@@ -4,33 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MINI APP PRO</title>
-    
-    <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+    <!-- ========================================== -->
+    <!-- 🟢 MONETAG INSTALLATION TAG (REAL ADS)     -->
+    <!-- ========================================== -->
+    <script src='//libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
 
     <style>
         /* --- CSS Variables & Theme --- */
         :root {
-            --bg-dark: #100f14; 
-            --bg-card: #1c1a24; 
-            --bg-header: #100f14;
-            --primary-accent: #7c3aed; /* Deep Purple */
-            --primary-light: #8b5cf6;
-            --text-light: #ffffff; 
-            --text-muted: #8e8d96; 
-            --divider: #2a2835;
-            --success: #10b981; 
-            --warning: #f59e0b; 
-            --danger: #ef4444;
-            --btn-bg: #2a2835;
-            --overlay-bg: rgba(0,0,0,0.85);
+            --bg-dark: #100f14; --bg-card: #1c1a24; --bg-header: #100f14;
+            --primary-accent: #7c3aed; --primary-light: #a78bfa;
+            --text-light: #ffffff; --text-muted: #8e8d96; --divider: #2a2835;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+            --btn-bg: #2a2835; --overlay-bg: rgba(0,0,0,0.85);
         }
         [data-theme="light"] {
             --bg-dark: #f8fafc; --bg-card: #ffffff; --bg-header: #ffffff;
@@ -42,39 +36,35 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-dark); color: var(--text-light); transition: background-color 0.4s ease, color 0.4s ease; padding-bottom: 90px; overflow-x: hidden; }
 
+        /* Hide Blogger Defaults if hosted on Blogger */
+        #navbar-iframe, .widget, .widget-content, .main-inner, .tabs-outer, .header-outer { display: none !important; margin:0!important; padding:0!important; }
+
         /* --- Header --- */
         .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background-color: var(--bg-header); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--divider); transition: background-color 0.4s ease;}
         .header-left { display: flex; align-items: center; gap: 12px; }
-        
         .menu-btn { background: #231d3b; border: none; color: #a855f7; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;}
         .menu-btn:active { transform: scale(0.9); }
-        
         .play-icon-wrapper { background: var(--success); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
         .play-icon-wrapper span { color: white; font-size: 24px; }
-        
         .app-title-text { font-weight: 900; line-height: 1.1; letter-spacing: -0.5px;}
         .title-top { font-size: 17px; }
         .title-mini { color: var(--danger); }
         .title-app { color: var(--text-light); }
         .title-pro { color: var(--success); font-size: 15px; }
-
         .header-right { display: flex; align-items: center; gap: 10px; }
         .action-btn { background: var(--btn-bg); border: none; color: var(--text-muted); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.3s;}
         .action-btn:active { transform: scale(0.9); }
         .noti-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: none; box-shadow: 0 0 8px var(--danger);}
-        
         .profile-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #c084fc, #818cf8); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: white; cursor: pointer; border: 2px solid var(--primary-accent); transition: 0.3s;}
         .profile-avatar:active { transform: scale(0.9); }
 
         /* --- Search & Categories --- */
         .search-bar { width: calc(100% - 30px); margin: 10px 15px; padding: 14px 15px; border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-card); color: var(--text-light); outline: none; display: none; font-size: 15px; transition: 0.3s;}
         .search-bar:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2); }
-        
         .categories-wrapper { padding: 10px 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .categories-wrapper::-webkit-scrollbar { display: none; }
         .category-pill { display: inline-block; background: var(--bg-card); border: 1px solid var(--divider); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-light);}
         .category-pill.active { background: var(--primary-accent); color: white; border-color: var(--primary-accent); transform: scale(1.05); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
-        
         .video-count-badge { display: inline-flex; align-items: center; gap: 6px; background-color: var(--primary-accent); color: white; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 0 15px 15px 15px; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);}
 
         /* --- Video Card --- */
@@ -86,7 +76,6 @@
         .badge-new { position: absolute; top: 12px; left: 12px; background-color: var(--success); color: white; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; z-index: 10; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);}
         .fav-btn { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; cursor: pointer; transition: 0.3s;}
         .fav-btn:active { transform: scale(0.8); }
-        
         .card-content { padding: 18px; }
         .video-info-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px; }
         .channel-avatar { width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #6366f1); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; flex-shrink: 0; }
@@ -106,8 +95,11 @@
 
         .unlock-btn { background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3); transition: 0.3s;}
         .unlock-btn:active { transform: translateY(2px); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); }
-        .direct-play-btn { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: 0.3s;}
+        .direct-play-btn { background: var(--success); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: 0.3s;}
         .direct-play-btn:active { transform: translateY(2px); }
+
+        /* Countdown Timer */
+        .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 8px; background: rgba(245, 158, 11, 0.1); padding: 5px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
 
         /* --- Floating Support Button --- */
         .floating-support { position: fixed; bottom: 100px; right: 20px; background: var(--primary-accent); color: white; padding: 12px 20px; border-radius: 30px; display: flex; align-items: center; gap: 8px; z-index: 90; text-decoration: none; box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4); font-weight: 600; font-size: 14px; transition: 0.3s;}
@@ -147,9 +139,20 @@
         
         .tut-step { background: var(--bg-dark); padding: 16px; border-radius: 16px; margin-bottom: 12px; display: flex; gap: 16px; border: 1px solid var(--divider);}
         .tut-step .num { background: var(--primary-accent); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
+        
+        /* AD SIMULATION UI */
+        .ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .ad-modal.active { display: flex; }
+        .ad-spinner { width: 50px; height: 50px; border: 5px solid rgba(139, 92, 246, 0.3); border-top-color: var(--primary-accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;}
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .ad-status-text { font-size: 18px; font-weight: bold; color: white; margin-bottom: 10px; }
+        .ad-timer { font-size: 14px; color: var(--text-muted); }
+        .btn-fake-ad { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--divider); padding: 10px 20px; border-radius: 10px; margin-top: 20px; display: flex; align-items: center; gap: 5px; font-size: 12px; border-color: rgba(255,255,255,0.1);}
+
     </style>
 </head>
 <body>
+    <b:section id='hidden-section' showaddelement='false'/>
 
     <!-- Header -->
     <header class="header">
@@ -267,7 +270,7 @@
                 </div>
             </div>
 
-            <div class="list-item" onclick="alert('Link Copied to Clipboard!')">
+            <div class="list-item" onclick="copyBotLink()">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div>
                     <span style="font-weight:700; font-size:15px;">Copy Referral Link</span>
@@ -349,6 +352,16 @@
                 <b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b>
             </div>
             
+            <div class="input-group">
+                <label>Select Payment Method</label>
+                <select id="payMethodInput">
+                    <option value="bKash">bKash</option>
+                    <option value="Nagad">Nagad</option>
+                    <option value="Rocket">Rocket</option>
+                    <option value="Binance">Binance</option>
+                </select>
+            </div>
+
             <div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;">
                 <span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br>
                 <b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span>
@@ -364,6 +377,28 @@
         </div>
     </div>
 
+    <!-- Share Overlay -->
+    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <h2>Share</h2>
+                <button class="close-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="list-item" onclick="shareOnTelegram()">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div>
+                    <div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div>
+                </div>
+            </div>
+            <div class="list-item" onclick="copyVideoLink()">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div>
+                    <div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Tutorial Overlay -->
     <div class="overlay" id="tutorialOverlay" onclick="closeOverlay(event, 'tutorialOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()" style="height: 85vh;">
@@ -372,7 +407,10 @@
                 <button class="close-btn" onclick="closeOverlay(null, 'tutorialOverlay')"><span class="material-symbols-rounded">close</span></button>
             </div>
             
-            <video id="tutorialVideo" controls style="width: 100%; border-radius: 16px; margin-bottom: 25px; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></video>
+            <div id="tutorialVideoContainer" style="background: #000; width: 100%; height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow:hidden;">
+               <video id="tutorialVideo" controls style="width: 100%; height:100%; display:none;"></video>
+               <span id="tutPlaceholderIcon" class="material-symbols-rounded" style="font-size: 48px; color: white;">play_circle</span>
+            </div>
             
             <div class="tut-step">
                 <div class="num">1</div>
@@ -433,7 +471,7 @@
                     <h3 id="statTotalUsers" style="font-size:28px; color:var(--text-light);">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-top:5px;">Total Users</p>
                 </div>
                 <div style="flex:1; background: var(--bg-dark); padding: 20px 15px; border-radius: 16px; text-align:center; border: 1px solid var(--warning);">
-                    <h3 id="statPremiumUsers" style="font-size:28px; color:var(--warning);">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-top:5px;">Premium</p>
+                    <h3 id="statPremiumUsers" style="font-size:28px; color:var(--warning);">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-top:5px;">Premium Users</p>
                 </div>
             </div>
 
@@ -448,8 +486,10 @@
                 </select>
             </div>
             <div class="input-group"><label>Photo URL (Thumbnail)</label><input type="text" id="vPhoto" placeholder="https://image-link.jpg"></div>
-            <div class="input-group"><label>Ad Destination URL (Monetag/Direct Link)</label><input type="text" id="vAdUrl" placeholder="https://ad-link.com"></div>
-            <div class="input-group"><label>Total Ads to Watch (For Free Users)</label><select id="vAdCount"><option value="3">3 Ads</option><option value="4">4 Ads</option><option value="5">5 Ads</option></select></div>
+            
+            <div class="input-group"><label>Target URL (Real Video Link)</label><input type="text" id="vAdUrl" placeholder="https://real-video.com"></div>
+            
+            <div class="input-group"><label>Total Ads to Watch (For Free Users)</label><select id="vAdCount"><option value="3">3 Steps</option><option value="4">4 Steps</option><option value="5">5 Steps</option></select></div>
             <button class="btn-submit" onclick="uploadVideo()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video</button>
 
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
@@ -459,12 +499,28 @@
             <div id="pendingTrxList" style="max-height: 250px; overflow-y:auto; padding-right:5px;">Loading...</div>
 
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
+
+            <!-- Premium Users List -->
+            <h3 style="color:var(--primary-accent); margin-bottom:15px;">🌟 Premium Users List</h3>
+            <div id="premiumUsersList" style="max-height: 250px; overflow-y:auto; padding-right:5px;">Loading...</div>
+
+            <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
             
             <!-- App Settings -->
             <h3 style="color:var(--success); margin-bottom:15px;">⚙️ App Settings & Pricing</h3>
             <div class="input-group"><label>Support Name (e.g. 24/7 Live Support)</label><input type="text" id="sSupportName" placeholder="Support Name"></div>
             <div class="input-group"><label>Support URL (Telegram Link)</label><input type="text" id="sSupportUrl" placeholder="https://t.me/..."></div>
-            <div class="input-group"><label>Tutorial Video URL (MP4)</label><input type="text" id="sTutorial" placeholder="https://...video.mp4"></div>
+            
+            <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:15px;">
+                 <h4 style="margin-bottom:10px; color:var(--primary-light); font-size:14px;">🎥 Tutorial Video Settings</h4>
+                 <div class="input-group">
+                     <label>Upload Video from Gallery</label>
+                     <input type="file" id="tutorialFileInput" accept="video/*" style="padding: 10px; font-size: 13px;">
+                     <button class="btn-submit" style="margin-top: 10px; background:var(--primary-light); padding:10px; font-size: 14px;" onclick="uploadTutorialVideo()">Upload Video</button>
+                     <div id="uploadProgress" style="font-size:12px; color:var(--success); margin-top:5px;"></div>
+                 </div>
+                 <input type="hidden" id="sTutorial"> 
+            </div>
             
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--divider); margin-bottom:15px;">
                 <h4 style="margin-bottom:10px; color:var(--text-light); font-size:14px;">💳 Payment Details</h4>
@@ -504,6 +560,16 @@
         </div>
     </div>
 
+    <!-- Monetag AD Simulation Modal -->
+    <div class="ad-modal" id="adSimulationModal">
+        <div class="ad-spinner"></div>
+        <div class="ad-status-text" id="adStatusText">Loading Ad...</div>
+        <div class="ad-timer" id="adTimerText">Please wait</div>
+        <button class="btn-fake-ad" id="adInfoBtn" onclick="alert('This advertisement supports our platform.')">
+            <span class="material-symbols-rounded" style="font-size:14px;">info</span> এই বিজ্ঞাপনটি আপনার কাজে আসতে পারে
+        </button>
+    </div>
+
 
     <script>
         // ==========================================
@@ -521,6 +587,7 @@
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
+        const storage = firebase.storage(); 
 
         // ==========================================
         // 2. TELEGRAM & APP STATE
@@ -538,12 +605,14 @@
         let favorites = JSON.parse(localStorage.getItem('favVideos')) || [];
         let unlockedCount = parseInt(localStorage.getItem('unlockedCount')) || 0;
 
-        // Ensure bottom sheet slide animation triggers
+        let currentShareVid = '';
+        let currentShareTitle = '';
+
         document.querySelectorAll('.overlay').forEach(overlay => {
             overlay.addEventListener('click', function(e) {
                 if(e.target === this) {
                     this.classList.remove('active');
-                    this.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
+                    if(this.querySelector('.bottom-sheet')) this.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
                 }
             });
         });
@@ -558,17 +627,15 @@
             document.getElementById('profName').innerText = currentUser.name;
             document.getElementById('profUsername').innerText = username ? `@${username}` : 'No Username';
             
-            // Show Admin Button in Sidebar
             if(currentUser.id === ADMIN_ID) {
                 document.getElementById('adminMenuBtn').style.display = 'flex';
                 fetchAdminStats();
                 fetchPendingTrx();
+                fetchPremiumUsers();
             }
         }
         
-        // Initial Local Stats Update
         updateLocalStatsUI();
-
         function updateLocalStatsUI() {
             document.getElementById('favCount').innerText = favorites.length;
             document.getElementById('favHeaderCount').innerText = favorites.length;
@@ -582,13 +649,11 @@
                 if(data.isPremium && data.premiumExpiry) {
                     let now = new Date().getTime();
                     if(now > data.premiumExpiry) {
-                        // Plan Expired
                         db.collection("users").doc(currentUser.id.toString()).update({ isPremium: false });
                         currentUser.isPremium = false;
                         document.getElementById('premiumBadge').style.display = 'none';
                         document.getElementById('premiumCount').innerText = 'Premium Expired';
                     } else {
-                        // Plan Active
                         currentUser.isPremium = true;
                         let daysLeft = Math.ceil((data.premiumExpiry - now) / (1000 * 60 * 60 * 24));
                         document.getElementById('premiumBadge').style.display = 'inline-block';
@@ -599,9 +664,8 @@
                     document.getElementById('premiumBadge').style.display = 'none';
                     document.getElementById('premiumCount').innerText = '';
                 }
-                renderVideos(); // Re-render to update buttons
+                renderVideos(); 
             } else {
-                // Register New User
                 db.collection("users").doc(currentUser.id.toString()).set({
                     name: currentUser.name, isPremium: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -609,12 +673,17 @@
         });
 
         // ==========================================
-        // 3. FETCH DATA (Videos, Settings, Notis)
+        // 3. FETCH DATA
         // ==========================================
         db.collection("videos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             allVideos = [];
             snapshot.forEach((doc) => {
-                let data = doc.data(); data.id = doc.id; allVideos.push(data);
+                let data = doc.data(); data.id = doc.id; 
+                // Randomize views if not exists
+                if(!data.views) {
+                    data.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
+                }
+                allVideos.push(data);
             });
             document.getElementById('totalVidCount').innerText = allVideos.length;
             renderVideos();
@@ -623,16 +692,24 @@
         db.collection("settings").doc("app_settings").onSnapshot(doc => {
             if(doc.exists) {
                 let d = doc.data();
-                // User UI Updates
                 document.getElementById('payNumberShow').innerText = d.payNumber || "Not Set";
                 document.getElementById('binanceShow').innerText = d.binanceId || "Not Set";
-                document.getElementById('tutorialVideo').src = d.tutorialUrl || "";
+                
+                let tutVidEl = document.getElementById('tutorialVideo');
+                let tutPlaceholder = document.getElementById('tutPlaceholderIcon');
+                if(d.tutorialUrl) {
+                    tutVidEl.src = d.tutorialUrl;
+                    tutVidEl.style.display = 'block';
+                    tutPlaceholder.style.display = 'none';
+                } else {
+                    tutVidEl.style.display = 'none';
+                    tutPlaceholder.style.display = 'block';
+                }
                 
                 document.getElementById('btnPrice1m').innerText = d.price1m || "100 BDT";
                 document.getElementById('btnPrice6m').innerText = d.price6m || "500 BDT";
                 document.getElementById('btnPrice1y').innerText = d.price1y || "900 BDT";
 
-                // Update Channels List in User UI
                 let channelsHtml = "";
                 if(d.ch1Name && d.ch1Url) {
                     channelsHtml += `
@@ -658,11 +735,9 @@
                 }
                 document.getElementById('channelListContainer').innerHTML = channelsHtml || "<p style='text-align:center; color:var(--text-muted);'>No channels added yet.</p>";
 
-                // Populate Admin fields
                 if(currentUser.id === ADMIN_ID) {
                     document.getElementById('sPayNum').value = d.payNumber || "";
                     document.getElementById('sBinance').value = d.binanceId || "";
-                    document.getElementById('sTutorial').value = d.tutorialUrl || "";
                     document.getElementById('p1m').value = d.price1m || "";
                     document.getElementById('p6m').value = d.price6m || "";
                     document.getElementById('p1y').value = d.price1y || "";
@@ -677,7 +752,6 @@
                     document.getElementById('ch2Url').value = d.ch2Url || "";
                 }
 
-                // Floating Support Button
                 if(d.supportUrl && d.supportName) {
                     let supBtn = document.getElementById('supportFloatingBtn');
                     supBtn.style.display = 'flex';
@@ -690,11 +764,7 @@
         db.collection("notifications").orderBy("timestamp", "desc").limit(10).onSnapshot(snap => {
             let html = "";
             let dot = document.getElementById('notiDotIndicator');
-            if(!snap.empty) {
-                dot.style.display = 'block'; // Show red dot
-            } else {
-                dot.style.display = 'none';
-            }
+            if(!snap.empty) dot.style.display = 'block'; else dot.style.display = 'none';
 
             snap.forEach(doc => {
                 let d = doc.data();
@@ -725,11 +795,17 @@
                 let isFav = favorites.some(f => f.id === vid.id) ? 'favorite' : 'favorite_border';
                 let favColor = isFav === 'favorite' ? 'var(--danger)' : 'white';
 
+                let targetUrl = vid.adUrl || '#';
+
                 let btnHtml = currentUser.isPremium 
-                    ? `<button class="direct-play-btn" onclick="window.open('${vid.adUrl}', '_blank')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`
+                    ? `<button class="direct-play-btn" onclick="window.open('${targetUrl}', '_blank')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`
                     : `<div class="unlock-steps" id="steps-${vid.id}">` + 
                       Array.from({length: vid.adCount}, (_, i) => `<div class="step ${i===0?'active':''}"><div class="step-circle">${i===0?'<span class="material-symbols-rounded" style="font-size:16px">play_arrow</span>':i+1}</div><span class="step-label">AD ${i+1}</span></div>`).join('') +
-                      `</div><button class="unlock-btn" id="btn-${vid.id}" onclick="startUnlock('${vid.id}', '${vid.adUrl}', ${vid.adCount})"><span class="material-symbols-rounded">lock</span> UNLOCK <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">0/${vid.adCount}</span></button>`;
+                      `</div>
+                      <button class="unlock-btn" id="btn-${vid.id}" onclick="startMonetagUnlock('${vid.id}', '${targetUrl}', ${vid.adCount})">
+                          <span class="material-symbols-rounded">lock</span> UNLOCK <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">0/${vid.adCount}</span>
+                      </button>
+                      <div id="timer-${vid.id}" class="countdown-timer"></div>`;
 
                 feed.innerHTML += `
                     <div class="video-card">
@@ -747,6 +823,13 @@
                         <div class="card-content">
                             <span class="category-tag">${vid.category}</span>
                             <h3 class="video-title">${vid.title}</h3>
+                            <div class="video-info-row">
+                                <div class="channel-avatar">V</div>
+                                <div class="video-details">
+                                    <div class="video-stats">DESIRUN.COM • <span class="material-symbols-rounded" style="font-size: 14px;">visibility</span> ${vid.views} views</div>
+                                </div>
+                                <button class="options-btn" onclick="openShareDialog('${vid.id}', '${vid.title.replace(/'/g, "\\'")}')"><span class="material-symbols-rounded">more_vert</span></button>
+                            </div>
                             ${btnHtml}
                         </div>
                     </div>
@@ -769,14 +852,37 @@
 
         function filterVideos() { renderVideos(); }
 
-        // --- Navigation Switch UI ---
         function navSwitch(btn) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
         }
 
-        // --- Ad Simulation ---
-        function startUnlock(vidId, targetUrl, totalAds) {
+        // --- SHARE LOGIC ---
+        function openShareDialog(vidId, title) {
+            currentShareVid = vidId;
+            currentShareTitle = title;
+            openOverlay('shareOverlay');
+        }
+        
+        function shareOnTelegram() {
+            // Assuming bot username is passed or known, replace YourBotName with actual if needed
+            // Getting generic start parameter for deep linking
+            let shareUrl = `https://t.me/share/url?url=${encodeURIComponent('https://t.me/yourbot?start=' + currentShareVid)}&text=${encodeURIComponent('Check out this video: ' + currentShareTitle)}`;
+            window.open(shareUrl, '_blank');
+        }
+        
+        function copyVideoLink() {
+            let link = `https://t.me/yourbot?start=${currentShareVid}`;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link Copied to Clipboard!');
+                closeOverlay(null, 'shareOverlay');
+            });
+        }
+
+        // ==========================================
+        // MONETAG AD SDK INTEGRATION LOGIC
+        // ==========================================
+        function startMonetagUnlock(vidId, targetUrl, totalAds) {
             if (currentUser.isPremium) {
                 window.open(targetUrl, '_blank');
                 return;
@@ -785,57 +891,141 @@
             const btn = document.getElementById(`btn-${vidId}`);
             const stepsVisuals = document.getElementById(`steps-${vidId}`).querySelectorAll('.step');
             
-            let match = btn.innerText.match(/(\d+)\//);
-            let currentStep = match ? parseInt(match[1]) : 0;
-
             if(btn.innerText.includes('WATCH NOW')) {
                 window.open(targetUrl, '_blank');
                 return;
             }
 
-            btn.disabled = true; btn.style.opacity = '0.7';
-            btn.innerHTML = `<span class="material-symbols-rounded" style="animation: spin 2s linear infinite;">hourglass_empty</span> Watching Ad...`;
+            let match = btn.innerText.match(/(\d+)\//);
+            let currentStep = match ? parseInt(match[1]) : 0;
 
+            const adModal = document.getElementById('adSimulationModal');
+            const statusText = document.getElementById('adStatusText');
+            const timerText = document.getElementById('adTimerText');
+            const infoBtn = document.getElementById('adInfoBtn');
+            
+            adModal.classList.add('active');
+            
+            statusText.innerText = `Preparing Ad...`;
+            timerText.innerText = `Step ${currentStep + 1} of ${totalAds}`;
+            infoBtn.style.display = 'none';
+
+            // Start Ad Process after 1.5s delay
             setTimeout(() => {
-                stepsVisuals[currentStep].classList.add('completed');
-                stepsVisuals[currentStep].classList.remove('active');
-                currentStep++;
+                statusText.innerText = `Ad 1 of 2 Playing`; 
+                infoBtn.style.display = 'flex';
                 
-                if(currentStep < totalAds) {
-                    stepsVisuals[currentStep].classList.add('active');
-                    let waitTime = 5;
-                    const cInt = setInterval(() => {
-                        btn.innerHTML = `<span class="material-symbols-rounded">timer</span> Wait ${waitTime}s`;
-                        waitTime--;
-                        if(waitTime < 0) {
-                            clearInterval(cInt);
-                            btn.disabled = false; btn.style.opacity = '1';
-                            btn.innerHTML = `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${currentStep}/${totalAds}</span>`;
-                        }
-                    }, 1000);
+                // CALL MONETAG AD 1
+                if(typeof show_11439323 === 'function') {
+                    show_11439323().then(() => {
+                        playAdTwo(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal, statusText);
+                    }).catch(() => {
+                        // Fallback if blocked
+                        playAdTwo(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal, statusText);
+                    });
                 } else {
-                    btn.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
-                    btn.style.background = 'var(--success)';
-                    btn.disabled = false; btn.style.opacity = '1';
-                    
-                    // Increment Local Stat
-                    unlockedCount++;
-                    localStorage.setItem('unlockedCount', unlockedCount);
-                    updateLocalStatsUI();
+                    // Fallback if script didn't load
+                    setTimeout(() => playAdTwo(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal, statusText), 2000);
                 }
-            }, 3000);
+            }, 1500); 
+        }
+
+        function playAdTwo(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal, statusText) {
+            statusText.innerText = `Ad 2 of 2 Playing`;
+            
+            // CALL MONETAG AD 2
+            if(typeof show_11439323 === 'function') {
+                show_11439323('pop').then(() => {
+                    finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal);
+                }).catch(() => {
+                    finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal);
+                });
+            } else {
+                setTimeout(() => finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal), 2000);
+            }
+        }
+
+        function finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal) {
+            adModal.classList.remove('active');
+            
+            stepsVisuals[currentStep].classList.add('completed');
+            stepsVisuals[currentStep].classList.remove('active');
+            currentStep++;
+            
+            if(currentStep < totalAds) {
+                stepsVisuals[currentStep].classList.add('active');
+                
+                btn.disabled = true; btn.style.opacity = '0.7';
+                let waitTime = 5;
+                const cInt = setInterval(() => {
+                    btn.innerHTML = `<span class="material-symbols-rounded">timer</span> Wait ${waitTime}s`;
+                    waitTime--;
+                    if(waitTime < 0) {
+                        clearInterval(cInt);
+                        btn.disabled = false; btn.style.opacity = '1';
+                        btn.innerHTML = `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${currentStep}/${totalAds}</span>`;
+                    }
+                }, 1000);
+            } else {
+                // ALL STEPS DONE -> SHOW WATCH NOW & START 5 MIN TIMER
+                startUnlockTimer(vidId, targetUrl, btn, stepsVisuals, totalAds);
+            }
+        }
+
+        function startUnlockTimer(vidId, targetUrl, btn, stepsVisuals, totalAds) {
+            btn.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
+            btn.style.background = 'var(--success)';
+            btn.disabled = false; btn.style.opacity = '1';
+            
+            // Timer Logic
+            let timeLeft = 300; // 5 minutes in seconds
+            let timerDisplay = document.getElementById(`timer-${vidId}`);
+            if(timerDisplay) timerDisplay.style.display = 'block';
+            
+            // Clear existing timer if any
+            if(window[`timerInt_${vidId}`]) clearInterval(window[`timerInt_${vidId}`]);
+            
+            let tInt = setInterval(() => {
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                if(timerDisplay) timerDisplay.innerText = `Link expires in ${m}:${s < 10 ? '0'+s : s}`;
+                timeLeft--;
+                
+                if(timeLeft < 0) {
+                    clearInterval(tInt);
+                    if(timerDisplay) timerDisplay.style.display = 'none';
+                    resetVideoCard(vidId, totalAds, btn, stepsVisuals);
+                }
+            }, 1000);
+            
+            window[`timerInt_${vidId}`] = tInt;
+            
+            unlockedCount++;
+            localStorage.setItem('unlockedCount', unlockedCount);
+            updateLocalStatsUI();
+        }
+
+        function resetVideoCard(vidId, totalAds, btn, stepsVisuals) {
+            btn.innerHTML = `<span class="material-symbols-rounded">lock</span> UNLOCK <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">0/${totalAds}</span>`;
+            btn.style.background = 'linear-gradient(135deg, #a855f7, #7c3aed)';
+            
+            stepsVisuals.forEach((el, i) => {
+                el.classList.remove('completed', 'active');
+                if(i === 0) el.classList.add('active');
+            });
         }
 
         // ==========================================
         // 5. PREMIUM & TRANSACTIONS
         // ==========================================
+        let selectedMethod = '';
+        
         function openPaymentMethods(plan, price) {
             selectedPlan = plan;
             selectedPrice = price;
             document.getElementById('selectedPlanShow').innerText = plan;
             document.getElementById('selectedAmountShow').innerText = price;
             
-            // Check if already pending
             db.collection("transactions").where("userId", "==", currentUser.id).where("status", "==", "Pending").get().then(snap => {
                 if(!snap.empty) {
                     document.getElementById('submitTrxBox').style.display = 'none';
@@ -852,6 +1042,8 @@
 
         function submitTrx() {
             let trx = document.getElementById('trxInput').value;
+            let method = document.getElementById('payMethodInput').value;
+            
             if(!trx) return alert("Enter TrxID or Binance Pay ID!");
             
             db.collection("transactions").add({
@@ -859,6 +1051,7 @@
                 userName: currentUser.name,
                 plan: selectedPlan,
                 amount: selectedPrice,
+                method: method,
                 trxId: trx,
                 status: "Pending",
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -877,18 +1070,52 @@
             let title = document.getElementById('vTitle').value;
             let cat = document.getElementById('vCategory').value;
             let photo = document.getElementById('vPhoto').value;
-            let adUrl = document.getElementById('vAdUrl').value;
+            let targetUrl = document.getElementById('vAdUrl').value;
             let adCount = parseInt(document.getElementById('vAdCount').value);
 
-            if(!title || !photo || !adUrl) return alert("Please fill all fields!");
+            if(!title || !photo || !targetUrl) return alert("Please fill Title, Photo, and Target URL fields!");
 
             db.collection("videos").add({
-                title: title, category: cat, photo: photo, adUrl: adUrl, adCount: adCount,
+                title: title, category: cat, photo: photo, adUrl: targetUrl, adCount: adCount,
+                views: Math.floor(Math.random() * (500 - 10) + 10) + 'K', // Random views initial
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 alert("Video Uploaded Successfully!");
                 document.getElementById('vTitle').value = ''; document.getElementById('vPhoto').value = ''; document.getElementById('vAdUrl').value = '';
             });
+        }
+
+        function uploadTutorialVideo() {
+            const fileInput = document.getElementById('tutorialFileInput');
+            const file = fileInput.files[0];
+            const progressTxt = document.getElementById('uploadProgress');
+            
+            if (!file) return alert("Please select a video file first.");
+
+            const storageRef = storage.ref('tutorials/' + file.name);
+            const uploadTask = storageRef.put(file);
+
+            progressTxt.style.color = "var(--warning)";
+            progressTxt.innerText = "Uploading... Please wait.";
+
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progressTxt.innerText = `Uploading: ${Math.round(progress)}%`;
+                }, 
+                (error) => {
+                    progressTxt.style.color = "var(--danger)";
+                    progressTxt.innerText = "Upload Failed!";
+                }, 
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        progressTxt.style.color = "var(--success)";
+                        progressTxt.innerText = "Upload Complete!";
+                        document.getElementById('sTutorial').value = downloadURL;
+                        saveSettings();
+                    });
+                }
+            );
         }
 
         function saveSettings() {
@@ -901,15 +1128,12 @@
                 supportName: document.getElementById('sSupportName').value,
                 supportUrl: document.getElementById('sSupportUrl').value,
                 tutorialUrl: document.getElementById('sTutorial').value,
-                
-                // Add Channel Settings saving
                 ch1Name: document.getElementById('ch1Name').value,
                 ch1Desc: document.getElementById('ch1Desc').value,
                 ch1Url: document.getElementById('ch1Url').value,
                 ch2Name: document.getElementById('ch2Name').value,
                 ch2Desc: document.getElementById('ch2Desc').value,
                 ch2Url: document.getElementById('ch2Url').value
-                
             }, {merge: true}).then(() => alert("Settings Saved Successfully!"));
         }
 
@@ -918,10 +1142,7 @@
             if(!msg) return alert("Message cannot be empty!");
             db.collection("notifications").add({
                 text: msg, timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => { 
-                alert("Notification Sent to all users!"); 
-                document.getElementById('nMessage').value = ''; 
-            });
+            }).then(() => { alert("Notification Sent to all users!"); document.getElementById('nMessage').value = ''; });
         }
 
         function fetchAdminStats() {
@@ -942,10 +1163,10 @@
                         <div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--divider);">
                             <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                                 <div><strong style="color:var(--text-light); font-size:15px;">${d.userName}</strong><br><small style="color:var(--text-muted)">ID: ${d.userId}</small></div>
-                                <div style="text-align:right;"><strong style="color:var(--warning); font-size:15px; font-family:monospace;">${d.trxId}</strong><br><small>${d.plan} (${d.amount})</small></div>
+                                <div style="text-align:right;"><strong style="color:var(--warning); font-size:15px; font-family:monospace;">${d.trxId}</strong><br><small>${d.plan} - ${d.method}</small></div>
                             </div>
                             <div style="display:flex; gap:10px;">
-                                <button class="btn-submit" style="flex:1; background:var(--success); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="approveTrx('${doc.id}', ${d.userId}, '${d.plan}')">Approve</button>
+                                <button class="btn-submit" style="flex:1; background:var(--success); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="approveTrx('${doc.id}', ${d.userId}, '${d.plan}', '${d.method}')">Approve</button>
                                 <button class="btn-submit" style="flex:1; background:var(--danger); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="rejectTrx('${doc.id}')">Reject</button>
                             </div>
                         </div>
@@ -955,7 +1176,28 @@
             });
         }
 
-        function approveTrx(docId, uid, plan) {
+        function fetchPremiumUsers() {
+            db.collection("users").where("isPremium", "==", true).onSnapshot(snap => {
+                let html = "";
+                let now = new Date().getTime();
+                snap.forEach(doc => {
+                    let d = doc.data();
+                    let daysLeft = Math.ceil((d.premiumExpiry - now) / (1000 * 60 * 60 * 24));
+                    html += `
+                        <div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--primary-accent);">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <div><strong style="color:var(--text-light);">${d.name}</strong><br><small style="color:var(--text-muted)">ID: ${doc.id}</small></div>
+                                <div style="text-align:right;"><strong style="color:var(--success);">${daysLeft} Days Left</strong><br><small style="color:var(--warning)">${d.payMethod || 'Manual'}</small></div>
+                            </div>
+                            <button class="btn-submit" style="background:var(--danger); padding:8px; border-radius:8px; font-size:13px;" onclick="removePremium('${doc.id}')">Remove Premium</button>
+                        </div>
+                    `;
+                });
+                document.getElementById('premiumUsersList').innerHTML = html || "<p style='color:var(--text-muted); text-align:center;'>No premium users.</p>";
+            });
+        }
+
+        function approveTrx(docId, uid, plan, method) {
             let days = 0;
             if(plan.includes('1 Month')) days = 30;
             else if(plan.includes('6 Months')) days = 180;
@@ -967,15 +1209,27 @@
             db.collection("transactions").doc(docId).update({ status: "Approved" });
             db.collection("users").doc(uid.toString()).update({ 
                 isPremium: true,
-                premiumExpiry: expiryDate.getTime()
+                premiumExpiry: expiryDate.getTime(),
+                plan: plan,
+                payMethod: method
             });
             alert("Approved successfully!");
-            fetchAdminStats(); // Refresh stats
+            fetchAdminStats(); 
         }
 
         function rejectTrx(docId) {
             if(confirm("Are you sure you want to reject this transaction?")) {
                 db.collection("transactions").doc(docId).update({ status: "Rejected" });
+            }
+        }
+        
+        function removePremium(uid) {
+            if(confirm("Remove premium status for this user?")) {
+                db.collection("users").doc(uid.toString()).update({ 
+                    isPremium: false, 
+                    premiumExpiry: firebase.firestore.FieldValue.delete(), 
+                    payMethod: firebase.firestore.FieldValue.delete() 
+                });
             }
         }
 
@@ -990,19 +1244,19 @@
                 if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
             }); 
             const overlay = document.getElementById(id);
+            if(!overlay) return;
             overlay.classList.add('active'); 
             setTimeout(() => {
                 if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)';
             }, 10);
-            
-            // Hide notification dot if notifications opened
             if(id === 'notificationsOverlay') document.getElementById('notiDotIndicator').style.display = 'none';
         }
         function closeOverlay(e, id) { 
             if (e && e.target !== e.currentTarget) return; 
             const overlay = document.getElementById(id);
+            if(!overlay) return;
             if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
-            setTimeout(() => { overlay.classList.remove('active'); }, 300); // match transition time
+            setTimeout(() => { overlay.classList.remove('active'); }, 300); 
         }
         function closeAllOverlays() { 
             document.querySelectorAll('.overlay').forEach(el => {
@@ -1010,7 +1264,6 @@
                 setTimeout(() => { el.classList.remove('active'); }, 300);
             }); 
         }
-        
         function toggleFav(vidId, title, thumb) {
             const icon = document.getElementById(`fav-icon-${vidId}`);
             const index = favorites.findIndex(v => v.id === vidId);
@@ -1029,7 +1282,10 @@
         function loadFavorites() {
             const list = document.getElementById('favoritesList'); list.innerHTML = '';
             document.getElementById('favHeaderCount').innerText = favorites.length;
-            if(favorites.length === 0) return list.innerHTML = '<div style="text-align:center; padding: 40px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size:48px; margin-bottom:10px; opacity:0.5;">heart_broken</span><br>No favorites yet.</div>';
+            if(favorites.length === 0) {
+                list.innerHTML = '<div style="text-align:center; padding: 40px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size:48px; margin-bottom:10px; opacity:0.5;">heart_broken</span><br>No favorites yet.</div>';
+                return;
+            }
             favorites.forEach(v => {
                 list.innerHTML += `
                 <div class="list-item" style="background:var(--bg-card); border: 1px solid var(--divider);">
