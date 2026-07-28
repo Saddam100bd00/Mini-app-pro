@@ -172,7 +172,6 @@
         </div>
         <div class="header-right">
             <button class="action-btn" onclick="toggleSearch()"><span class="material-symbols-rounded">search</span></button>
-            <!-- 🟢 NOTIFICATION BELL: Directly opens Telegram Channel -->
             <button class="action-btn" onclick="openTelegramChannelDirect()">
                 <span class="material-symbols-rounded">notifications</span>
                 <div class="noti-dot" id="notiDotIndicator"></div>
@@ -220,7 +219,6 @@
         <button class="nav-item" onclick="navSwitch(this); openOverlay('channelsOverlay');">
             <span class="material-symbols-rounded">send</span>Channels
         </button>
-        <!-- 🟢 UPDATED: Right Icon changed to Premium Icon & opens Premium Page -->
         <button class="nav-item" onclick="navSwitch(this); openOverlay('premiumOverlay');">
             <span class="material-symbols-rounded" style="color: var(--warning);">workspace_premium</span>Premium
         </button>
@@ -252,7 +250,7 @@
         </div>
     </div>
 
-    <!-- 🟢 Profile Overlay (UPDATED UI & BADGES & BUTTONS) -->
+    <!-- Profile Overlay -->
     <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header">
@@ -262,7 +260,6 @@
             <div style="text-align:center; margin-bottom: 25px; margin-top:10px;">
                 <div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div>
                 
-                <!-- Name with Status Badge -->
                 <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;">
                     <h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2>
                     <span id="userStatusBadge" class="badge-free">Free</span>
@@ -283,7 +280,6 @@
                 </div>
             </div>
 
-            <!-- Profile Action Buttons -->
             <div class="list-item" onclick="copyBotLink()">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div>
@@ -505,8 +501,10 @@
                 </div>
             </div>
 
-            <!-- Upload Video -->
-            <h3 style="color:var(--primary-accent); margin-bottom:15px;">➕ Upload New Video</h3>
+            <!-- Upload / Edit Video Section -->
+            <h3 style="color:var(--primary-accent); margin-bottom:15px;" id="videoFormHeading">➕ Upload New Video</h3>
+            <input type="hidden" id="editingVidId" value="">
+            
             <div class="input-group"><label>Video Title</label><input type="text" id="vTitle" placeholder="Enter viral title..."></div>
             <div class="input-group"><label>Category</label>
                 <select id="vCategory">
@@ -516,7 +514,7 @@
                 </select>
             </div>
             
-            <!-- 🟢 ADDED: Select Photo Option in Admin -->
+            <!-- Photo Upload Options -->
             <div class="input-group">
                 <label>Select Photo (Thumbnail Upload)</label>
                 <input type="file" id="vPhotoFile" accept="image/*" style="padding: 10px; font-size: 13px;" onchange="uploadThumbnailImage(this)">
@@ -525,12 +523,22 @@
                     <img id="photoPreviewImg" src="" style="max-width: 100%; height: 120px; border-radius:12px; object-fit:cover; border:1px solid var(--divider);">
                 </div>
             </div>
-            <div class="input-group"><label>Photo URL (Or Paste Link)</label><input type="text" id="vPhoto" placeholder="https://image-link.jpg"></div>
+            <div class="input-group"><label>Photo URL (Or Paste Link)</label><input type="text" id="vPhoto" placeholder="https://image-link.jpg" oninput="previewPhotoUrl(this.value)"></div>
             
             <div class="input-group"><label>Target URL (Real Video Link)</label><input type="text" id="vAdUrl" placeholder="https://real-video.com"></div>
             
             <div class="input-group"><label>Total Ads to Watch (For Free Users)</label><select id="vAdCount"><option value="3">3 Steps</option><option value="4">4 Steps</option><option value="5">5 Steps</option></select></div>
-            <button class="btn-submit" onclick="uploadVideo()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video</button>
+            
+            <div style="display:flex; gap:10px;">
+                <button class="btn-submit" id="vSubmitBtn" onclick="uploadVideo()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video</button>
+                <button class="btn-submit" id="vCancelBtn" style="display:none; background:var(--text-muted);" onclick="cancelEditVideo()">Cancel Edit</button>
+            </div>
+
+            <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
+
+            <!-- 🟢 ADDED: Manage Uploaded Videos (Edit/Delete) -->
+            <h3 style="color:var(--primary-light); margin-bottom:15px;">🎥 Manage Uploaded Videos</h3>
+            <div id="adminVideoManageList" style="max-height: 250px; overflow-y:auto; padding-right:5px;">Loading uploaded videos...</div>
 
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
             
@@ -551,7 +559,6 @@
             <div class="input-group"><label>Support Name (e.g. 24/7 Live Support)</label><input type="text" id="sSupportName" placeholder="Support Name"></div>
             <div class="input-group"><label>Support URL (Telegram Link)</label><input type="text" id="sSupportUrl" placeholder="https://t.me/..."></div>
             
-            <!-- 🟢 FIX: Fast & Stable Tutorial Video Upload -->
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:15px;">
                  <h4 style="margin-bottom:10px; color:var(--primary-light); font-size:14px;">🎥 Tutorial Video Settings</h4>
                  <div class="input-group">
@@ -732,6 +739,9 @@
             });
             document.getElementById('totalVidCount').innerText = allVideos.length;
             renderVideos();
+            if(currentUser.id === ADMIN_ID) {
+                renderAdminVideoManageList();
+            }
         });
 
         db.collection("settings").doc("app_settings").onSnapshot(doc => {
@@ -861,6 +871,7 @@
                       </button>
                       <div id="timer-${vid.id}" class="countdown-timer"></div>`;
 
+                // 🟢 FIX: User-provided Custom Image preview applied to all thumbnail collages
                 feed.innerHTML += `
                     <div class="video-card">
                         <div class="thumbnail-container">
@@ -870,8 +881,8 @@
                             </button>
                             <div class="thumbnail-collage">
                                 <div class="thumb-main" style="background-image: url('${vid.photo}');"></div>
-                                <div class="thumb-sub-1" style="background-image: url('https://picsum.photos/200/300?random=1');"></div>
-                                <div class="thumb-sub-2" style="background-image: url('https://picsum.photos/200/300?random=2');"></div>
+                                <div class="thumb-sub-1" style="background-image: url('${vid.photo}');"></div>
+                                <div class="thumb-sub-2" style="background-image: url('${vid.photo}');"></div>
                             </div>
                         </div>
                         <div class="card-content">
@@ -932,7 +943,7 @@
         }
 
         // ==========================================
-        // 🟢 FIXED: MONETAG SEQUENTIAL AD FLOW
+        // MONETAG SEQUENTIAL AD FLOW
         // ==========================================
         function startMonetagUnlock(vidId, targetUrl, totalAds) {
             if (currentUser.isPremium) {
@@ -961,7 +972,6 @@
             timerText.innerText = `Step ${currentStep + 1} of ${totalAds}`;
             infoBtn.style.display = 'none';
 
-            // Sequential Ad Loader Helper Function
             const showAdPromise = () => {
                 return new Promise((resolve) => {
                     if (typeof show_11439323 === 'function') {
@@ -974,19 +984,16 @@
                 });
             };
 
-            // First Ad
             setTimeout(async () => {
                 statusText.innerText = `Ad 1 of 2 Playing`; 
                 infoBtn.style.display = 'flex';
                 await showAdPromise();
 
-                // Small buffer transition
                 statusText.innerText = `Ad 2 Loading...`;
                 setTimeout(async () => {
                     statusText.innerText = `Ad 2 of 2 Playing`;
                     await showAdPromise();
 
-                    // Complete Ad Cycle
                     adModal.classList.remove('active');
                     finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn);
                 }, 1000);
@@ -1026,7 +1033,7 @@
             btn.disabled = false; 
             btn.style.opacity = '1';
             
-            let timeLeft = 300; // 5 minutes
+            let timeLeft = 300; 
             let timerDisplay = document.getElementById(`timer-${vidId}`);
             if(timerDisplay) timerDisplay.style.display = 'block';
             
@@ -1109,9 +1116,10 @@
         }
 
         // ==========================================
-        // 7. ADMIN FUNCTIONS & FAST UPLOADS
+        // 7. ADMIN FUNCTIONS & FAST UPLOADS (FIXED & ADDED EDIT/DELETE)
         // ==========================================
-        // 🟢 Select Photo (Thumbnail Upload Function)
+        
+        // 🟢 FIX 1: PHOTO UPLOAD FIX
         function uploadThumbnailImage(input) {
             const file = input.files[0];
             const statusTxt = document.getElementById('photoUploadStatus');
@@ -1123,14 +1131,18 @@
             statusTxt.style.color = "var(--warning)";
             statusTxt.innerText = "Uploading photo...";
 
+            const metadata = { contentType: file.type };
             const storageRef = storage.ref('thumbnails/' + Date.now() + '_' + file.name);
-            const uploadTask = storageRef.put(file);
+            const uploadTask = storageRef.put(file, metadata);
 
             uploadTask.on('state_changed', 
-                null, 
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    statusTxt.innerText = `Uploading photo: ${Math.round(progress)}%`;
+                }, 
                 (err) => {
                     statusTxt.style.color = "var(--danger)";
-                    statusTxt.innerText = "Photo Upload Failed!";
+                    statusTxt.innerText = "Photo Upload Failed: " + err.message;
                 }, 
                 () => {
                     uploadTask.snapshot.ref.getDownloadURL().then((url) => {
@@ -1144,7 +1156,21 @@
             );
         }
 
+        // 🟢 FIX 2: PREVIEW URL IMAGE LIVE
+        function previewPhotoUrl(url) {
+            const previewBox = document.getElementById('photoPreviewBox');
+            const previewImg = document.getElementById('photoPreviewImg');
+            if(url.trim() !== '') {
+                previewImg.src = url;
+                previewBox.style.display = 'block';
+            } else {
+                previewBox.style.display = 'none';
+            }
+        }
+
+        // 🟢 FIX 3: UPLOAD / UPDATE VIDEO FUNCTION
         function uploadVideo() {
+            let editId = document.getElementById('editingVidId').value;
             let title = document.getElementById('vTitle').value;
             let cat = document.getElementById('vCategory').value;
             let photo = document.getElementById('vPhoto').value;
@@ -1153,20 +1179,102 @@
 
             if(!title || !photo || !targetUrl) return alert("Please fill Title, Photo, and Target URL fields!");
 
-            db.collection("videos").add({
-                title: title, category: cat, photo: photo, adUrl: targetUrl, adCount: adCount,
-                views: Math.floor(Math.random() * (500 - 10) + 10) + 'K',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                alert("Video Uploaded Successfully!");
-                document.getElementById('vTitle').value = ''; 
-                document.getElementById('vPhoto').value = ''; 
-                document.getElementById('vAdUrl').value = '';
-                document.getElementById('photoPreviewBox').style.display = 'none';
-            });
+            let videoData = {
+                title: title, category: cat, photo: photo, adUrl: targetUrl, adCount: adCount
+            };
+
+            if(editId) {
+                // Update Existing Video
+                db.collection("videos").doc(editId).update(videoData).then(() => {
+                    alert("Video Updated Successfully!");
+                    cancelEditVideo();
+                }).catch(err => alert("Error updating: " + err.message));
+            } else {
+                // Upload New Video
+                videoData.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
+                videoData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
+                db.collection("videos").add(videoData).then(() => {
+                    alert("Video Uploaded Successfully!");
+                    cancelEditVideo();
+                }).catch(err => alert("Error uploading: " + err.message));
+            }
         }
 
-        // 🟢 FIX: Fast & Stable Tutorial Video Upload
+        // 🟢 ADDED: MANAGE VIDEO LIST IN ADMIN PANEL
+        function renderAdminVideoManageList() {
+            let container = document.getElementById('adminVideoManageList');
+            if(!container) return;
+            let html = "";
+            
+            if(allVideos.length === 0) {
+                container.innerHTML = "<p style='color:var(--text-muted); text-align:center; padding:10px;'>No videos uploaded yet.</p>";
+                return;
+            }
+
+            allVideos.forEach(v => {
+                html += `
+                    <div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);">
+                        <div style="display:flex; align-items:center; gap:10px; width:60%;">
+                            <img src="${v.photo}" style="width:45px; height:45px; border-radius:8px; object-fit:cover;">
+                            <div style="overflow:hidden;">
+                                <div style="font-weight:700; font-size:13px; color:var(--text-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${v.title}</div>
+                                <span style="font-size:11px; color:var(--primary-light);">${v.category}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button onclick="editVideo('${v.id}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button>
+                            <button onclick="deleteVideo('${v.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function editVideo(id) {
+            let vid = allVideos.find(v => v.id === id);
+            if(!vid) return;
+
+            document.getElementById('editingVidId').value = vid.id;
+            document.getElementById('vTitle').value = vid.title;
+            document.getElementById('vCategory').value = vid.category;
+            document.getElementById('vPhoto').value = vid.photo;
+            document.getElementById('vAdUrl').value = vid.adUrl;
+            document.getElementById('vAdCount').value = vid.adCount || 3;
+
+            previewPhotoUrl(vid.photo);
+
+            document.getElementById('videoFormHeading').innerText = "✏️ Edit Video";
+            document.getElementById('vSubmitBtn').innerHTML = `<span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">save</span> Save Changes`;
+            document.getElementById('vCancelBtn').style.display = "block";
+
+            // Scroll to form
+            document.getElementById('vTitle').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelEditVideo() {
+            document.getElementById('editingVidId').value = "";
+            document.getElementById('vTitle').value = "";
+            document.getElementById('vPhoto').value = "";
+            document.getElementById('vAdUrl').value = "";
+            document.getElementById('photoPreviewBox').style.display = 'none';
+            document.getElementById('photoUploadStatus').innerText = "";
+            document.getElementById('vPhotoFile').value = "";
+
+            document.getElementById('videoFormHeading').innerText = "➕ Upload New Video";
+            document.getElementById('vSubmitBtn').innerHTML = `<span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video`;
+            document.getElementById('vCancelBtn').style.display = "none";
+        }
+
+        function deleteVideo(id) {
+            if(confirm("Are you sure you want to delete this video?")) {
+                db.collection("videos").doc(id).delete().then(() => {
+                    alert("Video deleted successfully!");
+                }).catch(err => alert("Error deleting: " + err.message));
+            }
+        }
+
         function uploadTutorialVideo() {
             const fileInput = document.getElementById('tutorialFileInput');
             const file = fileInput.files[0];
@@ -1174,8 +1282,9 @@
             
             if (!file) return alert("Please select a video file first.");
 
+            const metadata = { contentType: file.type };
             const storageRef = storage.ref('tutorials/' + Date.now() + '_' + file.name);
-            const uploadTask = storageRef.put(file);
+            const uploadTask = storageRef.put(file, metadata);
 
             progressTxt.style.color = "var(--warning)";
             progressTxt.innerText = "Uploading... 0%";
