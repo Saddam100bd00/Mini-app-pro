@@ -102,7 +102,7 @@
         /* Countdown Timer */
         .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 8px; background: rgba(245, 158, 11, 0.1); padding: 5px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
 
-        /* 🟢 Smaller & Compact Floating Support Button */
+        /* Floating Support Button */
         .floating-support { position: fixed; bottom: 85px; right: 15px; background: var(--primary-accent); color: white; padding: 8px 14px; border-radius: 20px; display: flex; align-items: center; gap: 6px; z-index: 90; text-decoration: none; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); font-weight: 600; font-size: 12px; transition: 0.3s;}
         .floating-support:active { transform: scale(0.95); }
 
@@ -141,7 +141,7 @@
         .tut-step { background: var(--bg-dark); padding: 16px; border-radius: 16px; margin-bottom: 12px; display: flex; gap: 16px; border: 1px solid var(--divider);}
         .tut-step .num { background: var(--primary-accent); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
         
-        /* 🟢 ADVANCED ANIMATED AD MODAL (exact video style UI) */
+        /* AD SIMULATION MODAL UI */
         .ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 9, 14, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .ad-modal.active { display: flex; }
         
@@ -535,7 +535,7 @@
             <h3 style="color:var(--success); margin-bottom:15px;">⚙️ App Settings & Bot Link</h3>
             
             <div class="input-group">
-                <label>Telegram Bot Username / Link (For Share & Ref)</label>
+                <label>Telegram Bot Username / Link (For Direct Mini App Links)</label>
                 <input type="text" id="sBotUsername" placeholder="e.g. https://t.me/your_bot_username">
             </div>
 
@@ -545,7 +545,11 @@
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:15px;">
                  <h4 style="margin-bottom:10px; color:var(--primary-light); font-size:14px;">🎥 Tutorial Video Settings</h4>
                  <div class="input-group">
-                     <label>Upload Video from Gallery</label>
+                     <label>Tutorial Video Link (URL)</label>
+                     <input type="text" id="sTutorialUrlInput" placeholder="https://.../video.mp4" oninput="document.getElementById('sTutorial').value = this.value">
+                 </div>
+                 <div class="input-group">
+                     <label>Or Upload Video from Gallery</label>
                      <input type="file" id="tutorialFileInput" accept="video/*" style="padding: 10px; font-size: 13px;">
                      <button class="btn-submit" style="margin-top: 10px; background:var(--primary-light); padding:10px; font-size: 14px;" onclick="uploadTutorialVideo()">Upload Video</button>
                      <div id="uploadProgress" style="font-size:12px; color:var(--success); margin-top:5px;"></div>
@@ -739,6 +743,18 @@
             if(currentUser.id === ADMIN_ID) {
                 renderAdminVideoManageList();
             }
+
+            // 🟢 AUTO SCROLL TO DIRECT LINKED VIDEO IF ACCESSED VIA SHARED LINK (startapp=post_xxx)
+            if(tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+                let startParam = tg.initDataUnsafe.start_param;
+                if(startParam.startsWith('post_')) {
+                    let targetVidId = startParam.replace('post_', '');
+                    setTimeout(() => {
+                        let targetEl = document.getElementById(`card-${targetVidId}`);
+                        if(targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 500);
+                }
+            }
         });
 
         db.collection("notifications").orderBy("timestamp", "desc").onSnapshot(snap => {
@@ -780,6 +796,8 @@
                     tutVidEl.src = d.tutorialUrl;
                     tutVidEl.style.display = 'block';
                     tutPlaceholder.style.display = 'none';
+                    document.getElementById('sTutorialUrlInput').value = d.tutorialUrl;
+                    document.getElementById('sTutorial').value = d.tutorialUrl;
                 } else {
                     tutVidEl.style.display = 'none';
                     tutPlaceholder.style.display = 'block';
@@ -842,13 +860,17 @@
         });
 
         // ==========================================
-        // 4. PROFILE & SHARE LINK HANDLERS
+        // 4. 🟢 DIRECT MINI APP LINK GENERATOR FUNCTION (startapp=...)
         // ==========================================
-        function getBotLinkWithRef(extraDoc = "") {
+        function getBotLinkWithRef(extraParam = "") {
             let base = botBaseUrl.trim();
             if(!base.startsWith("http")) base = "https://t.me/" + base.replace("@", "");
-            let param = extraDoc ? extraDoc : `ref_${currentUser.id}`;
-            return `${base}?start=${param}`;
+            
+            // Clean URL from any existing parameters or trailing slashes
+            base = base.split("?")[0].replace(/\/$/, "");
+            
+            let param = extraParam ? extraParam : `ref_${currentUser.id}`;
+            return `${base}?startapp=${param}`;
         }
 
         function copyBotLink() {
@@ -867,13 +889,13 @@
         }
 
         function shareOnTelegram() {
-            let link = getBotLinkWithRef(currentShareVid);
+            let link = getBotLinkWithRef(`post_${currentShareVid}`);
             let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Check out this video: ' + currentShareTitle)}`;
             window.open(shareUrl, '_blank');
         }
         
         function copyVideoLink() {
-            let link = getBotLinkWithRef(currentShareVid);
+            let link = getBotLinkWithRef(`post_${currentShareVid}`);
             navigator.clipboard.writeText(link).then(() => {
                 alert('Video Link Copied to Clipboard!');
                 closeOverlay(null, 'shareOverlay');
@@ -975,7 +997,7 @@
         }
 
         // ==========================================
-        // 🟢 MONETAG AD ANIMATED FLOW (EXACT VIDEO LOOK)
+        // MONETAG AD ANIMATED FLOW
         // ==========================================
         function startMonetagUnlock(vidId, targetUrl, totalAds) {
             if (currentUser.isPremium) {
@@ -1009,7 +1031,6 @@
             timerCount.innerText = "3";
             circleVisual.style.setProperty('--pg', '0');
 
-            // Monetag Ad Call Helper
             const showAdPromise = () => {
                 return new Promise((resolve) => {
                     if (typeof show_11439323 === 'function') {
@@ -1034,11 +1055,9 @@
                 }
             }, 1000);
 
-            // First Ad Animation Phase
             setTimeout(async () => {
                 await showAdPromise();
 
-                // Phase 2: Verifying Phase
                 statusText.innerText = `Ad ${currentStep + 1} of 2 Done!`;
                 stepText.innerText = `Step ${currentStep + 1} of ${totalAds} — Next ad in a moment`;
                 pillText.innerText = "VERIFYING NOW...";
@@ -1427,6 +1446,7 @@
                         progressTxt.style.color = "var(--success)";
                         progressTxt.innerText = "Upload Complete & Saved!";
                         document.getElementById('sTutorial').value = downloadURL;
+                        document.getElementById('sTutorialUrlInput').value = downloadURL;
                         saveSettings();
                     });
                 }
@@ -1443,7 +1463,7 @@
                 price1y: document.getElementById('p1y').value,
                 supportName: document.getElementById('sSupportName').value,
                 supportUrl: document.getElementById('sSupportUrl').value,
-                tutorialUrl: document.getElementById('sTutorial').value,
+                tutorialUrl: document.getElementById('sTutorial').value || document.getElementById('sTutorialUrlInput').value,
                 ch1Name: document.getElementById('ch1Name').value,
                 ch1Desc: document.getElementById('ch1Desc').value,
                 ch1Url: document.getElementById('ch1Url').value,
@@ -1587,11 +1607,9 @@
             updateLocalStatsUI();
         }
 
-        // 🟢 FIX: FAVORITES CLICK TO OPEN & AUTO REMOVE DELETED
         function loadFavorites() {
             const list = document.getElementById('favoritesList'); list.innerHTML = '';
             
-            // Clean Deleted Items
             favorites = favorites.filter(f => allVideos.some(v => v.id === f.id));
             localStorage.setItem('favVideos', JSON.stringify(favorites));
 
