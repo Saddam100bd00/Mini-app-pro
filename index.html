@@ -25,6 +25,7 @@
             --text-light: #ffffff; --text-muted: #8e8d96; --divider: #2a2835;
             --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
             --btn-bg: #2a2835; --overlay-bg: rgba(0,0,0,0.85);
+            --gold-gradient: linear-gradient(135deg, #ffd700, #ffa500);
         }
         [data-theme="light"] {
             --bg-dark: #f8fafc; --bg-card: #ffffff; --bg-header: #ffffff;
@@ -58,6 +59,10 @@
         .profile-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #c084fc, #818cf8); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: white; cursor: pointer; border: 2px solid var(--primary-accent); transition: 0.3s;}
         .profile-avatar:active { transform: scale(0.9); }
 
+        /* --- Badges --- */
+        .badge-free { background: rgba(255,255,255,0.1); color: var(--text-muted); border: 1px solid var(--divider); padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; }
+        .badge-vip { background: var(--gold-gradient); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 900; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); vertical-align: middle; }
+
         /* --- Search & Categories --- */
         .search-bar { width: calc(100% - 30px); margin: 10px 15px; padding: 14px 15px; border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-card); color: var(--text-light); outline: none; display: none; font-size: 15px; transition: 0.3s;}
         .search-bar:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2); }
@@ -65,6 +70,7 @@
         .categories-wrapper::-webkit-scrollbar { display: none; }
         .category-pill { display: inline-block; background: var(--bg-card); border: 1px solid var(--divider); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-light);}
         .category-pill.active { background: var(--primary-accent); color: white; border-color: var(--primary-accent); transform: scale(1.05); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
+        .category-tag { font-size: 11px; font-weight: 800; color: var(--primary-light); background: rgba(124, 58, 237, 0.15); padding: 4px 10px; border-radius: 8px; margin-bottom: 8px; display: inline-block; }
         .video-count-badge { display: inline-flex; align-items: center; gap: 6px; background-color: var(--primary-accent); color: white; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 0 15px 15px 15px; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);}
 
         /* --- Video Card --- */
@@ -166,7 +172,8 @@
         </div>
         <div class="header-right">
             <button class="action-btn" onclick="toggleSearch()"><span class="material-symbols-rounded">search</span></button>
-            <button class="action-btn" onclick="openOverlay('notificationsOverlay')">
+            <!-- 🟢 NOTIFICATION BELL: Directly opens Telegram Channel -->
+            <button class="action-btn" onclick="openTelegramChannelDirect()">
                 <span class="material-symbols-rounded">notifications</span>
                 <div class="noti-dot" id="notiDotIndicator"></div>
             </button>
@@ -213,8 +220,9 @@
         <button class="nav-item" onclick="navSwitch(this); openOverlay('channelsOverlay');">
             <span class="material-symbols-rounded">send</span>Channels
         </button>
-        <button class="nav-item" onclick="navSwitch(this); openOverlay('profileOverlay');">
-            <span class="material-symbols-rounded">person</span>Profile
+        <!-- 🟢 UPDATED: Right Icon changed to Premium Icon & opens Premium Page -->
+        <button class="nav-item" onclick="navSwitch(this); openOverlay('premiumOverlay');">
+            <span class="material-symbols-rounded" style="color: var(--warning);">workspace_premium</span>Premium
         </button>
     </nav>
 
@@ -244,7 +252,7 @@
         </div>
     </div>
 
-    <!-- Profile Overlay -->
+    <!-- 🟢 Profile Overlay (UPDATED UI & BADGES & BUTTONS) -->
     <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header">
@@ -253,13 +261,18 @@
             </div>
             <div style="text-align:center; margin-bottom: 25px; margin-top:10px;">
                 <div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div>
-                <h2 id="profName" style="margin-top:20px; font-weight: 800;">User Name</h2>
-                <p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-bottom: 15px;">@username</p>
-                <div id="premiumBadge" style="display:none; color:var(--warning); font-weight:800; margin-top:5px; background:rgba(245, 158, 11, 0.15); padding:8px 16px; border-radius:12px; display:inline-block; border: 1px solid rgba(245, 158, 11, 0.3);">🌟 PREMIUM USER</div>
-                <div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold; margin-top:10px;"></div>
+                
+                <!-- Name with Status Badge -->
+                <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;">
+                    <h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2>
+                    <span id="userStatusBadge" class="badge-free">Free</span>
+                </div>
+                
+                <p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p>
+                <div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div>
             </div>
 
-            <div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:25px;">
+            <div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;">
                 <div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);">
                     <h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3>
                     <p style="font-size:12px; color:var(--text-muted); font-weight:600;">Favorites</p>
@@ -270,12 +283,29 @@
                 </div>
             </div>
 
+            <!-- Profile Action Buttons -->
             <div class="list-item" onclick="copyBotLink()">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div>
-                    <span style="font-weight:700; font-size:15px;">Copy Referral Link</span>
+                    <span style="font-weight:700; font-size:15px;">Copy My Link</span>
                 </div>
                 <span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span>
+            </div>
+
+            <div class="list-item" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('tutorialOverlay');">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--warning)">help</span></div>
+                    <span style="font-weight:700; font-size:15px;">View Tutorial</span>
+                </div>
+                <span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span>
+            </div>
+
+            <div class="list-item" onclick="shareAppOnTelegram()">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6">send</span></div>
+                    <span style="font-weight:700; font-size:15px;">Share App</span>
+                </div>
+                <span class="material-symbols-rounded" style="color:var(--text-muted)">share</span>
             </div>
             
             <button class="unlock-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');">
@@ -423,7 +453,7 @@
                 <div class="num">2</div>
                 <div>
                     <h3 style="margin-bottom: 6px; font-size:15px;">Unlock with Ads</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Click UNLOCK → overlay shows ads automatically (2 ads per step with 4s break). After each STEP completes, wait 5s on the button before tapping for the next step.</p>
+                    <p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Click UNLOCK → ads show automatically. After steps finish, tap WATCH NOW to enjoy!</p>
                 </div>
             </div>
             <div class="tut-step">
@@ -485,7 +515,17 @@
                     <option value="EXclusive">EXclusive</option>
                 </select>
             </div>
-            <div class="input-group"><label>Photo URL (Thumbnail)</label><input type="text" id="vPhoto" placeholder="https://image-link.jpg"></div>
+            
+            <!-- 🟢 ADDED: Select Photo Option in Admin -->
+            <div class="input-group">
+                <label>Select Photo (Thumbnail Upload)</label>
+                <input type="file" id="vPhotoFile" accept="image/*" style="padding: 10px; font-size: 13px;" onchange="uploadThumbnailImage(this)">
+                <div id="photoUploadStatus" style="font-size:12px; color:var(--success); margin-top:5px;"></div>
+                <div id="photoPreviewBox" style="margin-top:10px; display:none;">
+                    <img id="photoPreviewImg" src="" style="max-width: 100%; height: 120px; border-radius:12px; object-fit:cover; border:1px solid var(--divider);">
+                </div>
+            </div>
+            <div class="input-group"><label>Photo URL (Or Paste Link)</label><input type="text" id="vPhoto" placeholder="https://image-link.jpg"></div>
             
             <div class="input-group"><label>Target URL (Real Video Link)</label><input type="text" id="vAdUrl" placeholder="https://real-video.com"></div>
             
@@ -511,6 +551,7 @@
             <div class="input-group"><label>Support Name (e.g. 24/7 Live Support)</label><input type="text" id="sSupportName" placeholder="Support Name"></div>
             <div class="input-group"><label>Support URL (Telegram Link)</label><input type="text" id="sSupportUrl" placeholder="https://t.me/..."></div>
             
+            <!-- 🟢 FIX: Fast & Stable Tutorial Video Upload -->
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:15px;">
                  <h4 style="margin-bottom:10px; color:var(--primary-light); font-size:14px;">🎥 Tutorial Video Settings</h4>
                  <div class="input-group">
@@ -596,7 +637,7 @@
         tg.expand();
         tg.ready();
 
-        const ADMIN_ID = 6836865426; // ⚠️ আপনার এডমিন আইডি
+        const ADMIN_ID = 6836865426; 
         let currentUser = { id: 123456, name: "Guest", isPremium: false }; 
         let allVideos = [];
         let currentCategory = 'All';
@@ -604,6 +645,7 @@
         let selectedPrice = '';
         let favorites = JSON.parse(localStorage.getItem('favVideos')) || [];
         let unlockedCount = parseInt(localStorage.getItem('unlockedCount')) || 0;
+        let mainChannelUrl = '';
 
         let currentShareVid = '';
         let currentShareTitle = '';
@@ -642,8 +684,9 @@
             document.getElementById('unlockedCount').innerText = unlockedCount;
         }
 
-        // DB User Check & Premium Countdown Logic
+        // DB User Check & Premium Badge Logic
         db.collection("users").doc(currentUser.id.toString()).onSnapshot((doc) => {
+            const badgeEl = document.getElementById('userStatusBadge');
             if(doc.exists) {
                 let data = doc.data();
                 if(data.isPremium && data.premiumExpiry) {
@@ -651,17 +694,20 @@
                     if(now > data.premiumExpiry) {
                         db.collection("users").doc(currentUser.id.toString()).update({ isPremium: false });
                         currentUser.isPremium = false;
-                        document.getElementById('premiumBadge').style.display = 'none';
+                        badgeEl.className = "badge-free";
+                        badgeEl.innerHTML = "Free";
                         document.getElementById('premiumCount').innerText = 'Premium Expired';
                     } else {
                         currentUser.isPremium = true;
                         let daysLeft = Math.ceil((data.premiumExpiry - now) / (1000 * 60 * 60 * 24));
-                        document.getElementById('premiumBadge').style.display = 'inline-block';
+                        badgeEl.className = "badge-vip";
+                        badgeEl.innerHTML = "👑 VIP";
                         document.getElementById('premiumCount').innerText = `${daysLeft} Days Remaining`;
                     }
                 } else {
                     currentUser.isPremium = false;
-                    document.getElementById('premiumBadge').style.display = 'none';
+                    badgeEl.className = "badge-free";
+                    badgeEl.innerHTML = "Free";
                     document.getElementById('premiumCount').innerText = '';
                 }
                 renderVideos(); 
@@ -673,13 +719,12 @@
         });
 
         // ==========================================
-        // 3. FETCH DATA
+        // 3. FETCH DATA & APP SETTINGS
         // ==========================================
         db.collection("videos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             allVideos = [];
             snapshot.forEach((doc) => {
                 let data = doc.data(); data.id = doc.id; 
-                // Randomize views if not exists
                 if(!data.views) {
                     data.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
                 }
@@ -695,6 +740,8 @@
                 document.getElementById('payNumberShow').innerText = d.payNumber || "Not Set";
                 document.getElementById('binanceShow').innerText = d.binanceId || "Not Set";
                 
+                mainChannelUrl = d.ch1Url || '';
+
                 let tutVidEl = document.getElementById('tutorialVideo');
                 let tutPlaceholder = document.getElementById('tutPlaceholderIcon');
                 if(d.tutorialUrl) {
@@ -761,27 +808,34 @@
             }
         });
 
-        db.collection("notifications").orderBy("timestamp", "desc").limit(10).onSnapshot(snap => {
-            let html = "";
-            let dot = document.getElementById('notiDotIndicator');
-            if(!snap.empty) dot.style.display = 'block'; else dot.style.display = 'none';
-
-            snap.forEach(doc => {
-                let d = doc.data();
-                let timeStr = d.timestamp ? new Date(d.timestamp.toDate()).toLocaleString() : 'Recently';
-                html += `
-                    <div class="list-item" style="display:block; background:var(--bg-dark); padding:15px; border-radius:12px; margin-bottom:12px; border:1px solid var(--divider);">
-                        <div style="font-weight:800; color:var(--danger); margin-bottom:6px; display:flex; align-items:center; gap:5px;"><span class="material-symbols-rounded" style="font-size:18px;">campaign</span> Admin Notice</div>
-                        <div style="font-size:14px; line-height:1.6; color:var(--text-light);">${d.text}</div>
-                        <div style="font-size:11px; color:var(--text-muted); margin-top:8px; text-align:right;">${timeStr}</div>
-                    </div>
-                `;
-            });
-            document.getElementById('notiList').innerHTML = html || "<p style='text-align:center; color:var(--text-muted); padding:20px;'>No new updates right now.</p>";
-        });
+        function openTelegramChannelDirect() {
+            if(mainChannelUrl) {
+                window.open(mainChannelUrl, '_blank');
+            } else {
+                openOverlay('channelsOverlay');
+            }
+        }
 
         // ==========================================
-        // 4. RENDERING & UI LOGIC
+        // 4. PROFILE BUTTONS HANDLERS
+        // ==========================================
+        function copyBotLink() {
+            let link = `https://t.me/yourbot?start=ref_${currentUser.id}`;
+            navigator.clipboard.writeText(link).then(() => {
+                alert("Referral Link copied to clipboard!");
+            }).catch(() => {
+                alert("Referral Link: " + link);
+            });
+        }
+
+        function shareAppOnTelegram() {
+            let botUrl = `https://t.me/yourbot?start=ref_${currentUser.id}`;
+            let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(botUrl)}&text=${encodeURIComponent("Check out this amazing Mini App!")}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        // ==========================================
+        // 5. RENDERING & FEED LOGIC
         // ==========================================
         function renderVideos() {
             const feed = document.getElementById('videoFeed');
@@ -865,8 +919,6 @@
         }
         
         function shareOnTelegram() {
-            // Assuming bot username is passed or known, replace YourBotName with actual if needed
-            // Getting generic start parameter for deep linking
             let shareUrl = `https://t.me/share/url?url=${encodeURIComponent('https://t.me/yourbot?start=' + currentShareVid)}&text=${encodeURIComponent('Check out this video: ' + currentShareTitle)}`;
             window.open(shareUrl, '_blank');
         }
@@ -880,7 +932,7 @@
         }
 
         // ==========================================
-        // MONETAG AD SDK INTEGRATION LOGIC
+        // 🟢 FIXED: MONETAG SEQUENTIAL AD FLOW
         // ==========================================
         function startMonetagUnlock(vidId, targetUrl, totalAds) {
             if (currentUser.isPremium) {
@@ -905,49 +957,44 @@
             const infoBtn = document.getElementById('adInfoBtn');
             
             adModal.classList.add('active');
-            
             statusText.innerText = `Preparing Ad...`;
             timerText.innerText = `Step ${currentStep + 1} of ${totalAds}`;
             infoBtn.style.display = 'none';
 
-            // Start Ad Process after 1.5s delay
-            setTimeout(() => {
+            // Sequential Ad Loader Helper Function
+            const showAdPromise = () => {
+                return new Promise((resolve) => {
+                    if (typeof show_11439323 === 'function') {
+                        try {
+                            show_11439323().then(() => resolve(true)).catch(() => resolve(true));
+                        } catch(e) { resolve(true); }
+                    } else {
+                        setTimeout(() => resolve(true), 2000);
+                    }
+                });
+            };
+
+            // First Ad
+            setTimeout(async () => {
                 statusText.innerText = `Ad 1 of 2 Playing`; 
                 infoBtn.style.display = 'flex';
-                
-                // CALL MONETAG AD 1
-                if(typeof show_11439323 === 'function') {
-                    show_11439323().then(() => {
-                        playAdTwo(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal, statusText);
-                    }).catch(() => {
-                        // Fallback if blocked
-                        playAdTwo(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal, statusText);
-                    });
-                } else {
-                    // Fallback if script didn't load
-                    setTimeout(() => playAdTwo(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal, statusText), 2000);
-                }
-            }, 1500); 
+                await showAdPromise();
+
+                // Small buffer transition
+                statusText.innerText = `Ad 2 Loading...`;
+                setTimeout(async () => {
+                    statusText.innerText = `Ad 2 of 2 Playing`;
+                    await showAdPromise();
+
+                    // Complete Ad Cycle
+                    adModal.classList.remove('active');
+                    finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn);
+                }, 1000);
+
+            }, 1200); 
         }
 
-        function playAdTwo(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal, statusText) {
-            statusText.innerText = `Ad 2 of 2 Playing`;
-            
-            // CALL MONETAG AD 2
-            if(typeof show_11439323 === 'function') {
-                show_11439323('pop').then(() => {
-                    finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal);
-                }).catch(() => {
-                    finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal);
-                });
-            } else {
-                setTimeout(() => finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal), 2000);
-            }
-        }
-
-        function finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn, adModal) {
-            adModal.classList.remove('active');
-            
+        function finishStep(vidId, targetUrl, totalAds, currentStep, stepsVisuals, btn) {
             stepsVisuals[currentStep].classList.add('completed');
             stepsVisuals[currentStep].classList.remove('active');
             currentStep++;
@@ -955,19 +1002,20 @@
             if(currentStep < totalAds) {
                 stepsVisuals[currentStep].classList.add('active');
                 
-                btn.disabled = true; btn.style.opacity = '0.7';
-                let waitTime = 5;
+                btn.disabled = true; 
+                btn.style.opacity = '0.7';
+                let waitTime = 3;
                 const cInt = setInterval(() => {
                     btn.innerHTML = `<span class="material-symbols-rounded">timer</span> Wait ${waitTime}s`;
                     waitTime--;
                     if(waitTime < 0) {
                         clearInterval(cInt);
-                        btn.disabled = false; btn.style.opacity = '1';
+                        btn.disabled = false; 
+                        btn.style.opacity = '1';
                         btn.innerHTML = `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${currentStep}/${totalAds}</span>`;
                     }
                 }, 1000);
             } else {
-                // ALL STEPS DONE -> SHOW WATCH NOW & START 5 MIN TIMER
                 startUnlockTimer(vidId, targetUrl, btn, stepsVisuals, totalAds);
             }
         }
@@ -975,14 +1023,13 @@
         function startUnlockTimer(vidId, targetUrl, btn, stepsVisuals, totalAds) {
             btn.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
             btn.style.background = 'var(--success)';
-            btn.disabled = false; btn.style.opacity = '1';
+            btn.disabled = false; 
+            btn.style.opacity = '1';
             
-            // Timer Logic
-            let timeLeft = 300; // 5 minutes in seconds
+            let timeLeft = 300; // 5 minutes
             let timerDisplay = document.getElementById(`timer-${vidId}`);
             if(timerDisplay) timerDisplay.style.display = 'block';
             
-            // Clear existing timer if any
             if(window[`timerInt_${vidId}`]) clearInterval(window[`timerInt_${vidId}`]);
             
             let tInt = setInterval(() => {
@@ -1016,10 +1063,8 @@
         }
 
         // ==========================================
-        // 5. PREMIUM & TRANSACTIONS
+        // 6. PAYMENT SUBMISSION
         // ==========================================
-        let selectedMethod = '';
-        
         function openPaymentMethods(plan, price) {
             selectedPlan = plan;
             selectedPrice = price;
@@ -1064,8 +1109,41 @@
         }
 
         // ==========================================
-        // 6. ADMIN FUNCTIONS
+        // 7. ADMIN FUNCTIONS & FAST UPLOADS
         // ==========================================
+        // 🟢 Select Photo (Thumbnail Upload Function)
+        function uploadThumbnailImage(input) {
+            const file = input.files[0];
+            const statusTxt = document.getElementById('photoUploadStatus');
+            const previewBox = document.getElementById('photoPreviewBox');
+            const previewImg = document.getElementById('photoPreviewImg');
+
+            if (!file) return;
+
+            statusTxt.style.color = "var(--warning)";
+            statusTxt.innerText = "Uploading photo...";
+
+            const storageRef = storage.ref('thumbnails/' + Date.now() + '_' + file.name);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on('state_changed', 
+                null, 
+                (err) => {
+                    statusTxt.style.color = "var(--danger)";
+                    statusTxt.innerText = "Photo Upload Failed!";
+                }, 
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+                        document.getElementById('vPhoto').value = url;
+                        statusTxt.style.color = "var(--success)";
+                        statusTxt.innerText = "Photo Uploaded!";
+                        previewImg.src = url;
+                        previewBox.style.display = 'block';
+                    });
+                }
+            );
+        }
+
         function uploadVideo() {
             let title = document.getElementById('vTitle').value;
             let cat = document.getElementById('vCategory').value;
@@ -1077,14 +1155,18 @@
 
             db.collection("videos").add({
                 title: title, category: cat, photo: photo, adUrl: targetUrl, adCount: adCount,
-                views: Math.floor(Math.random() * (500 - 10) + 10) + 'K', // Random views initial
+                views: Math.floor(Math.random() * (500 - 10) + 10) + 'K',
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 alert("Video Uploaded Successfully!");
-                document.getElementById('vTitle').value = ''; document.getElementById('vPhoto').value = ''; document.getElementById('vAdUrl').value = '';
+                document.getElementById('vTitle').value = ''; 
+                document.getElementById('vPhoto').value = ''; 
+                document.getElementById('vAdUrl').value = '';
+                document.getElementById('photoPreviewBox').style.display = 'none';
             });
         }
 
+        // 🟢 FIX: Fast & Stable Tutorial Video Upload
         function uploadTutorialVideo() {
             const fileInput = document.getElementById('tutorialFileInput');
             const file = fileInput.files[0];
@@ -1092,11 +1174,11 @@
             
             if (!file) return alert("Please select a video file first.");
 
-            const storageRef = storage.ref('tutorials/' + file.name);
+            const storageRef = storage.ref('tutorials/' + Date.now() + '_' + file.name);
             const uploadTask = storageRef.put(file);
 
             progressTxt.style.color = "var(--warning)";
-            progressTxt.innerText = "Uploading... Please wait.";
+            progressTxt.innerText = "Uploading... 0%";
 
             uploadTask.on('state_changed', 
                 (snapshot) => {
@@ -1105,12 +1187,12 @@
                 }, 
                 (error) => {
                     progressTxt.style.color = "var(--danger)";
-                    progressTxt.innerText = "Upload Failed!";
+                    progressTxt.innerText = "Upload Failed! Check network.";
                 }, 
                 () => {
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                         progressTxt.style.color = "var(--success)";
-                        progressTxt.innerText = "Upload Complete!";
+                        progressTxt.innerText = "Upload Complete & Saved!";
                         document.getElementById('sTutorial').value = downloadURL;
                         saveSettings();
                     });
@@ -1233,7 +1315,7 @@
             }
         }
 
-        // --- Basic UI ---
+        // --- Basic UI Utilities ---
         function toggleTheme() {
             const isLight = document.body.parentElement.getAttribute('data-theme') === 'light';
             document.body.parentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
@@ -1249,7 +1331,6 @@
             setTimeout(() => {
                 if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)';
             }, 10);
-            if(id === 'notificationsOverlay') document.getElementById('notiDotIndicator').style.display = 'none';
         }
         function closeOverlay(e, id) { 
             if (e && e.target !== e.currentTarget) return; 
