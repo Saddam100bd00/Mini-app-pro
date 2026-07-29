@@ -11,7 +11,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
 
+    <!-- 1. Rewarded Popup Ad Code (আপনার দেওয়া ১ম অ্যাড) -->
     <script src='//libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
+    
+    <!-- 2. Rewarded Interstitial Ad Code (এখানে আপনার ২য় অ্যাডের ZONE ID বসাবেন) -->
+    <!-- <script src='//libtl.com/sdk.js' data-zone='আপনার_২য়_জোন_আইডি' data-sdk='show_interstitial_ad'></script> -->
 
     <style>
         /* --- CSS Variables & Theme --- */
@@ -66,11 +70,11 @@
         .categories-wrapper::-webkit-scrollbar { display: none; }
         .category-pill { display: inline-block; background: var(--bg-card); border: 1px solid var(--divider); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-light);}
         .category-pill.active { background: var(--primary-accent); color: white; border-color: var(--primary-accent); transform: scale(1.05); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
-        .category-tag { font-size: 11px; font-weight: 800; color: var(--primary-light); background: rgba(124, 58, 237, 0.15); padding: 4px 10px; border-radius: 8px; margin-bottom: 8px; display: inline-block; }
+        .category-tag { font-size: 11px; font-weight: 800; color: var(--text-light); background: rgba(124, 58, 237, 0.8); padding: 4px 10px; border-radius: 8px; margin-bottom: 8px; display: inline-block; }
         .video-count-badge { display: inline-flex; align-items: center; gap: 6px; background-color: var(--primary-accent); color: white; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 0 15px 15px 15px; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);}
 
         /* --- Dynamic Image Sized Video Card (Premium Design Update) --- */
-        .video-card { position: relative; background: linear-gradient(145deg, #1c1a24, #15131d); border-radius: 20px; margin: 0 15px 20px 15px; overflow: hidden; border: 1px solid rgba(124, 58, 237, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: 0.3s ease;}
+        .video-card { position: relative; background: linear-gradient(145deg, #1c1a24, #15131d); border-radius: 20px; margin: 0 15px 24px 15px; overflow: hidden; border: 1px solid rgba(124, 58, 237, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: 0.3s ease;}
         .video-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--primary-accent), transparent); opacity:0.8;}
         .thumbnail-container { position: relative; width: 100%; height: auto; min-height: 200px; background-color: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .thumb-dynamic { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -92,7 +96,7 @@
 
         .options-btn { background: none; border: none; color: var(--text-muted); padding: 4px; cursor: pointer; }
         
-        /* Unlock Steps */
+        /* Unlock Steps Visuals */
         .unlock-steps { display: flex; align-items: center; justify-content: space-between; margin: 16px 0; position: relative; }
         .unlock-steps::before { content: ''; position: absolute; top: 12px; left: 10%; right: 10%; height: 2px; background-color: var(--divider); z-index: 1; }
         .step { display: flex; flex-direction: column; align-items: center; z-index: 2; transition: 0.3s;}
@@ -101,19 +105,22 @@
         .step.completed .step-circle { background-color: var(--primary-accent); border-color: var(--primary-accent); color: white; }
         .step-label { font-size: 10px; color: var(--text-muted); font-weight: 700;}
 
-        /* AD Progress Button (Video Animation Style) */
+        /* --- AD Progress Button (Video Animation Style) --- */
         .unlock-btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3); transition: transform 0.2s, box-shadow 0.2s;}
         .unlock-btn:active { transform: translateY(2px); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); }
-        .unlock-btn.waiting { background: var(--btn-bg); color: var(--text-light); box-shadow: none; pointer-events: none;}
         
-        .btn-progress-fill { position: absolute; top: 0; left: 0; bottom: 0; width: 0%; background: rgba(124, 58, 237, 0.4); z-index: 1; transition: width 1s linear; }
+        /* Waiting state styles */
+        .unlock-btn.waiting { background: #231f30; color: #d1d5db; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
+        
+        /* Left to Right Progress Fill */
+        .btn-progress-fill { position: absolute; top: 0; left: 0; bottom: 0; width: 0%; background: linear-gradient(90deg, rgba(168, 85, 247, 0.4), rgba(124, 58, 237, 0.7)); z-index: 1; transition: width 1s linear; }
         .btn-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
 
         .direct-play-btn { background: var(--success); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: 0.3s;}
         .direct-play-btn:active { transform: translateY(2px); }
 
         /* Countdown Timer */
-        .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 8px; background: rgba(245, 158, 11, 0.1); padding: 5px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 10px; background: rgba(245, 158, 11, 0.1); padding: 8px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
 
         /* Floating Support Button */
         .floating-support { position: fixed; bottom: 85px; right: 15px; background: var(--primary-accent); color: white; padding: 8px 14px; border-radius: 20px; display: flex; align-items: center; gap: 6px; z-index: 90; text-decoration: none; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); font-weight: 600; font-size: 12px; transition: 0.3s;}
@@ -154,20 +161,29 @@
         .tut-step { background: var(--bg-dark); padding: 16px; border-radius: 16px; margin-bottom: 12px; display: flex; gap: 16px; border: 1px solid var(--divider);}
         .tut-step .num { background: var(--primary-accent); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
         
-        /* AD SIMULATION MODAL UI */
-        .ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 9, 14, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        /* =======================================================
+           🚀 PREMIUM SPINNER & LOADING MODAL UI (NEW UPDATE)
+           ======================================================= */
+        .ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 9, 14, 0.96); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .ad-modal.active { display: flex; }
         
-        .ad-card-box { background: #181524; border: 1px solid rgba(168, 85, 247, 0.25); border-radius: 24px; width: 88%; max-width: 340px; padding: 28px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; }
+        .ad-card-box { background: #181524; border: 1px solid rgba(168, 85, 247, 0.25); border-radius: 24px; width: 88%; max-width: 340px; padding: 35px 25px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
         
-        .ad-circle-progress { position: relative; width: 70px; height: 70px; margin: 0 auto 18px auto; border-radius: 50%; background: conic-gradient(var(--primary-accent) calc(var(--pg) * 1%), var(--divider) 0deg); display: flex; align-items: center; justify-content: center; transition: background 1s linear; }
-        .ad-circle-progress::before { content: ''; position: absolute; width: 58px; height: 58px; background: #181524; border-radius: 50%; }
-        .ad-circle-inner { position: relative; z-index: 2; font-size: 20px; font-weight: 800; color: white; }
+        /* Beautiful Colorful Spinner */
+        .premium-spinner-container { position: relative; width: 75px; height: 75px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; }
+        .premium-spinner { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; border: 4px solid rgba(255,255,255,0.05); border-top-color: #a855f7; border-left-color: #f59e0b; border-bottom-color: #10b981; animation: spinPremium 1s linear infinite; box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
+        @keyframes spinPremium { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .ad-status-text { font-size: 17px; font-weight: 800; color: white; margin-bottom: 6px; }
-        .ad-step-text { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+        .premium-countdown-text { position: relative; z-index: 2; font-size: 26px; font-weight: 900; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         
-        .ad-state-pill { background: rgba(124, 58, 237, 0.2); border: 1px solid var(--primary-accent); color: var(--primary-light); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-block; letter-spacing: 0.5px; }
+        .ad-status-text { font-size: 18px; font-weight: 800; color: white; margin-bottom: 8px; letter-spacing: 0.5px;}
+        .ad-step-text { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+        .ad-state-pill { background: rgba(124, 58, 237, 0.15); border: 1px solid var(--primary-accent); color: var(--primary-light); padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-block; letter-spacing: 0.5px; }
+        
+        /* Long Progress Line (Right to Left Smooth Fill) */
+        .ad-progress-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; margin-top: 25px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
+        .ad-progress-fill { height: 100%; width: 0%; background: linear-gradient(270deg, #f59e0b, #ef4444, #a855f7, #10b981); background-size: 300% 300%; animation: popGradient 3s ease infinite; border-radius: 10px; float: right; /* Float Right makes width grow towards left */ box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+        @keyframes popGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     </style>
 </head>
 <body>
@@ -232,7 +248,7 @@
         </button>
     </nav>
 
-    <!-- Sidebar Menu Added New Items -->
+    <!-- Sidebar Menu -->
     <div class="overlay" id="sidebarOverlay" onclick="closeOverlay(event, 'sidebarOverlay')" style="align-items: flex-start; justify-content: flex-start;">
         <div class="bottom-sheet" onclick="event.stopPropagation()" style="width: 280px; height: 100vh; max-height:100vh; border-radius: 0 24px 24px 0; transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);">
             <div class="sheet-header" style="margin-bottom: 30px;">
@@ -276,6 +292,7 @@
         </div>
     </div>
 
+    <!-- Rest of your Overlays -->
     <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header">
@@ -284,16 +301,13 @@
             </div>
             <div style="text-align:center; margin-bottom: 25px; margin-top:10px;">
                 <div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div>
-                
                 <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;">
                     <h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2>
                     <span id="userStatusBadge" class="badge-free">Free</span>
                 </div>
-                
                 <p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p>
                 <div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div>
             </div>
-
             <div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;">
                 <div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);">
                     <h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3>
@@ -304,7 +318,6 @@
                     <p style="font-size:12px; color:var(--text-muted); font-weight:600;">Unlocked</p>
                 </div>
             </div>
-
             <div class="list-item" onclick="copyBotLink()">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div>
@@ -312,7 +325,6 @@
                 </div>
                 <span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span>
             </div>
-
             <div class="list-item" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('tutorialOverlay');">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--warning)">help</span></div>
@@ -320,7 +332,6 @@
                 </div>
                 <span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span>
             </div>
-
             <div class="list-item" onclick="shareAppOnTelegram()">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6">send</span></div>
@@ -328,7 +339,6 @@
                 </div>
                 <span class="material-symbols-rounded" style="color:var(--text-muted)">share</span>
             </div>
-            
             <button class="unlock-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');">
                 <span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium
             </button>
@@ -635,17 +645,25 @@
         </div>
     </div>
 
-    <!-- AD SIMULATION MODAL UI -->
+    <!-- AD SIMULATION MODAL UI (NEW PREMIUM ANIMATION) -->
     <div class="ad-modal" id="adSimulationModal">
         <div class="ad-card-box">
-            <div class="ad-circle-progress" id="adCircleVisual" style="--pg: 0;">
-                <div class="ad-circle-inner" id="adTimerCount">6</div>
+            
+            <!-- Beautiful Colorful Spinner -->
+            <div class="premium-spinner-container">
+                <div class="premium-spinner"></div>
+                <div class="premium-countdown-text" id="adTimerCount">3</div>
             </div>
             
             <div class="ad-status-text" id="adStatusText">Ad 1 of 2 Playing</div>
             <div class="ad-step-text" id="adStepText">Step 1 of 3 — Please watch the full ad</div>
             
             <div class="ad-state-pill" id="adStatePill">AD STARTING...</div>
+            
+            <!-- Long Progress Line (Right to Left Smooth Fill) -->
+            <div class="ad-progress-bg">
+                <div class="ad-progress-fill" id="adLineProgress"></div>
+            </div>
             
             <div style="margin-top:20px; font-size:11px; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px;">
                 💡 এই বিজ্ঞাপনটি আপনার কাজে আসতে পারে
@@ -779,7 +797,6 @@
                 renderAdminVideoManageList();
             }
 
-            // 🟢 AUTO SCROLL TO DIRECT LINKED VIDEO IF ACCESSED VIA SHARED LINK (startapp=post_xxx)
             if(tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
                 let startParam = tg.initDataUnsafe.start_param;
                 if(startParam.startsWith('post_')) {
@@ -895,26 +912,19 @@
         });
 
         // ==========================================
-        // 4. 🟢 DIRECT MINI APP LINK GENERATOR FUNCTION (startapp=...)
+        // 4. 🟢 DIRECT MINI APP LINK GENERATOR
         // ==========================================
         function getBotLinkWithRef(extraParam = "") {
             let base = botBaseUrl.trim();
             if(!base.startsWith("http")) base = "https://t.me/" + base.replace("@", "");
-            
-            // Clean URL from any existing parameters or trailing slashes
             base = base.split("?")[0].replace(/\/$/, "");
-            
             let param = extraParam ? extraParam : `ref_${currentUser.id}`;
             return `${base}?startapp=${param}`;
         }
 
         function copyBotLink() {
             let link = getBotLinkWithRef();
-            navigator.clipboard.writeText(link).then(() => {
-                alert("My Link copied to clipboard!");
-            }).catch(() => {
-                alert("My Link: " + link);
-            });
+            navigator.clipboard.writeText(link).then(() => { alert("My Link copied to clipboard!"); });
         }
 
         function shareAppOnTelegram() {
@@ -952,7 +962,6 @@
                 let isFav = favorites.some(f => f.id === vid.id) ? 'favorite' : 'favorite_border';
                 let favColor = isFav === 'favorite' ? 'var(--danger)' : 'white';
 
-                // Real Live Like Check
                 let likedByArray = vid.likedBy || [];
                 let hasLiked = likedByArray.includes(currentUser.id);
                 let likeIcon = hasLiked ? 'favorite' : 'favorite_border';
@@ -965,7 +974,7 @@
                     : `<div class="unlock-steps" id="steps-${vid.id}">` + 
                       Array.from({length: vid.adCount}, (_, i) => `<div class="step ${i===0?'active':''}"><div class="step-circle">${i===0?'<span class="material-symbols-rounded" style="font-size:16px">play_arrow</span>':i+1}</div><span class="step-label">AD ${i+1}</span></div>`).join('') +
                       `</div>
-                      <button class="unlock-btn" id="btn-${vid.id}" data-clicks="0" onclick="handleUnlockClick('${vid.id}', '${targetUrl}', ${vid.adCount})">
+                      <button class="unlock-btn" id="btn-${vid.id}" data-step="0" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
                           <div class="btn-progress-fill" id="btn-fill-${vid.id}"></div>
                           <span class="btn-text" id="btn-text-${vid.id}">
                               <span class="material-symbols-rounded">lock</span> UNLOCK 
@@ -1006,7 +1015,7 @@
             });
         }
 
-        // Live Like System (1 Like per user)
+        // Live Like System
         function toggleLike(vidId) {
             let vid = allVideos.find(v => v.id === vidId);
             if(vid) {
@@ -1058,15 +1067,76 @@
         }
 
         function openShareDialog(vidId, title) {
-            currentShareVid = vidId;
-            currentShareTitle = title;
-            openOverlay('shareOverlay');
+            currentShareVid = vidId; currentShareTitle = title; openOverlay('shareOverlay');
         }
 
         // ==========================================
-        // MONETAG AD ANIMATED FLOW (2 Ads Per Step)
+        // 🚀 MONETAG AD FLOW & UI ANIMATION 
         // ==========================================
-        function handleUnlockClick(vidId, targetUrl, totalSteps) {
+        
+        // Helper Sleep Function
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        // Function to run the 3s Circular Countdown Modal
+        function runModalCountdown(adNum, totalSteps, currentStepIndex) {
+            return new Promise((resolve) => {
+                const adModal = document.getElementById('adSimulationModal');
+                const statusText = document.getElementById('adStatusText');
+                const stepText = document.getElementById('adStepText');
+                const pillText = document.getElementById('adStatePill');
+                const timerCount = document.getElementById('adTimerCount');
+                const progFill = document.getElementById('adLineProgress');
+
+                adModal.classList.add('active');
+                
+                statusText.innerText = `Ad ${adNum} of 2 Playing`;
+                stepText.innerText = `Step ${currentStepIndex + 1} of ${totalSteps} — Please watch the full ad`;
+                pillText.innerText = adNum === 1 ? "AD STARTING..." : "VERIFYING NOW...";
+                pillText.style.borderColor = adNum === 1 ? "var(--primary-accent)" : "var(--warning)";
+                pillText.style.color = adNum === 1 ? "var(--primary-light)" : "var(--warning)";
+
+                let countdown = 3;
+                timerCount.innerText = countdown;
+
+                // Reset CSS Animation
+                progFill.style.transition = 'none';
+                progFill.style.width = '0%';
+                
+                // Force reflow and start animation
+                setTimeout(() => {
+                    // Right to Left Progress Line fill for 3 seconds
+                    progFill.style.transition = 'width 3s linear';
+                    progFill.style.width = '100%';
+                    
+                    const intv = setInterval(() => {
+                        countdown--;
+                        if (countdown > 0) {
+                            timerCount.innerText = countdown;
+                        } else {
+                            timerCount.innerText = "✓";
+                            clearInterval(intv);
+                            setTimeout(resolve, 300);
+                        }
+                    }, 1000);
+                }, 50);
+            });
+        }
+
+        // Update Step Visual Circles
+        function updateStepVisuals(vidId, currentStep) {
+            const stepsVisuals = document.getElementById(`steps-${vidId}`).querySelectorAll('.step');
+            stepsVisuals.forEach((el, index) => {
+                el.classList.remove('active', 'completed');
+                if (index < currentStep) {
+                    el.classList.add('completed');
+                } else if (index === currentStep) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
+        // Main Handle Function
+        async function handleUnlockStep(vidId, targetUrl, totalSteps) {
             if (currentUser.isPremium) {
                 window.open(targetUrl, '_blank');
                 return;
@@ -1078,139 +1148,75 @@
                 return;
             }
 
-            let currentClicks = parseInt(btn.getAttribute('data-clicks') || "0");
-            let currentStepIndex = Math.floor(currentClicks / 2); // 0, 1, 2...
-            let currentSubAd = (currentClicks % 2) + 1; // 1 or 2
+            // Prevent multiple clicks while loading
+            if(btn.disabled) return;
+            btn.disabled = true;
 
-            // Start Modal Ad Simulation
-            const adModal = document.getElementById('adSimulationModal');
-            const statusText = document.getElementById('adStatusText');
-            const stepText = document.getElementById('adStepText');
-            const pillText = document.getElementById('adStatePill');
-            const timerCount = document.getElementById('adTimerCount');
-            const circleVisual = document.getElementById('adCircleVisual');
-            
-            adModal.classList.add('active');
-            
-            statusText.innerText = `Ad ${currentSubAd} of 2 Playing`;
-            stepText.innerText = `Step ${currentStepIndex + 1} of ${totalSteps} — Please watch the full ad`;
-            pillText.innerText = "AD STARTING...";
-            pillText.style.borderColor = "var(--primary-accent)";
-            pillText.style.color = "var(--primary-light)";
-            timerCount.innerText = "6";
-            circleVisual.style.setProperty('--pg', '0');
-
-            const showAdPromise = () => {
-                return new Promise((resolve) => {
-                    if (typeof show_11439323 === 'function') {
-                        try {
-                            show_11439323().then(() => resolve(true)).catch(() => resolve(true));
-                        } catch(e) { resolve(true); }
-                    } else {
-                        setTimeout(() => resolve(true), 2500); // fallback wait
-                    }
-                });
-            };
-
-            // 6 Seconds Countdown Animation
-            let countdown = 6;
-            const timerInterval = setInterval(() => {
-                countdown--;
-                timerCount.innerText = countdown > 0 ? countdown : "✓";
-                let pct = ((6 - countdown) / 6) * 100;
-                circleVisual.style.setProperty('--pg', pct);
-                
-                if(countdown <= 0) {
-                    clearInterval(timerInterval);
-                }
-            }, 1000);
-
-            setTimeout(async () => {
-                // Show Real Ad (or simulated wait)
-                await showAdPromise();
-
-                statusText.innerText = `Ad ${currentSubAd} of 2 Done!`;
-                stepText.innerText = `Step ${currentStepIndex + 1} of ${totalSteps} — Next step in a moment`;
-                pillText.innerText = "VERIFYING NOW...";
-                pillText.style.borderColor = "var(--warning)";
-                pillText.style.color = "var(--warning)";
-
-                let verifyCount = 3;
-                timerCount.innerText = verifyCount;
-                
-                const vInterval = setInterval(() => {
-                    verifyCount--;
-                    timerCount.innerText = verifyCount > 0 ? verifyCount : "✓";
-                    let pct = ((3 - verifyCount) / 3) * 100;
-                    circleVisual.style.setProperty('--pg', pct);
-
-                    if(verifyCount <= 0) {
-                        clearInterval(vInterval);
-                        adModal.classList.remove('active');
-                        
-                        // Increment Click Count & Process UI
-                        currentClicks++;
-                        btn.setAttribute('data-clicks', currentClicks);
-                        processAfterAd(vidId, targetUrl, totalSteps, currentClicks);
-                    }
-                }, 1000);
-
-            }, 6500); 
-        }
-
-        function processAfterAd(vidId, targetUrl, totalSteps, currentClicks) {
-            const btn = document.getElementById(`btn-${vidId}`);
-            const btnFill = document.getElementById(`btn-fill-${vidId}`);
+            let currentStep = parseInt(btn.getAttribute('data-step') || "0");
             const btnText = document.getElementById(`btn-text-${vidId}`);
-            const stepsVisuals = document.getElementById(`steps-${vidId}`).querySelectorAll('.step');
-            
-            let completedSteps = Math.floor(currentClicks / 2);
-            let totalNeededClicks = totalSteps * 2;
+            const btnFill = document.getElementById(`btn-fill-${vidId}`);
 
-            // Update Steps UI
-            stepsVisuals.forEach((el, index) => {
-                el.classList.remove('active', 'completed');
-                if (index < completedSteps) {
-                    el.classList.add('completed');
-                } else if (index === completedSteps) {
-                    el.classList.add('active');
+            // === 1. 3s Loading Ad 1 (Modal) ===
+            await runModalCountdown(1, totalSteps, currentStep);
+
+            // === 2. Play Ad 1 (Rewarded Popup) ===
+            try {
+                if (typeof show_11439323 === 'function') {
+                    await show_11439323('pop');
+                } else {
+                    await sleep(1000);
                 }
-            });
+            } catch(e) { console.log(e); }
 
-            if (currentClicks >= totalNeededClicks) {
-                // Fully Unlocked!
-                startUnlockTimer(vidId, targetUrl, btn, stepsVisuals, totalSteps);
+            // === 3. 3s Loading Ad 2 (Modal) ===
+            await runModalCountdown(2, totalSteps, currentStep);
+
+            // === 4. Play Ad 2 (Rewarded Interstitial) ===
+            try {
+                if (typeof show_11439323 === 'function') {
+                    await show_11439323();
+                } else {
+                    await sleep(1000); 
+                }
+            } catch(e) { console.log(e); }
+
+            // Close Modal After Ads are done
+            document.getElementById('adSimulationModal').classList.remove('active');
+
+            // === 5. Step Processing & Button Animation ===
+            currentStep++;
+            btn.setAttribute('data-step', currentStep.toString());
+            updateStepVisuals(vidId, currentStep);
+
+            if(currentStep >= totalSteps) {
+                // Completely Unlocked!
+                startUnlockTimer(vidId, targetUrl, btn, totalSteps);
             } else {
-                // Wait 6s Button Animation (Left to Right Fill)
-                btn.disabled = true;
-                btn.classList.add('waiting'); 
-                
-                let waitTime = 6;
+                // Wait 5 Seconds on the button (Left to Right Fill)
+                btn.classList.add('waiting');
                 btnFill.style.transition = 'none';
                 btnFill.style.width = '0%';
-                
-                // Allow browser to render reset before animating
+
                 setTimeout(() => {
-                    btnFill.style.transition = 'width 1s linear';
+                    btnFill.style.transition = 'width 5s linear';
+                    btnFill.style.width = '100%';
+
+                    let waitTime = 5;
                     btnText.innerHTML = `<span class="material-symbols-rounded">timer</span> Wait ${waitTime}s for Next Step`;
-                    
+
                     const waitInt = setInterval(() => {
                         waitTime--;
-                        let pct = ((6 - waitTime) / 6) * 100;
-                        btnFill.style.width = pct + '%';
-                        
                         if(waitTime > 0) {
                             btnText.innerHTML = `<span class="material-symbols-rounded">timer</span> Wait ${waitTime}s for Next Step`;
                         } else {
+                            // Timer Done
                             clearInterval(waitInt);
-                            // Enable button for next ad
-                            btn.disabled = false;
-                            btn.classList.remove('waiting');
+                            btnFill.style.transition = 'none';
                             btnFill.style.width = '0%';
+                            btn.classList.remove('waiting');
+                            btn.disabled = false;
                             
-                            let displayStep = Math.floor(currentClicks / 2) + 1;
-                            if(displayStep > totalSteps) displayStep = totalSteps;
-                            
+                            let displayStep = currentStep + 1 > totalSteps ? totalSteps : currentStep + 1;
                             btnText.innerHTML = `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${displayStep}/${totalSteps}</span>`;
                         }
                     }, 1000);
@@ -1218,14 +1224,16 @@
             }
         }
 
-        function startUnlockTimer(vidId, targetUrl, btn, stepsVisuals, totalSteps) {
+        function startUnlockTimer(vidId, targetUrl, btn, totalSteps) {
             const btnText = document.getElementById(`btn-text-${vidId}`);
             const btnFill = document.getElementById(`btn-fill-${vidId}`);
             
             btn.classList.remove('waiting');
+            btnFill.style.transition = 'none';
             btnFill.style.width = '0%';
             btnText.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
             btn.style.background = 'var(--success)';
+            btn.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.4)';
             btn.disabled = false; 
             
             let timeLeft = 300; 
@@ -1243,7 +1251,7 @@
                 if(timeLeft < 0) {
                     clearInterval(tInt);
                     if(timerDisplay) timerDisplay.style.display = 'none';
-                    resetVideoCard(vidId, totalSteps, btn, btnText, stepsVisuals);
+                    resetVideoCard(vidId, totalSteps, btn, btnText);
                 }
             }, 1000);
             
@@ -1254,15 +1262,12 @@
             updateLocalStatsUI();
         }
 
-        function resetVideoCard(vidId, totalSteps, btn, btnText, stepsVisuals) {
-            btn.setAttribute('data-clicks', '0');
+        function resetVideoCard(vidId, totalSteps, btn, btnText) {
+            btn.setAttribute('data-step', '0');
             btnText.innerHTML = `<span class="material-symbols-rounded">lock</span> UNLOCK <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">0/${totalSteps}</span>`;
             btn.style.background = 'linear-gradient(135deg, #a855f7, #7c3aed)';
-            
-            stepsVisuals.forEach((el, i) => {
-                el.classList.remove('completed', 'active');
-                if(i === 0) el.classList.add('active');
-            });
+            btn.style.boxShadow = '0 8px 20px rgba(124, 58, 237, 0.3)';
+            updateStepVisuals(vidId, 0);
         }
 
         // ==========================================
