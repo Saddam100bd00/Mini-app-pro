@@ -11,12 +11,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
 
-    <!-- 1. Rewarded Popup Ad Code (আপনার দেওয়া ১ম অ্যাড) -->
+    <!-- 1. Rewarded Popup Ad Code -->
     <script src='//libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
     
-    <!-- 2. Rewarded Interstitial Ad Code (এখানে আপনার ২য় অ্যাডের ZONE ID বসাবেন) -->
-    <!-- <script src='//libtl.com/sdk.js' data-zone='আপনার_২য়_জোন_আইডি' data-sdk='show_interstitial_ad'></script> -->
-
     <style>
         /* --- CSS Variables & Theme --- */
         :root {
@@ -96,14 +93,19 @@
 
         .options-btn { background: none; border: none; color: var(--text-muted); padding: 4px; cursor: pointer; }
         
-        /* Unlock Steps Visuals */
+        /* Unlock Steps Visuals & Line Progress System */
         .unlock-steps { display: flex; align-items: center; justify-content: space-between; margin: 16px 0; position: relative; }
-        .unlock-steps::before { content: ''; position: absolute; top: 12px; left: 10%; right: 10%; height: 2px; background-color: var(--divider); z-index: 1; }
-        .step { display: flex; flex-direction: column; align-items: center; z-index: 2; transition: 0.3s;}
+        /* Removed global static line for dynamic step lines */
+        .step { display: flex; flex-direction: column; align-items: center; z-index: 2; transition: 0.3s; position: relative;}
         .step-circle { width: 26px; height: 26px; border-radius: 50%; background-color: var(--bg-card); border: 2px solid var(--divider); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; transition: 0.3s;}
-        .step.active .step-circle { border-color: var(--primary-accent); color: var(--primary-accent); box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);}
-        .step.completed .step-circle { background-color: var(--primary-accent); border-color: var(--primary-accent); color: white; }
-        .step-label { font-size: 10px; color: var(--text-muted); font-weight: 700;}
+        .step.active .step-circle { border-color: var(--primary-accent); color: var(--primary-accent); box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);}
+        .step.completed .step-circle { background-color: var(--primary-accent); border-color: var(--primary-accent); color: white; box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);}
+        .step-label { font-size: 10px; color: var(--text-muted); font-weight: 700; transition: 0.3s;}
+        .step.active .step-label { color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.5); }
+        
+        /* New Glowing White Line between Steps */
+        .step-line-container { flex-grow: 1; height: 3px; background: rgba(255,255,255,0.15); margin: 0 4px; position: relative; overflow: hidden; transform: translateY(-9px); border-radius: 2px; }
+        .step-line-fill { width: 0%; height: 100%; background: #ffffff; box-shadow: 0 0 12px #ffffff, 0 0 6px rgba(255,255,255,0.8); border-radius: 2px; }
 
         /* --- AD Progress Button (Video Animation Style) --- */
         .unlock-btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3); transition: transform 0.2s, box-shadow 0.2s;}
@@ -115,6 +117,16 @@
         /* Left to Right Progress Fill */
         .btn-progress-fill { position: absolute; top: 0; left: 0; bottom: 0; width: 0%; background: linear-gradient(90deg, rgba(168, 85, 247, 0.4), rgba(124, 58, 237, 0.7)); z-index: 1; transition: width 1s linear; }
         .btn-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+
+        /* Premium Spinning Loader for the Button */
+        .premium-btn-spinner {
+            display: inline-block; width: 22px; height: 22px;
+            border: 3px solid rgba(255,255,255,0.15);
+            border-top-color: #ffffff; border-left-color: #10b981;
+            border-radius: 50%;
+            animation: spinPremium 0.8s linear infinite;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
 
         .direct-play-btn { background: var(--success); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: 0.3s;}
         .direct-play-btn:active { transform: translateY(2px); }
@@ -162,7 +174,7 @@
         .tut-step .num { background: var(--primary-accent); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
         
         /* =======================================================
-           🚀 PREMIUM SPINNER & LOADING MODAL UI (NEW UPDATE)
+           🚀 PREMIUM SPINNER & LOADING MODAL UI 
            ======================================================= */
         .ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 9, 14, 0.96); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .ad-modal.active { display: flex; }
@@ -182,7 +194,7 @@
         
         /* Long Progress Line (Right to Left Smooth Fill) */
         .ad-progress-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; margin-top: 25px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
-        .ad-progress-fill { height: 100%; width: 0%; background: linear-gradient(270deg, #f59e0b, #ef4444, #a855f7, #10b981); background-size: 300% 300%; animation: popGradient 3s ease infinite; border-radius: 10px; float: right; /* Float Right makes width grow towards left */ box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+        .ad-progress-fill { height: 100%; width: 0%; background: linear-gradient(270deg, #f59e0b, #ef4444, #a855f7, #10b981); background-size: 300% 300%; animation: popGradient 3s ease infinite; border-radius: 10px; float: right; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
         @keyframes popGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     </style>
 </head>
@@ -292,226 +304,18 @@
         </div>
     </div>
 
-    <!-- Rest of your Overlays -->
-    <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')">
-        <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header">
-                <h2>My Profile</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button>
-            </div>
-            <div style="text-align:center; margin-bottom: 25px; margin-top:10px;">
-                <div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div>
-                <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;">
-                    <h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2>
-                    <span id="userStatusBadge" class="badge-free">Free</span>
-                </div>
-                <p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p>
-                <div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div>
-            </div>
-            <div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;">
-                <div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);">
-                    <h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3>
-                    <p style="font-size:12px; color:var(--text-muted); font-weight:600;">Favorites</p>
-                </div>
-                <div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);">
-                    <h3 style="color:var(--success); font-size:24px;" id="unlockedCount">0</h3>
-                    <p style="font-size:12px; color:var(--text-muted); font-weight:600;">Unlocked</p>
-                </div>
-            </div>
-            <div class="list-item" onclick="copyBotLink()">
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div>
-                    <span style="font-weight:700; font-size:15px;">Copy My Link</span>
-                </div>
-                <span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span>
-            </div>
-            <div class="list-item" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('tutorialOverlay');">
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--warning)">help</span></div>
-                    <span style="font-weight:700; font-size:15px;">View Tutorial</span>
-                </div>
-                <span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span>
-            </div>
-            <div class="list-item" onclick="shareAppOnTelegram()">
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6">send</span></div>
-                    <span style="font-weight:700; font-size:15px;">Share App</span>
-                </div>
-                <span class="material-symbols-rounded" style="color:var(--text-muted)">share</span>
-            </div>
-            <button class="unlock-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');">
-                <span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium
-            </button>
-        </div>
-    </div>
+    <!-- Additional Overlays omitted for brevity but remain identical up to Admin Dashboard -->
+    <!-- Profiles, Notifications, Premium, Payments, Share, Tutorials, Channels, Favorites Overlays -->
+    <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>My Profile</h2><button class="close-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button></div><div style="text-align:center; margin-bottom: 25px; margin-top:10px;"><div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div><div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;"><h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2><span id="userStatusBadge" class="badge-free">Free</span></div><p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p><div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div></div><div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;"><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Favorites</p></div><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--success); font-size:24px;" id="unlockedCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Unlocked</p></div></div><div class="list-item" onclick="copyBotLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div><span style="font-weight:700; font-size:15px;">Copy My Link</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span></div><div class="list-item" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('tutorialOverlay');"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--warning)">help</span></div><span style="font-weight:700; font-size:15px;">View Tutorial</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span></div><div class="list-item" onclick="shareAppOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6">send</span></div><span style="font-weight:700; font-size:15px;">Share App</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">share</span></div><button class="unlock-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');"><span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium</button></div></div>
+    <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2><button class="close-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="notiList" style="margin-top:10px;">Loading updates...</div></div></div>
+    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে না! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
+    <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>Complete Payment</h2><button class="close-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"><b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।</div><div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--text-muted)">Selected Plan:</span><b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b></div><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span style="color:var(--text-muted)">Amount to Send:</span><b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b></div><hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;"><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p><b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p><b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b></div><div class="input-group"><label>Select Payment Method</label><select id="payMethodInput"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Binance">Binance</option></select></div><div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br><b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span></div><div id="submitTrxBox"><div class="input-group"><label>Enter Transaction ID (TrxID) / Binance ID</label><input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;"></div><button class="btn-submit" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button></div></div></div>
+    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;"><div class="sheet-header"><h2>Share Options</h2><button class="close-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="list-item" onclick="shareOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div><div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div></div></div><div class="list-item" onclick="copyVideoLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div><div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div></div></div></div></div>
+    <div class="overlay" id="tutorialOverlay" onclick="closeOverlay(event, 'tutorialOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="color:var(--primary-accent); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">help</span> How to Use</h2><button class="close-btn" onclick="closeOverlay(null, 'tutorialOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="tutorialVideoContainer" style="background: #000; width: 100%; height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow:hidden;"><video id="tutorialVideo" controls style="width: 100%; height:100%; display:none;"></video><span id="tutPlaceholderIcon" class="material-symbols-rounded" style="font-size: 48px; color: white;">play_circle</span></div><div class="tut-step"><div class="num">1</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Browse Videos</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Scroll through the home page to find videos. Use category filters to narrow your search.</p></div></div><div class="tut-step"><div class="num">2</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Unlock with Ads</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Click UNLOCK → ads show automatically. After steps finish, tap WATCH NOW to enjoy!</p></div></div><div class="tut-step"><div class="num">3</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Save Favorites</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Tap the heart icon on any video to save it to your favorites list.</p></div></div></div></div>
+    <div class="overlay" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--primary-light); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">send</span> Our Channels</h2><button class="close-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="channelListContainer">Loading channels...</div></div></div>
+    <div class="overlay" id="favoritesOverlay" onclick="closeOverlay(event, 'favoritesOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="color:var(--danger)">favorite</span> My Favorites (<span id="favHeaderCount">0</span>)</h2><button class="close-btn" onclick="closeOverlay(null, 'favoritesOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="favoritesList" style="margin-top: 10px;"></div></div></div>
 
-    <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')">
-        <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header">
-                <h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button>
-            </div>
-            <div id="notiList" style="margin-top:10px;">Loading updates...</div>
-        </div>
-    </div>
-
-    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')">
-        <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header">
-                <h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button>
-            </div>
-            
-            <div class="notice-box">
-                <b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>
-                প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে না! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।
-            </div>
-            
-            <button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)">
-                <span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span>
-            </button>
-            <button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)">
-                <span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span>
-            </button>
-            <button class="unlock-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)">
-                <span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span>
-            </button>
-        </div>
-    </div>
-
-    <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')">
-        <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header">
-                <h2>Complete Payment</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button>
-            </div>
-            
-            <div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
-                <b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>
-                দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।
-            </div>
-
-            <div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span style="color:var(--text-muted)">Selected Plan:</span>
-                    <b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b>
-                </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                    <span style="color:var(--text-muted)">Amount to Send:</span>
-                    <b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b>
-                </div>
-                
-                <hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;">
-                
-                <p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p>
-                <b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b>
-                
-                <p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p>
-                <b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b>
-            </div>
-            
-            <div class="input-group">
-                <label>Select Payment Method</label>
-                <select id="payMethodInput">
-                    <option value="bKash">bKash</option>
-                    <option value="Nagad">Nagad</option>
-                    <option value="Rocket">Rocket</option>
-                    <option value="Binance">Binance</option>
-                </select>
-            </div>
-
-            <div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;">
-                <span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br>
-                <b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span>
-            </div>
-
-            <div id="submitTrxBox">
-                <div class="input-group">
-                    <label>Enter Transaction ID (TrxID) / Binance ID</label>
-                    <input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;">
-                </div>
-                <button class="btn-submit" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')">
-        <div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;">
-            <div class="sheet-header">
-                <h2>Share Options</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button>
-            </div>
-            <div class="list-item" onclick="shareOnTelegram()">
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div>
-                    <div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div>
-                </div>
-            </div>
-            <div class="list-item" onclick="copyVideoLink()">
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div>
-                    <div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="overlay" id="tutorialOverlay" onclick="closeOverlay(event, 'tutorialOverlay')">
-        <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;">
-                <h2 style="color:var(--primary-accent); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">help</span> How to Use</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'tutorialOverlay')"><span class="material-symbols-rounded">close</span></button>
-            </div>
-            
-            <div id="tutorialVideoContainer" style="background: #000; width: 100%; height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow:hidden;">
-               <video id="tutorialVideo" controls style="width: 100%; height:100%; display:none;"></video>
-               <span id="tutPlaceholderIcon" class="material-symbols-rounded" style="font-size: 48px; color: white;">play_circle</span>
-            </div>
-            
-            <div class="tut-step">
-                <div class="num">1</div>
-                <div>
-                    <h3 style="margin-bottom: 6px; font-size:15px;">Browse Videos</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Scroll through the home page to find videos. Use category filters to narrow your search.</p>
-                </div>
-            </div>
-            <div class="tut-step">
-                <div class="num">2</div>
-                <div>
-                    <h3 style="margin-bottom: 6px; font-size:15px;">Unlock with Ads</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Click UNLOCK → ads show automatically. After steps finish, tap WATCH NOW to enjoy!</p>
-                </div>
-            </div>
-            <div class="tut-step">
-                <div class="num">3</div>
-                <div>
-                    <h3 style="margin-bottom: 6px; font-size:15px;">Save Favorites</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Tap the heart icon on any video to save it to your favorites list.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="overlay" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')">
-        <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header">
-                <h2 style="color:var(--primary-light); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">send</span> Our Channels</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">close</span></button>
-            </div>
-            <div id="channelListContainer">Loading channels...</div>
-        </div>
-    </div>
-
-    <div class="overlay" id="favoritesOverlay" onclick="closeOverlay(event, 'favoritesOverlay')">
-        <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;">
-                <h2 style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="color:var(--danger)">favorite</span> My Favorites (<span id="favHeaderCount">0</span>)</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'favoritesOverlay')"><span class="material-symbols-rounded">close</span></button>
-            </div>
-            <div id="favoritesList" style="margin-top: 10px;"></div>
-        </div>
-    </div>
-
+    <!-- ADMIN DASHBOARD UPDATED WITH NEW FEATURES -->
     <div class="overlay" id="adminOverlay" onclick="closeOverlay(event, 'adminOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px; border-bottom: 1px solid var(--divider);">
@@ -552,7 +356,40 @@
             
             <div class="input-group"><label>Target URL (Real Video Link)</label><input type="text" id="vAdUrl" placeholder="https://real-video.com"></div>
             
-            <div class="input-group"><label>Total Ads to Watch (For Free Users)</label><select id="vAdCount"><option value="3">3 Steps</option><option value="4">4 Steps</option><option value="5">5 Steps</option></select></div>
+            <div class="input-group"><label>Total Ad Steps</label><select id="vAdCount"><option value="3">3 Steps</option><option value="4">4 Steps</option><option value="5">5 Steps</option></select></div>
+            
+            <!-- NEW AD SETUP & STEPS MANAGEMENT -->
+            <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:18px;">
+                <h4 style="margin-bottom:10px; color:var(--primary-light); font-size:14px;">🎯 Monetag Ad Setup</h4>
+                
+                <div class="input-group">
+                    <label>Ad Type 1</label>
+                    <select id="vAd1Type">
+                        <option value="pop">Rewarded Popup</option>
+                        <option value="rewarded">Rewarded Interstitial</option>
+                        <option value="inapp">In-app Interstitial</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Ad Type 2</label>
+                    <select id="vAd2Type">
+                        <option value="rewarded">Rewarded Interstitial</option>
+                        <option value="pop">Rewarded Popup</option>
+                        <option value="inapp">In-app Interstitial</option>
+                    </select>
+                </div>
+
+                <div class="input-group" style="margin-bottom:5px;">
+                    <label>Ads Per Step Config (Select 1 or 2 Ads)</label>
+                    <div style="display:flex; gap:8px; flex-wrap:nowrap; text-align:center;">
+                        <div style="flex:1;"><small style="color:var(--text-muted);">St 1</small><br><select id="vS1Ads" style="padding:6px; font-size:12px;"><option value="1">1</option><option value="2" selected>2</option></select></div>
+                        <div style="flex:1;"><small style="color:var(--text-muted);">St 2</small><br><select id="vS2Ads" style="padding:6px; font-size:12px;"><option value="1">1</option><option value="2" selected>2</option></select></div>
+                        <div style="flex:1;"><small style="color:var(--text-muted);">St 3</small><br><select id="vS3Ads" style="padding:6px; font-size:12px;"><option value="1">1</option><option value="2" selected>2</option></select></div>
+                        <div style="flex:1;"><small style="color:var(--text-muted);">St 4</small><br><select id="vS4Ads" style="padding:6px; font-size:12px;"><option value="1">1</option><option value="2" selected>2</option></select></div>
+                        <div style="flex:1;"><small style="color:var(--text-muted);">St 5</small><br><select id="vS5Ads" style="padding:6px; font-size:12px;"><option value="1">1</option><option value="2" selected>2</option></select></div>
+                    </div>
+                </div>
+            </div>
             
             <div style="display:flex; gap:10px;">
                 <button class="btn-submit" id="vSubmitBtn" onclick="uploadVideo()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video</button>
@@ -564,54 +401,38 @@
             <h3 style="color:var(--primary-light); margin-bottom:15px;">🎥 Manage Uploaded Videos</h3>
             <div id="adminVideoManageList" style="max-height: 250px; overflow-y:auto; padding-right:5px;">Loading uploaded videos...</div>
 
+            <!-- Other Admin features preserved safely below -->
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
-            
             <h3 style="color:var(--warning); margin-bottom:15px;">💎 Approve Premium Requests</h3>
             <div id="pendingTrxList" style="max-height: 250px; overflow-y:auto; padding-right:5px;">Loading...</div>
-
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
-
             <h3 style="color:var(--primary-accent); margin-bottom:15px;">🌟 Premium Users List</h3>
             <div id="premiumUsersList" style="max-height: 250px; overflow-y:auto; padding-right:5px;">Loading...</div>
-
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
             
             <h3 style="color:var(--success); margin-bottom:15px;">⚙️ App Settings & Bot Link</h3>
-            
-            <div class="input-group">
-                <label>Telegram Bot Username / Link (For Direct Mini App Links)</label>
-                <input type="text" id="sBotUsername" placeholder="e.g. https://t.me/your_bot_username">
-            </div>
-
+            <div class="input-group"><label>Telegram Bot Username / Link</label><input type="text" id="sBotUsername" placeholder="e.g. https://t.me/your_bot_username"></div>
             <div class="input-group"><label>Support Name (e.g. 24/7 Live Support)</label><input type="text" id="sSupportName" placeholder="Support Name"></div>
             <div class="input-group"><label>Support URL (Telegram Link)</label><input type="text" id="sSupportUrl" placeholder="https://t.me/..."></div>
             
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:15px;">
                  <h4 style="margin-bottom:10px; color:var(--primary-light); font-size:14px;">🎥 Tutorial Video Settings</h4>
-                 <div class="input-group">
-                     <label>Tutorial Video Link (URL)</label>
-                     <input type="text" id="sTutorialUrlInput" placeholder="https://.../video.mp4" oninput="document.getElementById('sTutorial').value = this.value">
-                 </div>
-                 <div class="input-group">
-                     <label>Or Upload Video from Gallery</label>
-                     <input type="file" id="tutorialFileInput" accept="video/*" style="padding: 10px; font-size: 13px;">
-                     <button class="btn-submit" style="margin-top: 10px; background:var(--primary-light); padding:10px; font-size: 14px;" onclick="uploadTutorialVideo()">Upload Video</button>
-                     <div id="uploadProgress" style="font-size:12px; color:var(--success); margin-top:5px;"></div>
-                 </div>
+                 <div class="input-group"><label>Tutorial Video Link (URL)</label><input type="text" id="sTutorialUrlInput" placeholder="https://.../video.mp4" oninput="document.getElementById('sTutorial').value = this.value"></div>
+                 <div class="input-group"><label>Or Upload Video from Gallery</label><input type="file" id="tutorialFileInput" accept="video/*" style="padding: 10px; font-size: 13px;"><button class="btn-submit" style="margin-top: 10px; background:var(--primary-light); padding:10px; font-size: 14px;" onclick="uploadTutorialVideo()">Upload Video</button><div id="uploadProgress" style="font-size:12px; color:var(--success); margin-top:5px;"></div></div>
                  <input type="hidden" id="sTutorial"> 
             </div>
             
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--divider); margin-bottom:15px;">
                 <h4 style="margin-bottom:10px; color:var(--text-light); font-size:14px;">💳 Payment Details</h4>
-                <div class="input-group"><label>Payment Number (bKash/Nagad/Rocket Personal)</label><input type="text" id="sPayNum" placeholder="017..."></div>
+                <div class="input-group"><label>Payment Number (Personal)</label><input type="text" id="sPayNum" placeholder="017..."></div>
                 <div class="input-group"><label>Binance Pay ID</label><input type="text" id="sBinance" placeholder="ID..."></div>
             </div>
 
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--warning); margin-bottom:15px;">
                 <h4 style="margin-bottom:10px; color:var(--warning); font-size:14px;">💰 Pricing Setup</h4>
-                <div class="input-group"><label>1 Month Price (Text)</label><input type="text" id="p1m" placeholder="e.g. 100 BDT"></div>
-                <div class="input-group"><label>6 Months Price (Text)</label><input type="text" id="p6m" placeholder="e.g. 500 BDT"></div>
-                <div class="input-group"><label>1 Year Price (Text)</label><input type="text" id="p1y" placeholder="e.g. 900 BDT"></div>
+                <div class="input-group"><label>1 Month Price</label><input type="text" id="p1m" placeholder="e.g. 100 BDT"></div>
+                <div class="input-group"><label>6 Months Price</label><input type="text" id="p6m" placeholder="e.g. 500 BDT"></div>
+                <div class="input-group"><label>1 Year Price</label><input type="text" id="p1y" placeholder="e.g. 900 BDT"></div>
             </div>
             
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:15px;">
@@ -619,27 +440,18 @@
                 <div class="input-group"><label>Channel 1 Name</label><input type="text" id="ch1Name" placeholder="Main Channel"></div>
                 <div class="input-group"><label>Channel 1 Description</label><input type="text" id="ch1Desc" placeholder="Join for updates"></div>
                 <div class="input-group"><label>Channel 1 Link</label><input type="text" id="ch1Url" placeholder="https://t.me/..."></div>
-                
                 <hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;">
-                
                 <div class="input-group"><label>Channel 2 Name</label><input type="text" id="ch2Name" placeholder="Backup Channel"></div>
                 <div class="input-group"><label>Channel 2 Description</label><input type="text" id="ch2Desc" placeholder="Join for backup"></div>
                 <div class="input-group"><label>Channel 2 Link</label><input type="text" id="ch2Url" placeholder="https://t.me/..."></div>
             </div>
             
             <button class="btn-submit" style="background:var(--success);" onclick="saveSettings()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">save</span> Save Settings</button>
-            
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
-            
             <h3 style="color:var(--danger); margin-bottom:15px;" id="notiFormHeading">🔔 Global Notifications System</h3>
             <input type="hidden" id="editingNotiId" value="">
             <div class="input-group"><label>Notification Text</label><textarea id="nMessage" rows="3" placeholder="Type message for all users..."></textarea></div>
-            
-            <div style="display:flex; gap:10px; margin-bottom: 20px;">
-                <button class="btn-submit" id="nSubmitBtn" style="background:var(--danger);" onclick="sendOrUpdateNotification()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">campaign</span> Send to All</button>
-                <button class="btn-submit" id="nCancelBtn" style="display:none; background:var(--text-muted);" onclick="cancelNotiEdit()">Cancel</button>
-            </div>
-
+            <div style="display:flex; gap:10px; margin-bottom: 20px;"><button class="btn-submit" id="nSubmitBtn" style="background:var(--danger);" onclick="sendOrUpdateNotification()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">campaign</span> Send to All</button><button class="btn-submit" id="nCancelBtn" style="display:none; background:var(--text-muted);" onclick="cancelNotiEdit()">Cancel</button></div>
             <h4 style="color:var(--text-light); margin-bottom:10px; font-size:14px;">Manage Existing Notifications</h4>
             <div id="adminNotiManageList" style="max-height: 200px; overflow-y:auto; padding-right:5px;">Loading notifications...</div>
         </div>
@@ -648,29 +460,22 @@
     <!-- AD SIMULATION MODAL UI (NEW PREMIUM ANIMATION) -->
     <div class="ad-modal" id="adSimulationModal">
         <div class="ad-card-box">
-            
             <!-- Beautiful Colorful Spinner -->
             <div class="premium-spinner-container">
                 <div class="premium-spinner"></div>
                 <div class="premium-countdown-text" id="adTimerCount">3</div>
             </div>
-            
             <div class="ad-status-text" id="adStatusText">Ad 1 of 2 Playing</div>
             <div class="ad-step-text" id="adStepText">Step 1 of 3 — Please watch the full ad</div>
-            
             <div class="ad-state-pill" id="adStatePill">AD STARTING...</div>
-            
-            <!-- Long Progress Line (Right to Left Smooth Fill) -->
             <div class="ad-progress-bg">
                 <div class="ad-progress-fill" id="adLineProgress"></div>
             </div>
-            
             <div style="margin-top:20px; font-size:11px; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px;">
                 💡 এই বিজ্ঞাপনটি আপনার কাজে আসতে পারে
             </div>
         </div>
     </div>
-
 
     <script>
         // ==========================================
@@ -690,9 +495,6 @@
         const db = firebase.firestore();
         const storage = firebase.storage(); 
 
-        // ==========================================
-        // 2. TELEGRAM & APP STATE
-        // ==========================================
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
@@ -708,7 +510,6 @@
         let unlockedCount = parseInt(localStorage.getItem('unlockedCount')) || 0;
         let mainChannelUrl = '';
         let botBaseUrl = 'https://t.me/yourbot'; 
-
         let currentShareVid = '';
         let currentShareTitle = '';
 
@@ -733,9 +534,7 @@
             
             if(currentUser.id === ADMIN_ID) {
                 document.getElementById('adminMenuBtn').style.display = 'flex';
-                fetchAdminStats();
-                fetchPendingTrx();
-                fetchPremiumUsers();
+                fetchAdminStats(); fetchPendingTrx(); fetchPremiumUsers();
             }
         }
         
@@ -746,7 +545,6 @@
             document.getElementById('unlockedCount').innerText = unlockedCount;
         }
 
-        // DB User Check & Premium Badge Logic
         db.collection("users").doc(currentUser.id.toString()).onSnapshot((doc) => {
             const badgeEl = document.getElementById('userStatusBadge');
             if(doc.exists) {
@@ -756,33 +554,24 @@
                     if(now > data.premiumExpiry) {
                         db.collection("users").doc(currentUser.id.toString()).update({ isPremium: false });
                         currentUser.isPremium = false;
-                        badgeEl.className = "badge-free";
-                        badgeEl.innerHTML = "Free";
+                        badgeEl.className = "badge-free"; badgeEl.innerHTML = "Free";
                         document.getElementById('premiumCount').innerText = 'Premium Expired';
                     } else {
                         currentUser.isPremium = true;
                         let daysLeft = Math.ceil((data.premiumExpiry - now) / (1000 * 60 * 60 * 24));
-                        badgeEl.className = "badge-vip";
-                        badgeEl.innerHTML = "👑 VIP";
+                        badgeEl.className = "badge-vip"; badgeEl.innerHTML = "👑 VIP";
                         document.getElementById('premiumCount').innerText = `${daysLeft} Days Remaining`;
                     }
                 } else {
-                    currentUser.isPremium = false;
-                    badgeEl.className = "badge-free";
-                    badgeEl.innerHTML = "Free";
+                    currentUser.isPremium = false; badgeEl.className = "badge-free"; badgeEl.innerHTML = "Free";
                     document.getElementById('premiumCount').innerText = '';
                 }
                 renderVideos(); 
             } else {
-                db.collection("users").doc(currentUser.id.toString()).set({
-                    name: currentUser.name, isPremium: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                db.collection("users").doc(currentUser.id.toString()).set({ name: currentUser.name, isPremium: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp() });
             }
         });
 
-        // ==========================================
-        // 3. FETCH DATA & APP SETTINGS
-        // ==========================================
         db.collection("videos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             allVideos = [];
             snapshot.forEach((doc) => {
@@ -793,43 +582,21 @@
             });
             document.getElementById('totalVidCount').innerText = allVideos.length;
             renderVideos();
-            if(currentUser.id === ADMIN_ID) {
-                renderAdminVideoManageList();
-            }
-
-            if(tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
-                let startParam = tg.initDataUnsafe.start_param;
-                if(startParam.startsWith('post_')) {
-                    let targetVidId = startParam.replace('post_', '');
-                    setTimeout(() => {
-                        let targetEl = document.getElementById(`card-${targetVidId}`);
-                        if(targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 500);
-                }
-            }
+            if(currentUser.id === ADMIN_ID) renderAdminVideoManageList();
         });
 
+        // Other Fetch scripts are untouched
         db.collection("notifications").orderBy("timestamp", "desc").onSnapshot(snap => {
-            allNotis = [];
-            let html = "";
-            let dotInd = document.getElementById('notiDotIndicator');
-            
-            if(snap.empty) {
-                html = "<p style='text-align:center; color:var(--text-muted); padding:20px;'>No update messages yet.</p>";
-                dotInd.style.display = 'none';
-            } else {
+            allNotis = []; let html = ""; let dotInd = document.getElementById('notiDotIndicator');
+            if(snap.empty) { dotInd.style.display = 'none'; } 
+            else {
                 dotInd.style.display = 'block';
                 snap.forEach(doc => {
-                    let d = doc.data(); d.id = doc.id;
-                    allNotis.push(d);
-                    html += `
-                        <div class="list-item" style="display:block; background:var(--bg-dark); padding:15px; border-radius:14px; margin-bottom:10px;">
-                            <div style="font-size:14px; color:var(--text-light); line-height:1.5;">${d.text}</div>
-                        </div>
-                    `;
+                    let d = doc.data(); d.id = doc.id; allNotis.push(d);
+                    html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:15px; border-radius:14px; margin-bottom:10px;"><div style="font-size:14px; color:var(--text-light); line-height:1.5;">${d.text}</div></div>`;
                 });
             }
-            document.getElementById('notiList').innerHTML = html;
+            document.getElementById('notiList').innerHTML = html || "<p style='text-align:center; color:var(--text-muted); padding:20px;'>No update messages yet.</p>";
             if(currentUser.id === ADMIN_ID) renderAdminNotiManageList();
         });
 
@@ -838,82 +605,35 @@
                 let d = doc.data();
                 document.getElementById('payNumberShow').innerText = d.payNumber || "Not Set";
                 document.getElementById('binanceShow').innerText = d.binanceId || "Not Set";
+                mainChannelUrl = d.ch1Url || ''; if(d.botUsername) botBaseUrl = d.botUsername;
                 
-                mainChannelUrl = d.ch1Url || '';
-                if(d.botUsername) botBaseUrl = d.botUsername;
-
-                let tutVidEl = document.getElementById('tutorialVideo');
-                let tutPlaceholder = document.getElementById('tutPlaceholderIcon');
-                if(d.tutorialUrl) {
-                    tutVidEl.src = d.tutorialUrl;
-                    tutVidEl.style.display = 'block';
-                    tutPlaceholder.style.display = 'none';
-                    document.getElementById('sTutorialUrlInput').value = d.tutorialUrl;
-                    document.getElementById('sTutorial').value = d.tutorialUrl;
-                } else {
-                    tutVidEl.style.display = 'none';
-                    tutPlaceholder.style.display = 'block';
-                }
+                let tutVidEl = document.getElementById('tutorialVideo'); let tutPlaceholder = document.getElementById('tutPlaceholderIcon');
+                if(d.tutorialUrl) { tutVidEl.src = d.tutorialUrl; tutVidEl.style.display = 'block'; tutPlaceholder.style.display = 'none'; document.getElementById('sTutorialUrlInput').value = d.tutorialUrl; document.getElementById('sTutorial').value = d.tutorialUrl; } 
+                else { tutVidEl.style.display = 'none'; tutPlaceholder.style.display = 'block'; }
                 
                 document.getElementById('btnPrice1m').innerText = d.price1m || "100 BDT";
                 document.getElementById('btnPrice6m').innerText = d.price6m || "500 BDT";
                 document.getElementById('btnPrice1y').innerText = d.price1y || "900 BDT";
 
                 let channelsHtml = "";
-                if(d.ch1Name && d.ch1Url) {
-                    channelsHtml += `
-                        <div class="list-item" onclick="window.open('${d.ch1Url}', '_blank')">
-                            <div style="display:flex; align-items:center; gap:15px;">
-                                <div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--primary-accent);"><span class="material-symbols-rounded" style="color:var(--text-light)">campaign</span></div>
-                                <div><b style="color:var(--text-light); font-size:15px;">${d.ch1Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch1Desc || ''}</span></div>
-                            </div>
-                            <span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span>
-                        </div>
-                    `;
-                }
-                if(d.ch2Name && d.ch2Url) {
-                    channelsHtml += `
-                        <div class="list-item" onclick="window.open('${d.ch2Url}', '_blank')">
-                            <div style="display:flex; align-items:center; gap:15px;">
-                                <div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--danger);"><span class="material-symbols-rounded" style="color:var(--text-light)">local_fire_department</span></div>
-                                <div><b style="color:var(--text-light); font-size:15px;">${d.ch2Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch2Desc || ''}</span></div>
-                            </div>
-                            <span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span>
-                        </div>
-                    `;
-                }
+                if(d.ch1Name && d.ch1Url) channelsHtml += `<div class="list-item" onclick="window.open('${d.ch1Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--primary-accent);"><span class="material-symbols-rounded" style="color:var(--text-light)">campaign</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch1Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch1Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
+                if(d.ch2Name && d.ch2Url) channelsHtml += `<div class="list-item" onclick="window.open('${d.ch2Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--danger);"><span class="material-symbols-rounded" style="color:var(--text-light)">local_fire_department</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch2Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch2Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
                 document.getElementById('channelListContainer').innerHTML = channelsHtml || "<p style='text-align:center; color:var(--text-muted);'>No channels added yet.</p>";
 
                 if(currentUser.id === ADMIN_ID) {
-                    document.getElementById('sBotUsername').value = d.botUsername || "";
-                    document.getElementById('sPayNum').value = d.payNumber || "";
-                    document.getElementById('sBinance').value = d.binanceId || "";
-                    document.getElementById('p1m').value = d.price1m || "";
-                    document.getElementById('p6m').value = d.price6m || "";
-                    document.getElementById('p1y').value = d.price1y || "";
-                    document.getElementById('sSupportName').value = d.supportName || "";
-                    document.getElementById('sSupportUrl').value = d.supportUrl || "";
-                    
-                    document.getElementById('ch1Name').value = d.ch1Name || "";
-                    document.getElementById('ch1Desc').value = d.ch1Desc || "";
-                    document.getElementById('ch1Url').value = d.ch1Url || "";
-                    document.getElementById('ch2Name').value = d.ch2Name || "";
-                    document.getElementById('ch2Desc').value = d.ch2Desc || "";
-                    document.getElementById('ch2Url').value = d.ch2Url || "";
+                    document.getElementById('sBotUsername').value = d.botUsername || ""; document.getElementById('sPayNum').value = d.payNumber || ""; document.getElementById('sBinance').value = d.binanceId || "";
+                    document.getElementById('p1m').value = d.price1m || ""; document.getElementById('p6m').value = d.price6m || ""; document.getElementById('p1y').value = d.price1y || "";
+                    document.getElementById('sSupportName').value = d.supportName || ""; document.getElementById('sSupportUrl').value = d.supportUrl || "";
+                    document.getElementById('ch1Name').value = d.ch1Name || ""; document.getElementById('ch1Desc').value = d.ch1Desc || ""; document.getElementById('ch1Url').value = d.ch1Url || "";
+                    document.getElementById('ch2Name').value = d.ch2Name || ""; document.getElementById('ch2Desc').value = d.ch2Desc || ""; document.getElementById('ch2Url').value = d.ch2Url || "";
                 }
 
                 if(d.supportUrl && d.supportName) {
-                    let supBtn = document.getElementById('supportFloatingBtn');
-                    supBtn.style.display = 'flex';
-                    supBtn.href = d.supportUrl;
-                    document.getElementById('supportFloatingText').innerText = d.supportName;
+                    let supBtn = document.getElementById('supportFloatingBtn'); supBtn.style.display = 'flex'; supBtn.href = d.supportUrl; document.getElementById('supportFloatingText').innerText = d.supportName;
                 }
             }
         });
 
-        // ==========================================
-        // 4. 🟢 DIRECT MINI APP LINK GENERATOR
-        // ==========================================
         function getBotLinkWithRef(extraParam = "") {
             let base = botBaseUrl.trim();
             if(!base.startsWith("http")) base = "https://t.me/" + base.replace("@", "");
@@ -921,31 +641,10 @@
             let param = extraParam ? extraParam : `ref_${currentUser.id}`;
             return `${base}?startapp=${param}`;
         }
-
-        function copyBotLink() {
-            let link = getBotLinkWithRef();
-            navigator.clipboard.writeText(link).then(() => { alert("My Link copied to clipboard!"); });
-        }
-
-        function shareAppOnTelegram() {
-            let link = getBotLinkWithRef();
-            let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent("Check out this amazing Mini App!")}`;
-            window.open(shareUrl, '_blank');
-        }
-
-        function shareOnTelegram() {
-            let link = getBotLinkWithRef(`post_${currentShareVid}`);
-            let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Check out this video: ' + currentShareTitle)}`;
-            window.open(shareUrl, '_blank');
-        }
-        
-        function copyVideoLink() {
-            let link = getBotLinkWithRef(`post_${currentShareVid}`);
-            navigator.clipboard.writeText(link).then(() => {
-                alert('Video Link Copied to Clipboard!');
-                closeOverlay(null, 'shareOverlay');
-            });
-        }
+        function copyBotLink() { navigator.clipboard.writeText(getBotLinkWithRef()).then(() => { alert("My Link copied to clipboard!"); }); }
+        function shareAppOnTelegram() { let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef())}&text=${encodeURIComponent("Check out this amazing Mini App!")}`; window.open(shareUrl, '_blank'); }
+        function shareOnTelegram() { let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef(`post_${currentShareVid}`))}&text=${encodeURIComponent('Check out this video: ' + currentShareTitle)}`; window.open(shareUrl, '_blank'); }
+        function copyVideoLink() { navigator.clipboard.writeText(getBotLinkWithRef(`post_${currentShareVid}`)).then(() => { alert('Video Link Copied to Clipboard!'); closeOverlay(null, 'shareOverlay'); }); }
 
         // ==========================================
         // 5. RENDERING & DYNAMIC IMAGE SIZED FEED
@@ -961,27 +660,51 @@
             filtered.forEach(vid => {
                 let isFav = favorites.some(f => f.id === vid.id) ? 'favorite' : 'favorite_border';
                 let favColor = isFav === 'favorite' ? 'var(--danger)' : 'white';
-
-                let likedByArray = vid.likedBy || [];
-                let hasLiked = likedByArray.includes(currentUser.id);
+                let hasLiked = (vid.likedBy || []).includes(currentUser.id);
                 let likeIcon = hasLiked ? 'favorite' : 'favorite_border';
                 let likeClass = hasLiked ? 'like-container liked' : 'like-container';
-
                 let targetUrl = vid.adUrl || '#';
 
-                let btnHtml = currentUser.isPremium 
-                    ? `<button class="direct-play-btn" onclick="window.open('${targetUrl}', '_blank')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`
-                    : `<div class="unlock-steps" id="steps-${vid.id}">` + 
-                      Array.from({length: vid.adCount}, (_, i) => `<div class="step ${i===0?'active':''}"><div class="step-circle">${i===0?'<span class="material-symbols-rounded" style="font-size:16px">play_arrow</span>':i+1}</div><span class="step-label">AD ${i+1}</span></div>`).join('') +
-                      `</div>
-                      <button class="unlock-btn" id="btn-${vid.id}" data-step="0" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
-                          <div class="btn-progress-fill" id="btn-fill-${vid.id}"></div>
-                          <span class="btn-text" id="btn-text-${vid.id}">
-                              <span class="material-symbols-rounded">lock</span> UNLOCK 
-                              <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">0/${vid.adCount}</span>
-                          </span>
+                // Restore Progress Logic
+                let savedState = JSON.parse(localStorage.getItem('vidProgress_' + vid.id)) || { step: 0, unlockedUntil: 0 };
+                let currentStep = parseInt(savedState.step) || 0;
+                let isUnlocked = (savedState.unlockedUntil > Date.now());
+                if (savedState.unlockedUntil && !isUnlocked) { currentStep = 0; localStorage.removeItem('vidProgress_' + vid.id); } // Expired
+                if (isUnlocked) { currentStep = vid.adCount; } // Completely unlocked
+
+                // Render Visual Steps & Glowing Connected Lines
+                let stepsHtml = `<div class="unlock-steps" id="steps-${vid.id}">`;
+                for(let i=0; i<vid.adCount; i++) {
+                    let stepClass = (i < currentStep) ? 'completed' : (i === currentStep ? 'active' : '');
+                    stepsHtml += `<div class="step ${stepClass}" id="step-circle-${vid.id}-${i}"><div class="step-circle">${i===0 ? '<span class="material-symbols-rounded" style="font-size:16px">play_arrow</span>' : i+1}</div><span class="step-label">AD ${i+1}</span></div>`;
+                    if (i < vid.adCount - 1) {
+                        let lineWidth = (i < currentStep) ? '100%' : '0%';
+                        stepsHtml += `<div class="step-line-container"><div class="step-line-fill" id="step-line-${vid.id}-${i}" style="width: ${lineWidth};"></div></div>`;
+                    }
+                }
+                stepsHtml += `</div>`;
+
+                let btnHtml = '';
+                if (currentUser.isPremium) {
+                    btnHtml = `<button class="direct-play-btn" onclick="window.open('${targetUrl}', '_blank')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
+                } else if (isUnlocked) {
+                    btnHtml = `${stepsHtml}
+                      <button class="unlock-btn" id="btn-${vid.id}" data-step="${currentStep}" style="background:var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
+                          <span class="btn-text" id="btn-text-${vid.id}"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</span>
+                      </button>
+                      <div id="timer-${vid.id}" class="countdown-timer" style="display:block;"></div>`;
+                } else {
+                    let displayStep = currentStep < vid.adCount ? currentStep + 1 : vid.adCount;
+                    let btnText = currentStep === 0 
+                                ? `<span class="material-symbols-rounded">lock</span> UNLOCK <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">0/${vid.adCount}</span>` 
+                                : `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${displayStep}/${vid.adCount}</span>`;
+
+                    btnHtml = `${stepsHtml}
+                      <button class="unlock-btn" id="btn-${vid.id}" data-step="${currentStep}" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
+                          <span class="btn-text" id="btn-text-${vid.id}">${btnText}</span>
                       </button>
                       <div id="timer-${vid.id}" class="countdown-timer"></div>`;
+                }
 
                 feed.innerHTML += `
                     <div class="video-card" id="card-${vid.id}">
@@ -995,15 +718,12 @@
                         <div class="card-content">
                             <span class="category-tag">${vid.category}</span>
                             <h3 class="video-title">${vid.title}</h3>
-                            
                             <div class="video-info-row">
                                 <div class="channel-avatar">V</div>
                                 <div class="video-details">
                                     <div class="video-stats">
                                         <span class="stat-item"><span class="material-symbols-rounded" style="font-size: 15px;">visibility</span> ${vid.views}</span>
-                                        <span class="${likeClass}" onclick="toggleLike('${vid.id}')" id="like-box-${vid.id}">
-                                            <span class="material-symbols-rounded" style="font-size: 15px;">${likeIcon}</span> <span id="like-count-${vid.id}">${vid.likes}</span>
-                                        </span>
+                                        <span class="${likeClass}" onclick="toggleLike('${vid.id}')" id="like-box-${vid.id}"><span class="material-symbols-rounded" style="font-size: 15px;">${likeIcon}</span> <span id="like-count-${vid.id}">${vid.likes}</span></span>
                                     </div>
                                 </div>
                                 <button class="options-btn" onclick="openShareDialog('${vid.id}', '${vid.title.replace(/'/g, "\\'")}')"><span class="material-symbols-rounded">more_vert</span></button>
@@ -1013,9 +733,19 @@
                     </div>
                 `;
             });
+
+            // Re-trigger running countdowns for unlocked videos
+            setTimeout(() => {
+                filtered.forEach(vid => {
+                    let s = JSON.parse(localStorage.getItem('vidProgress_' + vid.id));
+                    if (s && s.unlockedUntil > Date.now() && !currentUser.isPremium) {
+                        let btn = document.getElementById(`btn-${vid.id}`);
+                        if (btn) startUnlockTimer(vid.id, vid.adUrl, btn, vid.adCount, s.unlockedUntil);
+                    }
+                });
+            }, 100);
         }
 
-        // Live Like System
         function toggleLike(vidId) {
             let vid = allVideos.find(v => v.id === vidId);
             if(vid) {
@@ -1027,58 +757,27 @@
                 let iconEl = boxEl.querySelector('.material-symbols-rounded');
 
                 if(isLiked) {
-                    vidRef.update({
-                        likes: firebase.firestore.FieldValue.increment(-1),
-                        likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.id)
-                    });
-                    countEl.innerText = parseInt(countEl.innerText) - 1;
-                    boxEl.className = 'like-container';
-                    iconEl.innerText = 'favorite_border';
+                    vidRef.update({ likes: firebase.firestore.FieldValue.increment(-1), likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.id) });
+                    countEl.innerText = parseInt(countEl.innerText) - 1; boxEl.className = 'like-container'; iconEl.innerText = 'favorite_border';
                 } else {
-                    vidRef.update({
-                        likes: firebase.firestore.FieldValue.increment(1),
-                        likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.id)
-                    });
-                    countEl.innerText = parseInt(countEl.innerText) + 1;
-                    boxEl.className = 'like-container liked';
-                    iconEl.innerText = 'favorite';
+                    vidRef.update({ likes: firebase.firestore.FieldValue.increment(1), likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.id) });
+                    countEl.innerText = parseInt(countEl.innerText) + 1; boxEl.className = 'like-container liked'; iconEl.innerText = 'favorite';
                 }
             }
         }
 
-        function toggleSearch() {
-            let sb = document.getElementById('searchInput');
-            sb.style.display = sb.style.display === 'block' ? 'none' : 'block';
-            if(sb.style.display === 'block') sb.focus();
-        }
-
-        function setCategory(cat, btn) {
-            document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-            currentCategory = cat;
-            renderVideos();
-        }
-
+        function toggleSearch() { let sb = document.getElementById('searchInput'); sb.style.display = sb.style.display === 'block' ? 'none' : 'block'; if(sb.style.display === 'block') sb.focus(); }
+        function setCategory(cat, btn) { document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active')); btn.classList.add('active'); currentCategory = cat; renderVideos(); }
         function filterVideos() { renderVideos(); }
-
-        function navSwitch(btn) {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        function openShareDialog(vidId, title) {
-            currentShareVid = vidId; currentShareTitle = title; openOverlay('shareOverlay');
-        }
+        function navSwitch(btn) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); btn.classList.add('active'); }
+        function openShareDialog(vidId, title) { currentShareVid = vidId; currentShareTitle = title; openOverlay('shareOverlay'); }
 
         // ==========================================
-        // 🚀 MONETAG AD FLOW & UI ANIMATION 
+        // 🚀 DYNAMIC MONETAG AD FLOW & UI ANIMATION 
         // ==========================================
-        
-        // Helper Sleep Function
         const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-        // Function to run the 3s Circular Countdown Modal
-        function runModalCountdown(adNum, totalSteps, currentStepIndex) {
+        function runModalCountdown(adNum, totalAds, currentStepIndex) {
             return new Promise((resolve) => {
                 const adModal = document.getElementById('adSimulationModal');
                 const statusText = document.getElementById('adStatusText');
@@ -1088,178 +787,152 @@
                 const progFill = document.getElementById('adLineProgress');
 
                 adModal.classList.add('active');
-                
-                statusText.innerText = `Ad ${adNum} of 2 Playing`;
-                stepText.innerText = `Step ${currentStepIndex + 1} of ${totalSteps} — Please watch the full ad`;
+                statusText.innerText = `Ad ${adNum} of ${totalAds} Playing`;
+                stepText.innerText = `Step ${currentStepIndex + 1} — Please watch the full ad`;
                 pillText.innerText = adNum === 1 ? "AD STARTING..." : "VERIFYING NOW...";
                 pillText.style.borderColor = adNum === 1 ? "var(--primary-accent)" : "var(--warning)";
                 pillText.style.color = adNum === 1 ? "var(--primary-light)" : "var(--warning)";
 
-                let countdown = 3;
-                timerCount.innerText = countdown;
-
-                // Reset CSS Animation
-                progFill.style.transition = 'none';
-                progFill.style.width = '0%';
+                let countdown = 3; timerCount.innerText = countdown;
+                progFill.style.transition = 'none'; progFill.style.width = '0%';
                 
-                // Force reflow and start animation
                 setTimeout(() => {
-                    // Right to Left Progress Line fill for 3 seconds
-                    progFill.style.transition = 'width 3s linear';
-                    progFill.style.width = '100%';
-                    
+                    progFill.style.transition = 'width 3s linear'; progFill.style.width = '100%';
                     const intv = setInterval(() => {
                         countdown--;
-                        if (countdown > 0) {
-                            timerCount.innerText = countdown;
-                        } else {
-                            timerCount.innerText = "✓";
-                            clearInterval(intv);
-                            setTimeout(resolve, 300);
-                        }
+                        if (countdown > 0) { timerCount.innerText = countdown; } 
+                        else { timerCount.innerText = "✓"; clearInterval(intv); setTimeout(resolve, 300); }
                     }, 1000);
                 }, 50);
             });
         }
 
-        // Update Step Visual Circles
-        function updateStepVisuals(vidId, currentStep) {
-            const stepsVisuals = document.getElementById(`steps-${vidId}`).querySelectorAll('.step');
-            stepsVisuals.forEach((el, index) => {
-                el.classList.remove('active', 'completed');
-                if (index < currentStep) {
-                    el.classList.add('completed');
-                } else if (index === currentStep) {
-                    el.classList.add('active');
-                }
-            });
+        async function playMonetagAd(type) {
+            try {
+                if (type === 'pop') { if (typeof show_11439323 === 'function') await show_11439323('pop'); else await sleep(1000); } 
+                else if (type === 'rewarded') { if (typeof show_11439323 === 'function') await show_11439323(); else await sleep(1000); } 
+                else if (type === 'inapp') { if (typeof show_11439323 === 'function') await show_11439323('inapp'); else await sleep(1000); } 
+                else { await sleep(1000); }
+            } catch(e) { console.log(e); }
         }
 
-        // Main Handle Function
-        async function handleUnlockStep(vidId, targetUrl, totalSteps) {
-            if (currentUser.isPremium) {
-                window.open(targetUrl, '_blank');
-                return;
+        function updateStepVisuals(vidId, currentStep) {
+            let vid = allVideos.find(v => v.id === vidId);
+            if(!vid) return;
+            for(let i=0; i<vid.adCount; i++) {
+                let el = document.getElementById(`step-circle-${vidId}-${i}`);
+                if(!el) continue;
+                el.classList.remove('active', 'completed');
+                if (i < currentStep) el.classList.add('completed');
+                else if (i === currentStep) el.classList.add('active');
             }
+        }
+
+        async function handleUnlockStep(vidId, targetUrl, totalSteps) {
+            if (currentUser.isPremium) { window.open(targetUrl, '_blank'); return; }
 
             const btn = document.getElementById(`btn-${vidId}`);
-            if(btn.innerText.includes('WATCH NOW')) {
-                window.open(targetUrl, '_blank');
-                return;
-            }
-
-            // Prevent multiple clicks while loading
+            if(btn.innerText.includes('WATCH NOW')) { window.open(targetUrl, '_blank'); return; }
             if(btn.disabled) return;
             btn.disabled = true;
 
-            let currentStep = parseInt(btn.getAttribute('data-step') || "0");
+            let vid = allVideos.find(v => v.id === vidId);
+            let savedState = JSON.parse(localStorage.getItem('vidProgress_' + vidId)) || { step: 0 };
+            let currentStep = parseInt(savedState.step) || 0;
+
             const btnText = document.getElementById(`btn-text-${vidId}`);
-            const btnFill = document.getElementById(`btn-fill-${vidId}`);
 
-            // === 1. 3s Loading Ad 1 (Modal) ===
-            await runModalCountdown(1, totalSteps, currentStep);
+            // Fetch Step Settings
+            let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
+            let ad1Type = vid.ad1Type || 'pop';
+            let ad2Type = vid.ad2Type || 'rewarded';
 
-            // === 2. Play Ad 1 (Rewarded Popup) ===
-            try {
-                if (typeof show_11439323 === 'function') {
-                    await show_11439323('pop');
-                } else {
-                    await sleep(1000);
-                }
-            } catch(e) { console.log(e); }
+            // AD 1 Play
+            await runModalCountdown(1, adsForThisStep, currentStep);
+            await playMonetagAd(ad1Type);
 
-            // === 3. 3s Loading Ad 2 (Modal) ===
-            await runModalCountdown(2, totalSteps, currentStep);
+            // AD 2 Play (If configured)
+            if (adsForThisStep === 2) {
+                await runModalCountdown(2, adsForThisStep, currentStep);
+                await playMonetagAd(ad2Type);
+            }
 
-            // === 4. Play Ad 2 (Rewarded Interstitial) ===
-            try {
-                if (typeof show_11439323 === 'function') {
-                    await show_11439323();
-                } else {
-                    await sleep(1000); 
-                }
-            } catch(e) { console.log(e); }
-
-            // Close Modal After Ads are done
             document.getElementById('adSimulationModal').classList.remove('active');
 
-            // === 5. Step Processing & Button Animation ===
-            currentStep++;
-            btn.setAttribute('data-step', currentStep.toString());
-            updateStepVisuals(vidId, currentStep);
-
-            if(currentStep >= totalSteps) {
-                // Completely Unlocked!
-                startUnlockTimer(vidId, targetUrl, btn, totalSteps);
-            } else {
-                // Wait 5 Seconds on the button (Left to Right Fill)
-                btn.classList.add('waiting');
-                btnFill.style.transition = 'none';
-                btnFill.style.width = '0%';
-
-                setTimeout(() => {
-                    btnFill.style.transition = 'width 5s linear';
-                    btnFill.style.width = '100%';
-
-                    let waitTime = 5;
-                    btnText.innerHTML = `<span class="material-symbols-rounded">timer</span> Wait ${waitTime}s for Next Step`;
-
-                    const waitInt = setInterval(() => {
-                        waitTime--;
-                        if(waitTime > 0) {
-                            btnText.innerHTML = `<span class="material-symbols-rounded">timer</span> Wait ${waitTime}s for Next Step`;
-                        } else {
-                            // Timer Done
-                            clearInterval(waitInt);
-                            btnFill.style.transition = 'none';
-                            btnFill.style.width = '0%';
-                            btn.classList.remove('waiting');
-                            btn.disabled = false;
-                            
-                            let displayStep = currentStep + 1 > totalSteps ? totalSteps : currentStep + 1;
-                            btnText.innerHTML = `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${displayStep}/${totalSteps}</span>`;
-                        }
-                    }, 1000);
-                }, 50);
+            // 5 Seconds Premium Wait & Line Animation
+            btn.classList.add('waiting');
+            let waitTime = 5;
+            
+            // Start Line glowing animation towards next step
+            if(currentStep < totalSteps - 1) {
+                let lineEl = document.getElementById(`step-line-${vidId}-${currentStep}`);
+                if(lineEl) {
+                    lineEl.style.transition = 'width 5s linear';
+                    lineEl.style.width = '100%';
+                }
             }
+
+            // Set Initial Spinning UI
+            btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING 5s</span>`;
+
+            const waitInt = setInterval(() => {
+                waitTime--;
+                if(waitTime > 0) {
+                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING ${waitTime}s</span>`;
+                } else {
+                    clearInterval(waitInt);
+                    btn.classList.remove('waiting');
+                    btn.disabled = false;
+                    
+                    currentStep++;
+                    
+                    if (currentStep >= totalSteps) {
+                        // Fully Unlocked with 5 Minute Retention
+                        let expiry = Date.now() + (5 * 60 * 1000); // 5 Minutes Timestamp
+                        localStorage.setItem('vidProgress_' + vidId, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
+                        updateStepVisuals(vidId, currentStep);
+                        startUnlockTimer(vidId, targetUrl, btn, totalSteps, expiry);
+                        
+                        unlockedCount++; localStorage.setItem('unlockedCount', unlockedCount); updateLocalStatsUI();
+                    } else {
+                        // Next Step is Ready (Progress Saved)
+                        localStorage.setItem('vidProgress_' + vidId, JSON.stringify({ step: currentStep }));
+                        updateStepVisuals(vidId, currentStep);
+                        let displayStep = currentStep + 1 > totalSteps ? totalSteps : currentStep + 1;
+                        btnText.innerHTML = `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${displayStep}/${totalSteps}</span>`;
+                    }
+                }
+            }, 1000);
         }
 
-        function startUnlockTimer(vidId, targetUrl, btn, totalSteps) {
+        function startUnlockTimer(vidId, targetUrl, btn, totalSteps, expiryTime) {
             const btnText = document.getElementById(`btn-text-${vidId}`);
-            const btnFill = document.getElementById(`btn-fill-${vidId}`);
-            
             btn.classList.remove('waiting');
-            btnFill.style.transition = 'none';
-            btnFill.style.width = '0%';
             btnText.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
             btn.style.background = 'var(--success)';
             btn.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.4)';
             btn.disabled = false; 
             
-            let timeLeft = 300; 
             let timerDisplay = document.getElementById(`timer-${vidId}`);
             if(timerDisplay) timerDisplay.style.display = 'block';
             
             if(window[`timerInt_${vidId}`]) clearInterval(window[`timerInt_${vidId}`]);
             
             let tInt = setInterval(() => {
-                let m = Math.floor(timeLeft / 60);
-                let s = timeLeft % 60;
-                if(timerDisplay) timerDisplay.innerText = `Link expires in ${m}:${s < 10 ? '0'+s : s}`;
-                timeLeft--;
-                
-                if(timeLeft < 0) {
+                let timeLeft = Math.floor((expiryTime - Date.now()) / 1000);
+                if(timeLeft <= 0) {
                     clearInterval(tInt);
                     if(timerDisplay) timerDisplay.style.display = 'none';
+                    localStorage.removeItem('vidProgress_' + vidId); // Reset completely
                     resetVideoCard(vidId, totalSteps, btn, btnText);
+                } else {
+                    let m = Math.floor(timeLeft / 60);
+                    let s = timeLeft % 60;
+                    if(timerDisplay) timerDisplay.innerText = `Restart in ${m}:${s < 10 ? '0'+s : s} mins`;
                 }
             }, 1000);
             
             window[`timerInt_${vidId}`] = tInt;
-            
-            unlockedCount++;
-            localStorage.setItem('unlockedCount', unlockedCount);
-            updateLocalStatsUI();
         }
 
         function resetVideoCard(vidId, totalSteps, btn, btnText) {
@@ -1267,103 +940,52 @@
             btnText.innerHTML = `<span class="material-symbols-rounded">lock</span> UNLOCK <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">0/${totalSteps}</span>`;
             btn.style.background = 'linear-gradient(135deg, #a855f7, #7c3aed)';
             btn.style.boxShadow = '0 8px 20px rgba(124, 58, 237, 0.3)';
+            
+            // Reset visually
             updateStepVisuals(vidId, 0);
+            for(let i=0; i<totalSteps-1; i++) {
+                let lineEl = document.getElementById(`step-line-${vidId}-${i}`);
+                if(lineEl) { lineEl.style.transition = 'none'; lineEl.style.width = '0%'; }
+            }
         }
 
         // ==========================================
         // 6. PAYMENT SUBMISSION
         // ==========================================
         function openPaymentMethods(plan, price) {
-            selectedPlan = plan;
-            selectedPrice = price;
-            document.getElementById('selectedPlanShow').innerText = plan;
-            document.getElementById('selectedAmountShow').innerText = price;
-            
+            selectedPlan = plan; selectedPrice = price;
+            document.getElementById('selectedPlanShow').innerText = plan; document.getElementById('selectedAmountShow').innerText = price;
             db.collection("transactions").where("userId", "==", currentUser.id).where("status", "==", "Pending").get().then(snap => {
-                if(!snap.empty) {
-                    document.getElementById('submitTrxBox').style.display = 'none';
-                    document.getElementById('pendingStatusBox').style.display = 'block';
-                } else {
-                    document.getElementById('submitTrxBox').style.display = 'block';
-                    document.getElementById('pendingStatusBox').style.display = 'none';
-                }
+                if(!snap.empty) { document.getElementById('submitTrxBox').style.display = 'none'; document.getElementById('pendingStatusBox').style.display = 'block'; } 
+                else { document.getElementById('submitTrxBox').style.display = 'block'; document.getElementById('pendingStatusBox').style.display = 'none'; }
             });
-
-            closeOverlay(null, 'premiumOverlay');
-            openOverlay('paymentOverlay');
+            closeOverlay(null, 'premiumOverlay'); openOverlay('paymentOverlay');
         }
 
         function submitTrx() {
-            let trx = document.getElementById('trxInput').value;
-            let method = document.getElementById('payMethodInput').value;
-            
+            let trx = document.getElementById('trxInput').value; let method = document.getElementById('payMethodInput').value;
             if(!trx) return alert("Enter TrxID or Binance Pay ID!");
-            
-            db.collection("transactions").add({
-                userId: currentUser.id,
-                userName: currentUser.name,
-                plan: selectedPlan,
-                amount: selectedPrice,
-                method: method,
-                trxId: trx,
-                status: "Pending",
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                document.getElementById('trxInput').value = '';
-                document.getElementById('submitTrxBox').style.display = 'none';
-                document.getElementById('pendingStatusBox').style.display = 'block';
-                alert("TrxID Submitted! Please wait for Admin Approval.");
+            db.collection("transactions").add({ userId: currentUser.id, userName: currentUser.name, plan: selectedPlan, amount: selectedPrice, method: method, trxId: trx, status: "Pending", timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => {
+                document.getElementById('trxInput').value = ''; document.getElementById('submitTrxBox').style.display = 'none'; document.getElementById('pendingStatusBox').style.display = 'block'; alert("TrxID Submitted! Please wait for Admin Approval.");
             });
         }
 
         // ==========================================
-        // 7. ADMIN FUNCTIONS & PHOTO/VIDEO FIX
+        // 7. ADMIN FUNCTIONS & VIDEO UPDATES
         // ==========================================
         function uploadThumbnailImage(input) {
-            const file = input.files[0];
-            const statusTxt = document.getElementById('photoUploadStatus');
-            const previewBox = document.getElementById('photoPreviewBox');
-            const previewImg = document.getElementById('photoPreviewImg');
-
-            if (!file) return;
-
-            statusTxt.style.color = "var(--warning)";
-            statusTxt.innerText = "Uploading photo...";
-
-            const metadata = { contentType: file.type };
-            const storageRef = storage.ref('thumbnails/' + Date.now() + '_' + file.name);
-            const uploadTask = storageRef.put(file, metadata);
-
+            const file = input.files[0]; const statusTxt = document.getElementById('photoUploadStatus'); const previewBox = document.getElementById('photoPreviewBox'); const previewImg = document.getElementById('photoPreviewImg');
+            if (!file) return; statusTxt.style.color = "var(--warning)"; statusTxt.innerText = "Uploading photo...";
+            const uploadTask = storage.ref('thumbnails/' + Date.now() + '_' + file.name).put(file, { contentType: file.type });
             uploadTask.on('state_changed', 
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    statusTxt.innerText = `Uploading photo: ${Math.round(progress)}%`;
-                }, 
-                (err) => {
-                    statusTxt.style.color = "var(--danger)";
-                    statusTxt.innerText = "Photo Upload Failed: " + err.message;
-                }, 
-                () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then((url) => {
-                        document.getElementById('vPhoto').value = url;
-                        statusTxt.style.color = "var(--success)";
-                        statusTxt.innerText = "Photo Uploaded!";
-                        previewImg.src = url;
-                        previewBox.style.display = 'block';
-                    });
-                }
+                (snapshot) => { statusTxt.innerText = `Uploading photo: ${Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)}%`; }, 
+                (err) => { statusTxt.style.color = "var(--danger)"; statusTxt.innerText = "Photo Upload Failed: " + err.message; }, 
+                () => { uploadTask.snapshot.ref.getDownloadURL().then((url) => { document.getElementById('vPhoto').value = url; statusTxt.style.color = "var(--success)"; statusTxt.innerText = "Photo Uploaded!"; previewImg.src = url; previewBox.style.display = 'block'; }); }
             );
         }
-
         function previewPhotoUrl(url) {
-            const previewBox = document.getElementById('photoPreviewBox');
-            const previewImg = document.getElementById('photoPreviewImg');
-            if(url.trim() !== '') {
-                previewImg.src = url;
-                previewBox.style.display = 'block';
-            } else {
-                previewBox.style.display = 'none';
-            }
+            const previewBox = document.getElementById('photoPreviewBox'); const previewImg = document.getElementById('photoPreviewImg');
+            if(url.trim() !== '') { previewImg.src = url; previewBox.style.display = 'block'; } else { previewBox.style.display = 'none'; }
         }
 
         function uploadVideo() {
@@ -1377,393 +999,173 @@
             if(!title || !photo || !targetUrl) return alert("Please fill Title, Photo, and Target URL fields!");
 
             let videoData = {
-                title: title, category: cat, photo: photo, adUrl: targetUrl, adCount: adCount
+                title: title, category: cat, photo: photo, adUrl: targetUrl, adCount: adCount,
+                ad1Type: document.getElementById('vAd1Type').value,
+                ad2Type: document.getElementById('vAd2Type').value,
+                s1Ads: document.getElementById('vS1Ads').value,
+                s2Ads: document.getElementById('vS2Ads').value,
+                s3Ads: document.getElementById('vS3Ads').value,
+                s4Ads: document.getElementById('vS4Ads').value,
+                s5Ads: document.getElementById('vS5Ads').value
             };
 
             if(editId) {
-                db.collection("videos").doc(editId).update(videoData).then(() => {
-                    alert("Video Updated Successfully!");
-                    cancelEditVideo();
-                }).catch(err => alert("Error updating: " + err.message));
+                db.collection("videos").doc(editId).update(videoData).then(() => { alert("Video Updated Successfully!"); cancelEditVideo(); }).catch(err => alert("Error updating: " + err.message));
             } else {
-                videoData.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
-                videoData.likes = Math.floor(Math.random() * 200 + 50);
-                videoData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-
-                db.collection("videos").add(videoData).then(() => {
-                    alert("Video Uploaded Successfully!");
-                    cancelEditVideo();
-                }).catch(err => alert("Error uploading: " + err.message));
+                videoData.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K'; videoData.likes = Math.floor(Math.random() * 200 + 50); videoData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+                db.collection("videos").add(videoData).then(() => { alert("Video Uploaded Successfully!"); cancelEditVideo(); }).catch(err => alert("Error uploading: " + err.message));
             }
         }
 
         function renderAdminVideoManageList() {
-            let container = document.getElementById('adminVideoManageList');
-            if(!container) return;
-            let html = "";
-            
-            if(allVideos.length === 0) {
-                container.innerHTML = "<p style='color:var(--text-muted); text-align:center; padding:10px;'>No videos uploaded yet.</p>";
-                return;
-            }
-
+            let container = document.getElementById('adminVideoManageList'); if(!container) return; let html = "";
+            if(allVideos.length === 0) { container.innerHTML = "<p style='color:var(--text-muted); text-align:center; padding:10px;'>No videos uploaded yet.</p>"; return; }
             allVideos.forEach(v => {
-                html += `
-                    <div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);">
-                        <div style="display:flex; align-items:center; gap:10px; width:60%;">
-                            <img src="${v.photo}" style="width:45px; height:45px; border-radius:8px; object-fit:cover;">
-                            <div style="overflow:hidden;">
-                                <div style="font-weight:700; font-size:13px; color:var(--text-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${v.title}</div>
-                                <span style="font-size:11px; color:var(--primary-light);">${v.category}</span>
-                            </div>
-                        </div>
-                        <div style="display:flex; gap:6px;">
-                            <button onclick="editVideo('${v.id}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button>
-                            <button onclick="deleteVideo('${v.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button>
-                        </div>
+                html += `<div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);">
+                    <div style="display:flex; align-items:center; gap:10px; width:60%;">
+                        <img src="${v.photo}" style="width:45px; height:45px; border-radius:8px; object-fit:cover;">
+                        <div style="overflow:hidden;"><div style="font-weight:700; font-size:13px; color:var(--text-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${v.title}</div><span style="font-size:11px; color:var(--primary-light);">${v.category}</span></div>
                     </div>
-                `;
-            });
-            container.innerHTML = html;
+                    <div style="display:flex; gap:6px;"><button onclick="editVideo('${v.id}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button><button onclick="deleteVideo('${v.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button></div>
+                </div>`;
+            }); container.innerHTML = html;
         }
 
         function editVideo(id) {
-            let vid = allVideos.find(v => v.id === id);
-            if(!vid) return;
-
+            let vid = allVideos.find(v => v.id === id); if(!vid) return;
             document.getElementById('editingVidId').value = vid.id;
-            document.getElementById('vTitle').value = vid.title;
-            document.getElementById('vCategory').value = vid.category;
-            document.getElementById('vPhoto').value = vid.photo;
-            document.getElementById('vAdUrl').value = vid.adUrl;
+            document.getElementById('vTitle').value = vid.title; document.getElementById('vCategory').value = vid.category;
+            document.getElementById('vPhoto').value = vid.photo; document.getElementById('vAdUrl').value = vid.adUrl;
             document.getElementById('vAdCount').value = vid.adCount || 3;
+            
+            // Edit new Ad features
+            document.getElementById('vAd1Type').value = vid.ad1Type || 'pop';
+            document.getElementById('vAd2Type').value = vid.ad2Type || 'rewarded';
+            document.getElementById('vS1Ads').value = vid.s1Ads || '2';
+            document.getElementById('vS2Ads').value = vid.s2Ads || '2';
+            document.getElementById('vS3Ads').value = vid.s3Ads || '2';
+            document.getElementById('vS4Ads').value = vid.s4Ads || '2';
+            document.getElementById('vS5Ads').value = vid.s5Ads || '2';
 
             previewPhotoUrl(vid.photo);
-
             document.getElementById('videoFormHeading').innerText = "✏️ Edit Video";
             document.getElementById('vSubmitBtn').innerHTML = `<span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">save</span> Save Changes`;
-            document.getElementById('vCancelBtn').style.display = "block";
-            document.getElementById('vTitle').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('vCancelBtn').style.display = "block"; document.getElementById('vTitle').scrollIntoView({ behavior: 'smooth' });
         }
 
         function cancelEditVideo() {
-            document.getElementById('editingVidId').value = "";
-            document.getElementById('vTitle').value = "";
-            document.getElementById('vPhoto').value = "";
-            document.getElementById('vAdUrl').value = "";
-            document.getElementById('photoPreviewBox').style.display = 'none';
-            document.getElementById('photoUploadStatus').innerText = "";
-            document.getElementById('vPhotoFile').value = "";
+            document.getElementById('editingVidId').value = ""; document.getElementById('vTitle').value = ""; document.getElementById('vPhoto').value = ""; document.getElementById('vAdUrl').value = "";
+            document.getElementById('photoPreviewBox').style.display = 'none'; document.getElementById('photoUploadStatus').innerText = ""; document.getElementById('vPhotoFile').value = "";
+            
+            // Clear new Ad features
+            document.getElementById('vAd1Type').value = 'pop'; document.getElementById('vAd2Type').value = 'rewarded';
+            document.getElementById('vS1Ads').value = '2'; document.getElementById('vS2Ads').value = '2';
+            document.getElementById('vS3Ads').value = '2'; document.getElementById('vS4Ads').value = '2'; document.getElementById('vS5Ads').value = '2';
 
             document.getElementById('videoFormHeading').innerText = "➕ Upload New Video";
             document.getElementById('vSubmitBtn').innerHTML = `<span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video`;
             document.getElementById('vCancelBtn').style.display = "none";
         }
 
-        function deleteVideo(id) {
-            if(confirm("Are you sure you want to delete this video?")) {
-                db.collection("videos").doc(id).delete().then(() => {
-                    alert("Video deleted successfully!");
-                }).catch(err => alert("Error deleting: " + err.message));
-            }
-        }
+        function deleteVideo(id) { if(confirm("Are you sure you want to delete this video?")) { db.collection("videos").doc(id).delete().then(() => { alert("Video deleted successfully!"); }); } }
 
         function sendOrUpdateNotification() {
-            let msg = document.getElementById('nMessage').value;
-            let editId = document.getElementById('editingNotiId').value;
-
+            let msg = document.getElementById('nMessage').value; let editId = document.getElementById('editingNotiId').value;
             if(!msg) return alert("Message cannot be empty!");
-
-            if(editId) {
-                db.collection("notifications").doc(editId).update({
-                    text: msg
-                }).then(() => {
-                    alert("Notification updated!");
-                    cancelNotiEdit();
-                });
-            } else {
-                db.collection("notifications").add({
-                    text: msg, timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => { 
-                    alert("Notification Sent to all users!"); 
-                    cancelNotiEdit();
-                });
-            }
+            if(editId) { db.collection("notifications").doc(editId).update({ text: msg }).then(() => { alert("Notification updated!"); cancelNotiEdit(); }); } 
+            else { db.collection("notifications").add({ text: msg, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { alert("Notification Sent to all users!"); cancelNotiEdit(); }); }
         }
 
         function renderAdminNotiManageList() {
-            let container = document.getElementById('adminNotiManageList');
-            if(!container) return;
-            let html = "";
-
-            if(allNotis.length === 0) {
-                container.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>No notifications sent yet.</p>";
-                return;
-            }
-
-            allNotis.forEach(n => {
-                html += `
-                    <div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);">
-                        <div style="font-size:13px; color:var(--text-light); width:65%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${n.text}</div>
-                        <div style="display:flex; gap:6px;">
-                            <button onclick="editNoti('${n.id}', '${n.text.replace(/'/g, "\\'")}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button>
-                            <button onclick="deleteNoti('${n.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
+            let container = document.getElementById('adminNotiManageList'); if(!container) return; let html = "";
+            if(allNotis.length === 0) { container.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>No notifications sent yet.</p>"; return; }
+            allNotis.forEach(n => { html += `<div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);"><div style="font-size:13px; color:var(--text-light); width:65%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${n.text}</div><div style="display:flex; gap:6px;"><button onclick="editNoti('${n.id}', '${n.text.replace(/'/g, "\\'")}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button><button onclick="deleteNoti('${n.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button></div></div>`; });
             container.innerHTML = html;
         }
 
-        function editNoti(id, text) {
-            document.getElementById('editingNotiId').value = id;
-            document.getElementById('nMessage').value = text;
-            document.getElementById('notiFormHeading').innerText = "✏️ Edit Notification";
-            document.getElementById('nSubmitBtn').innerText = "Update Notification";
-            document.getElementById('nCancelBtn').style.display = "block";
-        }
-
-        function cancelNotiEdit() {
-            document.getElementById('editingNotiId').value = "";
-            document.getElementById('nMessage').value = "";
-            document.getElementById('notiFormHeading').innerText = "🔔 Global Notifications System";
-            document.getElementById('nSubmitBtn').innerText = "Send to All";
-            document.getElementById('nCancelBtn').style.display = "none";
-        }
-
-        function deleteNoti(id) {
-            if(confirm("Delete this notification?")) {
-                db.collection("notifications").doc(id).delete().then(() => alert("Notification deleted!"));
-            }
-        }
+        function editNoti(id, text) { document.getElementById('editingNotiId').value = id; document.getElementById('nMessage').value = text; document.getElementById('notiFormHeading').innerText = "✏️ Edit Notification"; document.getElementById('nSubmitBtn').innerText = "Update Notification"; document.getElementById('nCancelBtn').style.display = "block"; }
+        function cancelNotiEdit() { document.getElementById('editingNotiId').value = ""; document.getElementById('nMessage').value = ""; document.getElementById('notiFormHeading').innerText = "🔔 Global Notifications System"; document.getElementById('nSubmitBtn').innerText = "Send to All"; document.getElementById('nCancelBtn').style.display = "none"; }
+        function deleteNoti(id) { if(confirm("Delete this notification?")) { db.collection("notifications").doc(id).delete().then(() => alert("Notification deleted!")); } }
 
         function uploadTutorialVideo() {
-            const fileInput = document.getElementById('tutorialFileInput');
-            const file = fileInput.files[0];
-            const progressTxt = document.getElementById('uploadProgress');
-            
+            const file = document.getElementById('tutorialFileInput').files[0]; const progressTxt = document.getElementById('uploadProgress');
             if (!file) return alert("Please select a video file first.");
-
-            const metadata = { contentType: file.type };
-            const storageRef = storage.ref('tutorials/' + Date.now() + '_' + file.name);
-            const uploadTask = storageRef.put(file, metadata);
-
-            progressTxt.style.color = "var(--warning)";
-            progressTxt.innerText = "Uploading... 0%";
-
+            const uploadTask = storage.ref('tutorials/' + Date.now() + '_' + file.name).put(file, { contentType: file.type });
+            progressTxt.style.color = "var(--warning)"; progressTxt.innerText = "Uploading... 0%";
             uploadTask.on('state_changed', 
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressTxt.innerText = `Uploading: ${Math.round(progress)}%`;
-                }, 
-                (error) => {
-                    progressTxt.style.color = "var(--danger)";
-                    progressTxt.innerText = "Upload Failed! Check network.";
-                }, 
-                () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        progressTxt.style.color = "var(--success)";
-                        progressTxt.innerText = "Upload Complete & Saved!";
-                        document.getElementById('sTutorial').value = downloadURL;
-                        document.getElementById('sTutorialUrlInput').value = downloadURL;
-                        saveSettings();
-                    });
-                }
+                (snapshot) => { progressTxt.innerText = `Uploading: ${Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)}%`; }, 
+                (error) => { progressTxt.style.color = "var(--danger)"; progressTxt.innerText = "Upload Failed! Check network."; }, 
+                () => { uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { progressTxt.style.color = "var(--success)"; progressTxt.innerText = "Upload Complete & Saved!"; document.getElementById('sTutorial').value = downloadURL; document.getElementById('sTutorialUrlInput').value = downloadURL; saveSettings(); }); }
             );
         }
 
         function saveSettings() {
             db.collection("settings").doc("app_settings").set({
-                botUsername: document.getElementById('sBotUsername').value,
-                payNumber: document.getElementById('sPayNum').value,
-                binanceId: document.getElementById('sBinance').value,
-                price1m: document.getElementById('p1m').value,
-                price6m: document.getElementById('p6m').value,
-                price1y: document.getElementById('p1y').value,
-                supportName: document.getElementById('sSupportName').value,
-                supportUrl: document.getElementById('sSupportUrl').value,
+                botUsername: document.getElementById('sBotUsername').value, payNumber: document.getElementById('sPayNum').value, binanceId: document.getElementById('sBinance').value,
+                price1m: document.getElementById('p1m').value, price6m: document.getElementById('p6m').value, price1y: document.getElementById('p1y').value,
+                supportName: document.getElementById('sSupportName').value, supportUrl: document.getElementById('sSupportUrl').value,
                 tutorialUrl: document.getElementById('sTutorial').value || document.getElementById('sTutorialUrlInput').value,
-                ch1Name: document.getElementById('ch1Name').value,
-                ch1Desc: document.getElementById('ch1Desc').value,
-                ch1Url: document.getElementById('ch1Url').value,
-                ch2Name: document.getElementById('ch2Name').value,
-                ch2Desc: document.getElementById('ch2Desc').value,
-                ch2Url: document.getElementById('ch2Url').value
+                ch1Name: document.getElementById('ch1Name').value, ch1Desc: document.getElementById('ch1Desc').value, ch1Url: document.getElementById('ch1Url').value,
+                ch2Name: document.getElementById('ch2Name').value, ch2Desc: document.getElementById('ch2Desc').value, ch2Url: document.getElementById('ch2Url').value
             }, {merge: true}).then(() => alert("Settings Saved Successfully!"));
         }
 
-        function fetchAdminStats() {
-            db.collection("users").get().then(snap => {
-                document.getElementById('statTotalUsers').innerText = snap.size;
-                let prem = 0;
-                snap.forEach(doc => { if(doc.data().isPremium) prem++; });
-                document.getElementById('statPremiumUsers').innerText = prem;
-            });
-        }
+        function fetchAdminStats() { db.collection("users").get().then(snap => { document.getElementById('statTotalUsers').innerText = snap.size; let prem = 0; snap.forEach(doc => { if(doc.data().isPremium) prem++; }); document.getElementById('statPremiumUsers').innerText = prem; }); }
 
         function fetchPendingTrx() {
             db.collection("transactions").where("status", "==", "Pending").onSnapshot(snap => {
                 let html = "";
                 snap.forEach(doc => {
                     let d = doc.data();
-                    html += `
-                        <div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--divider);">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                                <div><strong style="color:var(--text-light); font-size:15px;">${d.userName}</strong><br><small style="color:var(--text-muted)">ID: ${d.userId}</small></div>
-                                <div style="text-align:right;"><strong style="color:var(--warning); font-size:15px; font-family:monospace;">${d.trxId}</strong><br><small>${d.plan} - ${d.method}</small></div>
-                            </div>
-                            <div style="display:flex; gap:10px;">
-                                <button class="btn-submit" style="flex:1; background:var(--success); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="approveTrx('${doc.id}', ${d.userId}, '${d.plan}', '${d.method}')">Approve</button>
-                                <button class="btn-submit" style="flex:1; background:var(--danger); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="rejectTrx('${doc.id}')">Reject</button>
-                            </div>
-                        </div>
-                    `;
-                });
-                document.getElementById('pendingTrxList').innerHTML = html || "<p style='color:var(--text-muted); text-align:center; padding:20px;'>No pending requests.</p>";
+                    html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><div><strong style="color:var(--text-light); font-size:15px;">${d.userName}</strong><br><small style="color:var(--text-muted)">ID: ${d.userId}</small></div><div style="text-align:right;"><strong style="color:var(--warning); font-size:15px; font-family:monospace;">${d.trxId}</strong><br><small>${d.plan} - ${d.method}</small></div></div><div style="display:flex; gap:10px;"><button class="btn-submit" style="flex:1; background:var(--success); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="approveTrx('${doc.id}', ${d.userId}, '${d.plan}', '${d.method}')">Approve</button><button class="btn-submit" style="flex:1; background:var(--danger); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="rejectTrx('${doc.id}')">Reject</button></div></div>`;
+                }); document.getElementById('pendingTrxList').innerHTML = html || "<p style='color:var(--text-muted); text-align:center; padding:20px;'>No pending requests.</p>";
             });
         }
 
         function fetchPremiumUsers() {
             db.collection("users").where("isPremium", "==", true).onSnapshot(snap => {
-                let html = "";
-                let now = new Date().getTime();
+                let html = ""; let now = new Date().getTime();
                 snap.forEach(doc => {
-                    let d = doc.data();
-                    let daysLeft = Math.ceil((d.premiumExpiry - now) / (1000 * 60 * 60 * 24));
-                    html += `
-                        <div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--primary-accent);">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <div><strong style="color:var(--text-light);">${d.name}</strong><br><small style="color:var(--text-muted)">ID: ${doc.id}</small></div>
-                                <div style="text-align:right;"><strong style="color:var(--success);">${daysLeft} Days Left</strong><br><small style="color:var(--warning)">${d.payMethod || 'Manual'}</small></div>
-                            </div>
-                            <button class="btn-submit" style="background:var(--danger); padding:8px; border-radius:8px; font-size:13px;" onclick="removePremium('${doc.id}')">Remove Premium</button>
-                        </div>
-                    `;
-                });
-                document.getElementById('premiumUsersList').innerHTML = html || "<p style='color:var(--text-muted); text-align:center;'>No premium users.</p>";
+                    let d = doc.data(); let daysLeft = Math.ceil((d.premiumExpiry - now) / (1000 * 60 * 60 * 24));
+                    html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--primary-accent);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div><strong style="color:var(--text-light);">${d.name}</strong><br><small style="color:var(--text-muted)">ID: ${doc.id}</small></div><div style="text-align:right;"><strong style="color:var(--success);">${daysLeft} Days Left</strong><br><small style="color:var(--warning)">${d.payMethod || 'Manual'}</small></div></div><button class="btn-submit" style="background:var(--danger); padding:8px; border-radius:8px; font-size:13px;" onclick="removePremium('${doc.id}')">Remove Premium</button></div>`;
+                }); document.getElementById('premiumUsersList').innerHTML = html || "<p style='color:var(--text-muted); text-align:center;'>No premium users.</p>";
             });
         }
 
         function approveTrx(docId, uid, plan, method) {
-            let days = 0;
-            if(plan.includes('1 Month')) days = 30;
-            else if(plan.includes('6 Months')) days = 180;
-            else if(plan.includes('1 Year')) days = 365;
-
-            let expiryDate = new Date();
-            expiryDate.setDate(expiryDate.getDate() + days);
-
+            let days = 0; if(plan.includes('1 Month')) days = 30; else if(plan.includes('6 Months')) days = 180; else if(plan.includes('1 Year')) days = 365;
+            let expiryDate = new Date(); expiryDate.setDate(expiryDate.getDate() + days);
             db.collection("transactions").doc(docId).update({ status: "Approved" });
-            db.collection("users").doc(uid.toString()).update({ 
-                isPremium: true,
-                premiumExpiry: expiryDate.getTime(),
-                plan: plan,
-                payMethod: method
-            });
-            alert("Approved successfully!");
-            fetchAdminStats(); 
+            db.collection("users").doc(uid.toString()).update({ isPremium: true, premiumExpiry: expiryDate.getTime(), plan: plan, payMethod: method }); alert("Approved successfully!"); fetchAdminStats(); 
         }
 
-        function rejectTrx(docId) {
-            if(confirm("Are you sure you want to reject this transaction?")) {
-                db.collection("transactions").doc(docId).update({ status: "Rejected" });
-            }
-        }
+        function rejectTrx(docId) { if(confirm("Are you sure you want to reject this transaction?")) { db.collection("transactions").doc(docId).update({ status: "Rejected" }); } }
+        function removePremium(uid) { if(confirm("Remove premium status for this user?")) { db.collection("users").doc(uid.toString()).update({ isPremium: false, premiumExpiry: firebase.firestore.FieldValue.delete(), payMethod: firebase.firestore.FieldValue.delete() }); } }
+
+        function toggleTheme() { const isLight = document.body.parentElement.getAttribute('data-theme') === 'light'; document.body.parentElement.setAttribute('data-theme', isLight ? 'dark' : 'light'); }
+        function openOverlay(id) { document.querySelectorAll('.overlay').forEach(el => { el.classList.remove('active'); if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)'; }); const overlay = document.getElementById(id); if(!overlay) return; overlay.classList.add('active'); setTimeout(() => { if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)'; }, 10); }
+        function closeOverlay(e, id) { if (e && e.target !== e.currentTarget) return; const overlay = document.getElementById(id); if(!overlay) return; if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(100%)'; setTimeout(() => { overlay.classList.remove('active'); }, 300); }
+        function closeAllOverlays() { document.querySelectorAll('.overlay').forEach(el => { if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)'; setTimeout(() => { el.classList.remove('active'); }, 300); }); }
         
-        function removePremium(uid) {
-            if(confirm("Remove premium status for this user?")) {
-                db.collection("users").doc(uid.toString()).update({ 
-                    isPremium: false, 
-                    premiumExpiry: firebase.firestore.FieldValue.delete(), 
-                    payMethod: firebase.firestore.FieldValue.delete() 
-                });
-            }
-        }
-
-        // --- Basic UI Utilities ---
-        function toggleTheme() {
-            const isLight = document.body.parentElement.getAttribute('data-theme') === 'light';
-            document.body.parentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
-        }
-        function openOverlay(id) { 
-            document.querySelectorAll('.overlay').forEach(el => {
-                el.classList.remove('active');
-                if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
-            }); 
-            const overlay = document.getElementById(id);
-            if(!overlay) return;
-            overlay.classList.add('active'); 
-            setTimeout(() => {
-                if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)';
-            }, 10);
-        }
-        function closeOverlay(e, id) { 
-            if (e && e.target !== e.currentTarget) return; 
-            const overlay = document.getElementById(id);
-            if(!overlay) return;
-            if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
-            setTimeout(() => { overlay.classList.remove('active'); }, 300); 
-        }
-        function closeAllOverlays() { 
-            document.querySelectorAll('.overlay').forEach(el => {
-                if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
-                setTimeout(() => { el.classList.remove('active'); }, 300);
-            }); 
-        }
         function toggleFav(vidId, title, thumb) {
-            const icon = document.getElementById(`fav-icon-${vidId}`);
-            const index = favorites.findIndex(v => v.id === vidId);
-            if (index === -1) { 
-                favorites.push({ id: vidId, title: title, thumb: thumb }); 
-                icon.innerText = 'favorite'; 
-                icon.style.color = 'var(--danger)'; 
-            } else { 
-                favorites.splice(index, 1); 
-                icon.innerText = 'favorite_border'; 
-                icon.style.color = 'white'; 
-            }
-            localStorage.setItem('favVideos', JSON.stringify(favorites));
-            updateLocalStatsUI();
+            const icon = document.getElementById(`fav-icon-${vidId}`); const index = favorites.findIndex(v => v.id === vidId);
+            if (index === -1) { favorites.push({ id: vidId, title: title, thumb: thumb }); icon.innerText = 'favorite'; icon.style.color = 'var(--danger)'; } 
+            else { favorites.splice(index, 1); icon.innerText = 'favorite_border'; icon.style.color = 'white'; }
+            localStorage.setItem('favVideos', JSON.stringify(favorites)); updateLocalStatsUI();
         }
 
         function loadFavorites() {
             const list = document.getElementById('favoritesList'); list.innerHTML = '';
-            
-            favorites = favorites.filter(f => allVideos.some(v => v.id === f.id));
-            localStorage.setItem('favVideos', JSON.stringify(favorites));
-
+            favorites = favorites.filter(f => allVideos.some(v => v.id === f.id)); localStorage.setItem('favVideos', JSON.stringify(favorites));
             document.getElementById('favHeaderCount').innerText = favorites.length;
-            if(favorites.length === 0) {
-                list.innerHTML = '<div style="text-align:center; padding: 40px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size:48px; margin-bottom:10px; opacity:0.5;">heart_broken</span><br>No favorites yet.</div>';
-                return;
-            }
+            if(favorites.length === 0) { list.innerHTML = '<div style="text-align:center; padding: 40px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size:48px; margin-bottom:10px; opacity:0.5;">heart_broken</span><br>No favorites yet.</div>'; return; }
             favorites.forEach(v => {
-                let liveVid = allVideos.find(vDoc => vDoc.id === v.id);
-                let targetUrl = liveVid ? liveVid.adUrl : '#';
-                
-                list.innerHTML += `
-                <div class="list-item" style="background:var(--bg-card); border: 1px solid var(--divider);" onclick="openFavVideo('${v.id}')">
-                    <div style="display:flex; gap:15px; align-items:center;">
-                        <img src="${v.thumb}" style="width:70px; height:60px; border-radius:10px; object-fit:cover; border: 1px solid var(--divider);">
-                        <div>
-                            <div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text-light);">${v.title}</div>
-                            <div style="font-size:12px; color:var(--success); font-weight:bold;">Tap to Open / Unlock</div>
-                        </div>
-                    </div>
-                    <span class="material-symbols-rounded" style="color:var(--text-muted)">play_circle</span>
-                </div>`;
+                let liveVid = allVideos.find(vDoc => vDoc.id === v.id); let targetUrl = liveVid ? liveVid.adUrl : '#';
+                list.innerHTML += `<div class="list-item" style="background:var(--bg-card); border: 1px solid var(--divider);" onclick="openFavVideo('${v.id}')"><div style="display:flex; gap:15px; align-items:center;"><img src="${v.thumb}" style="width:70px; height:60px; border-radius:10px; object-fit:cover; border: 1px solid var(--divider);"><div><div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text-light);">${v.title}</div><div style="font-size:12px; color:var(--success); font-weight:bold;">Tap to Open / Unlock</div></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">play_circle</span></div>`;
             });
         }
 
-        function openFavVideo(vidId) {
-            closeOverlay(null, 'favoritesOverlay');
-            let el = document.getElementById(`card-${vidId}`);
-            if(el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                alert("Video not available right now!");
-            }
-        }
+        function openFavVideo(vidId) { closeOverlay(null, 'favoritesOverlay'); let el = document.getElementById(`card-${vidId}`); if(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } else { alert("Video not available right now!"); } }
     </script>
 </body>
 </html>
