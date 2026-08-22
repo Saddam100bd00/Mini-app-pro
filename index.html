@@ -308,7 +308,7 @@
     <!-- Profiles, Notifications, Premium, Payments, Share, Tutorials, Channels, Favorites Overlays -->
     <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>My Profile</h2><button class="close-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button></div><div style="text-align:center; margin-bottom: 25px; margin-top:10px;"><div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div><div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;"><h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2><span id="userStatusBadge" class="badge-free">Free</span></div><p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p><div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div></div><div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;"><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Favorites</p></div><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--success); font-size:24px;" id="unlockedCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Unlocked</p></div></div><div class="list-item" onclick="copyBotLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div><span style="font-weight:700; font-size:15px;">Copy My Link</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span></div><div class="list-item" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('tutorialOverlay');"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--warning)">help</span></div><span style="font-weight:700; font-size:15px;">View Tutorial</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span></div><div class="list-item" onclick="shareAppOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6">send</span></div><span style="font-weight:700; font-size:15px;">Share App</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">share</span></div><button class="unlock-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');"><span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium</button></div></div>
     <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2><button class="close-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="notiList" style="margin-top:10px;">Loading updates...</div></div></div>
-    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে না! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
+    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবেলগ্ন না! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
     <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>Complete Payment</h2><button class="close-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"><b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।</div><div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--text-muted)">Selected Plan:</span><b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b></div><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span style="color:var(--text-muted)">Amount to Send:</span><b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b></div><hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;"><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p><b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p><b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b></div><div class="input-group"><label>Select Payment Method</label><select id="payMethodInput"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Binance">Binance</option></select></div><div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br><b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span></div><div id="submitTrxBox"><div class="input-group"><label>Enter Transaction ID (TrxID) / Binance ID</label><input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;"></div><button class="btn-submit" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button></div></div></div>
     <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;"><div class="sheet-header"><h2>Share Options</h2><button class="close-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="list-item" onclick="shareOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div><div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div></div></div><div class="list-item" onclick="copyVideoLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div><div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div></div></div></div></div>
     <div class="overlay" id="tutorialOverlay" onclick="closeOverlay(event, 'tutorialOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="color:var(--primary-accent); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">help</span> How to Use</h2><button class="close-btn" onclick="closeOverlay(null, 'tutorialOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="tutorialVideoContainer" style="background: #000; width: 100%; height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow:hidden;"><video id="tutorialVideo" controls style="width: 100%; height:100%; display:none;"></video><span id="tutPlaceholderIcon" class="material-symbols-rounded" style="font-size: 48px; color: white;">play_circle</span></div><div class="tut-step"><div class="num">1</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Browse Videos</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Scroll through the home page to find videos. Use category filters to narrow your search.</p></div></div><div class="tut-step"><div class="num">2</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Unlock with Ads</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Click UNLOCK → ads show automatically. After steps finish, tap WATCH NOW to enjoy!</p></div></div><div class="tut-step"><div class="num">3</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Save Favorites</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Tap the heart icon on any video to save it to your favorites list.</p></div></div></div></div>
@@ -500,6 +500,7 @@
         tg.ready();
 
         // --- Added: Function to open external link & minimize/close app ---
+        // tg.close() সরানো হয়েছে যেন অ্যাপটি একবারে কেটে না গিয়ে ব্যাকগ্রাউন্ডে নেমে যায়।
         function openExternalLink(url) {
             try {
                 if (url.includes('t.me') || url.includes('telegram.me')) {
@@ -507,16 +508,15 @@
                 } else {
                     tg.openLink(url);
                 }
-                setTimeout(() => { tg.close(); }, 300); // 300ms delay দিয়ে App মিনিমাইজ/ক্লোজ করা হচ্ছে
             } catch (e) {
                 window.open(url, '_blank');
-                setTimeout(() => { tg.close(); }, 300);
             }
         }
 
         const ADMIN_ID = 8045432536; 
         let currentUser = { id: 123456, name: "Guest", isPremium: false }; 
         let allVideos = [];
+        let isVideosLoading = true; // লোডিং স্টেট ট্র‍্যাক করার জন্য
         let allNotis = [];
         let currentCategory = 'All';
         let selectedPlan = '';
@@ -588,6 +588,7 @@
         });
 
         db.collection("videos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+            isVideosLoading = false; // ডাটা ফেচ হওয়া শেষ, লোডিং ফলস
             allVideos = [];
             snapshot.forEach((doc) => {
                 let data = doc.data(); data.id = doc.id; 
@@ -666,11 +667,37 @@
         // ==========================================
         function renderVideos() {
             const feed = document.getElementById('videoFeed');
+            
+            // --- লোডিং এনিমেশন যুক্ত করা হলো ---
+            if (isVideosLoading) {
+                feed.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center;">
+                        <div style="position: relative; width: 60px; height: 60px; margin-bottom: 20px;">
+                            <div class="premium-spinner" style="border-width: 4px;"></div>
+                        </div>
+                        <h3 style="color: var(--text-light); font-size: 16px; margin-bottom: 8px; font-weight: 700;">ভিডিও লোডিং হচ্ছে...</h3>
+                        <p style="color: var(--text-muted); font-size: 13px;">দয়া করে একটু অপেক্ষা করুন</p>
+                    </div>
+                `;
+                return;
+            }
+
             feed.innerHTML = '';
             
             let filtered = currentCategory === 'All' ? allVideos : allVideos.filter(v => v.category === currentCategory);
             let searchQ = document.getElementById('searchInput').value.toLowerCase();
             if(searchQ) filtered = filtered.filter(v => v.title.toLowerCase().includes(searchQ));
+
+            // কোনো ভিডিও না থাকলে নোটিশ দেখাবে 
+            if (!isVideosLoading && filtered.length === 0) {
+                feed.innerHTML = `
+                    <div style="text-align: center; padding: 50px 20px; color: var(--text-muted);">
+                        <span class="material-symbols-rounded" style="font-size: 48px; margin-bottom: 10px; opacity: 0.5;">videocam_off</span>
+                        <br>কোনো ভিডিও পাওয়া যায়নি!
+                    </div>
+                `;
+                return;
+            }
 
             filtered.forEach(vid => {
                 let isFav = favorites.some(f => f.id === vid.id) ? 'favorite' : 'favorite_border';
@@ -1181,6 +1208,9 @@
         }
 
         function openFavVideo(vidId) { closeOverlay(null, 'favoritesOverlay'); let el = document.getElementById(`card-${vidId}`); if(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } else { alert("Video not available right now!"); } }
+
+        // পেজ লোড হওয়া মাত্রই শুরুতে একবার renderVideos কল করে দেওয়া হলো, যাতে লোডিং এনিমেশন সাথে সাথে দেখা যায়।
+        renderVideos();
     </script>
 </body>
 </html>
