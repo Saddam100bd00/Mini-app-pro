@@ -541,8 +541,8 @@
         tg.expand();
         tg.ready();
 
-        // --- Added: Function to open external link without closing app to prevent reload ---
-        // tg.close() সরানো হয়েছে যাতে অ্যাপ ক্লিন না হয়। এটি টেলিগ্রামের ভেতরে ব্যাকগ্রাউন্ডে থেকে যাবে।
+        // --- Added: Function to open external link & collapse app (slide down) ---
+        // tg.close() সরানো হয়েছে যাতে অ্যাপ ক্লিন না হয়। tg.collapse() ব্যবহার করা হয়েছে যেন এটি নিচে নেমে যায়।
         function openExternalLink(url) {
             try {
                 if (url.includes('t.me') || url.includes('telegram.me')) {
@@ -550,8 +550,11 @@
                 } else {
                     tg.openLink(url);
                 }
+                // অ্যাপটি একবারে কেটে (clean) না গিয়ে স্ক্রল হয়ে নিচে নামার (Minimize) জন্য
+                setTimeout(() => { tg.collapse(); }, 300); 
             } catch (e) {
                 window.open(url, '_blank');
+                setTimeout(() => { tg.collapse(); }, 300);
             }
         }
 
