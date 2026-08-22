@@ -302,7 +302,7 @@
                 </div>
             </div>
             
-            <div class="list-item" onclick="alert('Leaderboard coming soon!');">
+            <div class="list-item" onclick="loadLeaderboard(); closeOverlay(null, 'sidebarOverlay');">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:10px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-rounded" style="color:var(--warning)">leaderboard</span></div>
                     <div><b style="color:var(--text-light); font-size:14px;">Leaderboard</b></div>
@@ -328,6 +328,17 @@
                     <span class="material-symbols-rounded">admin_panel_settings</span> Secret Admin Panel
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Overlay -->
+    <div class="overlay" id="leaderboardOverlay" onclick="closeOverlay(event, 'leaderboardOverlay')">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;">
+                <h2 style="color:var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">leaderboard</span> Leaderboard</h2>
+                <button class="close-btn" onclick="closeOverlay(null, 'leaderboardOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div id="leaderboardList" style="margin-top:10px;">Loading...</div>
         </div>
     </div>
 
@@ -357,6 +368,10 @@
                 <div style="flex:1; background: var(--bg-dark); padding: 20px 15px; border-radius: 16px; text-align:center; border: 1px solid var(--warning);">
                     <h3 id="statPremiumUsers" style="font-size:28px; color:var(--warning);">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-top:5px;">Premium Users</p>
                 </div>
+            </div>
+            <!-- Added Watch Clicks Stat -->
+            <div style="background: var(--bg-dark); padding: 20px 15px; border-radius: 16px; text-align:center; border: 1px solid var(--success); margin-bottom: 20px;">
+                <h3 id="statTotalWatches" style="font-size:28px; color:var(--success);">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-top:5px;">Total Watch Clicks</p>
             </div>
 
             <h3 style="color:var(--primary-accent); margin-bottom:15px;" id="videoFormHeading">➕ Upload New Video</h3>
@@ -526,8 +541,8 @@
         tg.expand();
         tg.ready();
 
-        // --- Added: Function to open external link & minimize/close app ---
-        // tg.close() পুনরায় যুক্ত করা হয়েছে যেন অ্যাপটি মিনিমাইজ হয়ে লিংক ওপেন করে।
+        // --- Added: Function to open external link without closing app to prevent reload ---
+        // tg.close() সরানো হয়েছে যাতে অ্যাপ ক্লিন না হয়। এটি টেলিগ্রামের ভেতরে ব্যাকগ্রাউন্ডে থেকে যাবে।
         function openExternalLink(url) {
             try {
                 if (url.includes('t.me') || url.includes('telegram.me')) {
@@ -535,18 +550,63 @@
                 } else {
                     tg.openLink(url);
                 }
-                // অ্যাপটি চ্যাটে ব্যাক (মিনিমাইজ) করার জন্য একটু পরেই close করা হচ্ছে
-                setTimeout(() => { tg.close(); }, 200); 
             } catch (e) {
                 window.open(url, '_blank');
-                setTimeout(() => { tg.close(); }, 200);
             }
+        }
+
+        // --- Added: Function to track video watch clicks and open link ---
+        function watchVideoAction(vidId, targetUrl) {
+            openExternalLink(targetUrl);
+            
+            // Increment watch count in specific video document
+            db.collection("videos").doc(vidId).update({
+                watchClicks: firebase.firestore.FieldValue.increment(1)
+            }).catch(e => console.log(e));
+            
+            // Increment global watch count
+            db.collection("settings").doc("app_stats").set({
+                totalWatches: firebase.firestore.FieldValue.increment(1)
+            }, { merge: true }).catch(e => console.log(e));
+        }
+
+        // --- Added: Function to Load Leaderboard Data ---
+        function loadLeaderboard() {
+            openOverlay('leaderboardOverlay');
+            document.getElementById('leaderboardList').innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading Top Users...</div>';
+            db.collection("users").orderBy("unlockedCount", "desc").limit(20).get().then(snap => {
+                let html = "";
+                let rank = 1;
+                snap.forEach(doc => {
+                    let d = doc.data();
+                    let unl = d.unlockedCount || 0;
+                    if(unl === 0) return; // Skip if 0
+                    let rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
+                    html += `
+                    <div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:12px 16px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="font-size:18px; font-weight:bold; width:25px; text-align:center;">${rankIcon}</div>
+                            <div style="width:36px; height:36px; border-radius:50%; background:var(--primary-accent); display:flex; align-items:center; justify-content:center; font-weight:bold; color:white;">${(d.name||'U').charAt(0)}</div>
+                            <div style="font-weight:700; color:var(--text-light); font-size:15px;">${d.name || 'User'}</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:800; color:var(--success); font-size:16px;">${unl}</div>
+                            <div style="font-size:10px; color:var(--text-muted);">Unlocked</div>
+                        </div>
+                    </div>`;
+                    rank++;
+                });
+                if(html === "") html = "<div style='text-align:center; color:var(--text-muted); padding: 20px;'>No data available yet.</div>";
+                document.getElementById('leaderboardList').innerHTML = html;
+            }).catch(e => {
+                document.getElementById('leaderboardList').innerHTML = "<div style='text-align:center; color:var(--danger); padding: 20px;'>Failed to load leaderboard!</div>";
+            });
         }
 
         const ADMIN_ID = 8045432536; 
         let currentUser = { id: 123456, name: "Guest", isPremium: false }; 
         let allVideos = [];
-        let isVideosLoading = true; // লোডিং স্টেট ট্র‍্যাক করার জন্য
+        let isVideosLoading = true; 
         let allNotis = [];
         let currentCategory = 'All';
         let selectedPlan = '';
@@ -594,6 +654,16 @@
             const badgeEl = document.getElementById('userStatusBadge');
             if(doc.exists) {
                 let data = doc.data();
+                
+                // Sync Unlocked Count for Leaderboard
+                if (data.unlockedCount !== undefined && data.unlockedCount > unlockedCount) {
+                    unlockedCount = data.unlockedCount;
+                    localStorage.setItem('unlockedCount', unlockedCount);
+                    updateLocalStatsUI();
+                } else if (unlockedCount > 0 && data.unlockedCount === undefined) {
+                    db.collection("users").doc(currentUser.id.toString()).update({ unlockedCount: unlockedCount });
+                }
+
                 if(data.isPremium && data.premiumExpiry) {
                     let now = new Date().getTime();
                     if(now > data.premiumExpiry) {
@@ -613,7 +683,7 @@
                 }
                 renderVideos(); 
             } else {
-                db.collection("users").doc(currentUser.id.toString()).set({ name: currentUser.name, isPremium: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                db.collection("users").doc(currentUser.id.toString()).set({ name: currentUser.name, isPremium: false, unlockedCount: unlockedCount, joinedAt: firebase.firestore.FieldValue.serverTimestamp() });
             }
         });
 
@@ -657,7 +727,7 @@
         }
 
         db.collection("videos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-            isVideosLoading = false; // ডাটা ফেচ হওয়া শেষ, লোডিং ফলস
+            isVideosLoading = false; 
             allVideos = [];
             snapshot.forEach((doc) => {
                 let data = doc.data(); data.id = doc.id; 
@@ -672,7 +742,7 @@
             // লোড হওয়ার পর প্রিমিয়াম পপ-আপ দেখানো (সেশনে একবার)
             if (!window.promoShown && !currentUser.isPremium) {
                 window.promoShown = true;
-                setTimeout(showPremiumPromo, 1500); // পেজ রেডি হওয়ার দেড় সেকেন্ড পর পপ-আপ আসবে
+                setTimeout(showPremiumPromo, 1500); 
             }
         });
 
@@ -743,7 +813,6 @@
         function renderVideos() {
             const feed = document.getElementById('videoFeed');
             
-            // --- লোডিং এনিমেশন যুক্ত করা হলো ---
             if (isVideosLoading) {
                 feed.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center;">
@@ -763,7 +832,6 @@
             let searchQ = document.getElementById('searchInput').value.toLowerCase();
             if(searchQ) filtered = filtered.filter(v => v.title.toLowerCase().includes(searchQ));
 
-            // কোনো ভিডিও না থাকলে নোটিশ দেখাবে 
             if (!isVideosLoading && filtered.length === 0) {
                 feed.innerHTML = `
                     <div style="text-align: center; padding: 50px 20px; color: var(--text-muted);">
@@ -803,7 +871,7 @@
 
                 let btnHtml = '';
                 if (currentUser.isPremium) {
-                    btnHtml = `<button class="direct-play-btn" onclick="openExternalLink('${targetUrl}')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
+                    btnHtml = `<button class="direct-play-btn" onclick="watchVideoAction('${vid.id}', '${targetUrl}')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
                 } else if (isUnlocked) {
                     btnHtml = `${stepsHtml}
                       <button class="unlock-btn" id="btn-${vid.id}" data-step="${currentStep}" style="background:var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
@@ -946,10 +1014,10 @@
         }
 
         async function handleUnlockStep(vidId, targetUrl, totalSteps) {
-            if (currentUser.isPremium) { openExternalLink(targetUrl); return; }
+            if (currentUser.isPremium) { watchVideoAction(vidId, targetUrl); return; }
 
             const btn = document.getElementById(`btn-${vidId}`);
-            if(btn.innerText.includes('WATCH NOW')) { openExternalLink(targetUrl); return; }
+            if(btn.innerText.includes('WATCH NOW')) { watchVideoAction(vidId, targetUrl); return; }
             if(btn.disabled) return;
             btn.disabled = true;
 
@@ -1005,12 +1073,16 @@
                     
                     if (currentStep >= totalSteps) {
                         // Fully Unlocked with 5 Minute Retention
-                        let expiry = Date.now() + (5 * 60 * 1000); // 5 Minutes Timestamp
+                        let expiry = Date.now() + (5 * 60 * 1000); 
                         localStorage.setItem('vidProgress_' + vidId, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
                         updateStepVisuals(vidId, currentStep);
                         startUnlockTimer(vidId, targetUrl, btn, totalSteps, expiry);
                         
-                        unlockedCount++; localStorage.setItem('unlockedCount', unlockedCount); updateLocalStatsUI();
+                        unlockedCount++; 
+                        localStorage.setItem('unlockedCount', unlockedCount); 
+                        updateLocalStatsUI();
+                        // Update to Firestore for Leaderboard
+                        db.collection("users").doc(currentUser.id.toString()).update({ unlockedCount: unlockedCount, name: currentUser.name }).catch(e=>console.log(e));
                     } else {
                         // Next Step is Ready (Progress Saved)
                         localStorage.setItem('vidProgress_' + vidId, JSON.stringify({ step: currentStep }));
@@ -1129,7 +1201,7 @@
             if(editId) {
                 db.collection("videos").doc(editId).update(videoData).then(() => { alert("Video Updated Successfully!"); cancelEditVideo(); }).catch(err => alert("Error updating: " + err.message));
             } else {
-                videoData.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K'; videoData.likes = Math.floor(Math.random() * 200 + 50); videoData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+                videoData.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K'; videoData.likes = Math.floor(Math.random() * 200 + 50); videoData.timestamp = firebase.firestore.FieldValue.serverTimestamp(); videoData.watchClicks = 0;
                 db.collection("videos").add(videoData).then(() => { alert("Video Uploaded Successfully!"); cancelEditVideo(); }).catch(err => alert("Error uploading: " + err.message));
             }
         }
@@ -1138,10 +1210,15 @@
             let container = document.getElementById('adminVideoManageList'); if(!container) return; let html = "";
             if(allVideos.length === 0) { container.innerHTML = "<p style='color:var(--text-muted); text-align:center; padding:10px;'>No videos uploaded yet.</p>"; return; }
             allVideos.forEach(v => {
+                let realWatches = v.watchClicks || 0;
                 html += `<div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);">
                     <div style="display:flex; align-items:center; gap:10px; width:60%;">
                         <img src="${v.photo}" style="width:45px; height:45px; border-radius:8px; object-fit:cover;">
-                        <div style="overflow:hidden;"><div style="font-weight:700; font-size:13px; color:var(--text-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${v.title}</div><span style="font-size:11px; color:var(--primary-light);">${v.category}</span></div>
+                        <div style="overflow:hidden;">
+                            <div style="font-weight:700; font-size:13px; color:var(--text-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${v.title}</div>
+                            <span style="font-size:11px; color:var(--primary-light);">${v.category}</span>
+                            <span style="font-size:11px; color:var(--success); margin-left:8px; font-weight:bold;">👁️ ${realWatches} Clicks</span>
+                        </div>
                     </div>
                     <div style="display:flex; gap:6px;"><button onclick="editVideo('${v.id}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button><button onclick="deleteVideo('${v.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button></div>
                 </div>`;
@@ -1227,7 +1304,21 @@
             }, {merge: true}).then(() => alert("Settings Saved Successfully!"));
         }
 
-        function fetchAdminStats() { db.collection("users").get().then(snap => { document.getElementById('statTotalUsers').innerText = snap.size; let prem = 0; snap.forEach(doc => { if(doc.data().isPremium) prem++; }); document.getElementById('statPremiumUsers').innerText = prem; }); }
+        function fetchAdminStats() { 
+            db.collection("users").get().then(snap => { 
+                document.getElementById('statTotalUsers').innerText = snap.size; 
+                let prem = 0; 
+                snap.forEach(doc => { if(doc.data().isPremium) prem++; }); 
+                document.getElementById('statPremiumUsers').innerText = prem; 
+            }); 
+            
+            // Added: Watch Count listener
+            db.collection("settings").doc("app_stats").onSnapshot(doc => {
+                if(doc.exists) {
+                    document.getElementById('statTotalWatches').innerText = doc.data().totalWatches || 0;
+                }
+            });
+        }
 
         function fetchPendingTrx() {
             db.collection("transactions").where("status", "==", "Pending").onSnapshot(snap => {
