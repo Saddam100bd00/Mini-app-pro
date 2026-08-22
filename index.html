@@ -95,7 +95,6 @@
         
         /* Unlock Steps Visuals & Line Progress System */
         .unlock-steps { display: flex; align-items: center; justify-content: space-between; margin: 16px 0; position: relative; }
-        /* Removed global static line for dynamic step lines */
         .step { display: flex; flex-direction: column; align-items: center; z-index: 2; transition: 0.3s; position: relative;}
         .step-circle { width: 26px; height: 26px; border-radius: 50%; background-color: var(--bg-card); border: 2px solid var(--divider); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; transition: 0.3s;}
         .step.active .step-circle { border-color: var(--primary-accent); color: var(--primary-accent); box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);}
@@ -196,10 +195,38 @@
         .ad-progress-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; margin-top: 25px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
         .ad-progress-fill { height: 100%; width: 0%; background: linear-gradient(270deg, #f59e0b, #ef4444, #a855f7, #10b981); background-size: 300% 300%; animation: popGradient 3s ease infinite; border-radius: 10px; float: right; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
         @keyframes popGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* =======================================================
+           🚀 NEW PREMIUM PROMO POPUP CSS
+           ======================================================= */
+        .promo-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 3000; display: none; align-items: center; justify-content: center; opacity: 0; transition: all 0.4s ease; }
+        .promo-overlay.active { display: flex; opacity: 1; }
+        .promo-box { background: linear-gradient(145deg, #1f1c2c, #15131d); border: 2px solid var(--warning); border-radius: 24px; padding: 30px 20px; width: 85%; max-width: 320px; text-align: center; position: relative; box-shadow: 0 0 30px rgba(245, 158, 11, 0.4), inset 0 0 20px rgba(245, 158, 11, 0.1); animation: pulseGlow 2s infinite alternate; }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3), inset 0 0 10px rgba(245, 158, 11, 0.1); } 100% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.7), inset 0 0 20px rgba(245, 158, 11, 0.3); } }
+        .promo-close { position: absolute; top: -15px; right: -15px; background: var(--danger); border: 2px solid #fff; color: white; width: 36px; height: 36px; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.5); transition: 0.3s; z-index: 10;}
+        .promo-close:active { transform: scale(0.8); }
+        .promo-icon { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 36px; color: white; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.5); }
+        .promo-title { font-size: 22px; font-weight: 900; color: #ffd700; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3); }
+        .promo-desc { font-size: 14px; color: var(--text-light); line-height: 1.5; margin-bottom: 20px; }
+        .promo-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4); cursor: pointer; transition: 0.3s; }
+        .promo-btn:active { transform: translateY(2px); }
     </style>
 </head>
 <body>
     <b:section id='hidden-section' showaddelement='false'/>
+
+    <!-- 🌟 PREMIUM PROMO OVERLAY 🌟 -->
+    <div class="promo-overlay" id="promoOverlay">
+        <div class="promo-box">
+            <button class="promo-close" id="promoCloseBtn" onclick="closePromo()"><span class="material-symbols-rounded">close</span></button>
+            <div class="promo-icon"><span class="material-symbols-rounded">workspace_premium</span></div>
+            <h2 class="promo-title">প্রিমিয়াম অফার!</h2>
+            <p class="promo-desc">কোনো বিরক্তিকর অ্যাড ছাড়া আনলিমিটেড ভিডিও দেখতে আজই প্রিমিয়াম নিন। কোনো অপেক্ষা নেই, সরাসরি ভিডিও প্লে হবে!</p>
+            <button class="promo-btn" onclick="goToPremiumFromPromo()">
+                Upgrade Now <span id="promoTimerText" style="font-size: 13px; font-weight: normal; margin-left: 5px;">(10s)</span>
+            </button>
+        </div>
+    </div>
 
     <header class="header">
         <div class="header-left">
@@ -308,7 +335,7 @@
     <!-- Profiles, Notifications, Premium, Payments, Share, Tutorials, Channels, Favorites Overlays -->
     <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>My Profile</h2><button class="close-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button></div><div style="text-align:center; margin-bottom: 25px; margin-top:10px;"><div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div><div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;"><h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2><span id="userStatusBadge" class="badge-free">Free</span></div><p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p><div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div></div><div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;"><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Favorites</p></div><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--success); font-size:24px;" id="unlockedCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Unlocked</p></div></div><div class="list-item" onclick="copyBotLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div><span style="font-weight:700; font-size:15px;">Copy My Link</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span></div><div class="list-item" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('tutorialOverlay');"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--warning)">help</span></div><span style="font-weight:700; font-size:15px;">View Tutorial</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span></div><div class="list-item" onclick="shareAppOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6">send</span></div><span style="font-weight:700; font-size:15px;">Share App</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">share</span></div><button class="unlock-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');"><span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium</button></div></div>
     <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2><button class="close-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="notiList" style="margin-top:10px;">Loading updates...</div></div></div>
-    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবেলগ্ন না! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
+    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে না! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
     <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>Complete Payment</h2><button class="close-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"><b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।</div><div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--text-muted)">Selected Plan:</span><b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b></div><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span style="color:var(--text-muted)">Amount to Send:</span><b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b></div><hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;"><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p><b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p><b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b></div><div class="input-group"><label>Select Payment Method</label><select id="payMethodInput"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Binance">Binance</option></select></div><div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br><b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span></div><div id="submitTrxBox"><div class="input-group"><label>Enter Transaction ID (TrxID) / Binance ID</label><input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;"></div><button class="btn-submit" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button></div></div></div>
     <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;"><div class="sheet-header"><h2>Share Options</h2><button class="close-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="list-item" onclick="shareOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div><div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div></div></div><div class="list-item" onclick="copyVideoLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div><div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div></div></div></div></div>
     <div class="overlay" id="tutorialOverlay" onclick="closeOverlay(event, 'tutorialOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="color:var(--primary-accent); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">help</span> How to Use</h2><button class="close-btn" onclick="closeOverlay(null, 'tutorialOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="tutorialVideoContainer" style="background: #000; width: 100%; height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow:hidden;"><video id="tutorialVideo" controls style="width: 100%; height:100%; display:none;"></video><span id="tutPlaceholderIcon" class="material-symbols-rounded" style="font-size: 48px; color: white;">play_circle</span></div><div class="tut-step"><div class="num">1</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Browse Videos</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Scroll through the home page to find videos. Use category filters to narrow your search.</p></div></div><div class="tut-step"><div class="num">2</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Unlock with Ads</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Click UNLOCK → ads show automatically. After steps finish, tap WATCH NOW to enjoy!</p></div></div><div class="tut-step"><div class="num">3</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Save Favorites</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Tap the heart icon on any video to save it to your favorites list.</p></div></div></div></div>
@@ -500,7 +527,7 @@
         tg.ready();
 
         // --- Added: Function to open external link & minimize/close app ---
-        // tg.close() সরানো হয়েছে যেন অ্যাপটি একবারে কেটে না গিয়ে ব্যাকগ্রাউন্ডে নেমে যায়।
+        // tg.close() পুনরায় যুক্ত করা হয়েছে যেন অ্যাপটি মিনিমাইজ হয়ে লিংক ওপেন করে।
         function openExternalLink(url) {
             try {
                 if (url.includes('t.me') || url.includes('telegram.me')) {
@@ -508,8 +535,11 @@
                 } else {
                     tg.openLink(url);
                 }
+                // অ্যাপটি চ্যাটে ব্যাক (মিনিমাইজ) করার জন্য একটু পরেই close করা হচ্ছে
+                setTimeout(() => { tg.close(); }, 200); 
             } catch (e) {
                 window.open(url, '_blank');
+                setTimeout(() => { tg.close(); }, 200);
             }
         }
 
@@ -587,6 +617,45 @@
             }
         });
 
+        // ==========================================
+        // 🚀 PREMIUM PROMO POPUP LOGIC 
+        // ==========================================
+        function showPremiumPromo() {
+            const promo = document.getElementById('promoOverlay');
+            const closeBtn = document.getElementById('promoCloseBtn');
+            const timerText = document.getElementById('promoTimerText');
+            
+            promo.classList.add('active');
+            closeBtn.style.display = 'none';
+            
+            let timeLeft = 10;
+            timerText.innerText = `(${timeLeft}s)`;
+            
+            let pTimer = setInterval(() => {
+                timeLeft--;
+                if(timeLeft > 0) {
+                    timerText.innerText = `(${timeLeft}s)`;
+                } else {
+                    timerText.innerText = "";
+                    clearInterval(pTimer);
+                }
+                
+                // Show close button after 3 seconds
+                if(timeLeft === 7) {
+                    closeBtn.style.display = 'flex';
+                }
+            }, 1000);
+        }
+
+        function closePromo() {
+            document.getElementById('promoOverlay').classList.remove('active');
+        }
+
+        function goToPremiumFromPromo() {
+            closePromo();
+            openOverlay('premiumOverlay');
+        }
+
         db.collection("videos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             isVideosLoading = false; // ডাটা ফেচ হওয়া শেষ, লোডিং ফলস
             allVideos = [];
@@ -599,6 +668,12 @@
             document.getElementById('totalVidCount').innerText = allVideos.length;
             renderVideos();
             if(currentUser.id === ADMIN_ID) renderAdminVideoManageList();
+
+            // লোড হওয়ার পর প্রিমিয়াম পপ-আপ দেখানো (সেশনে একবার)
+            if (!window.promoShown && !currentUser.isPremium) {
+                window.promoShown = true;
+                setTimeout(showPremiumPromo, 1500); // পেজ রেডি হওয়ার দেড় সেকেন্ড পর পপ-আপ আসবে
+            }
         });
 
         // Other Fetch scripts are untouched
