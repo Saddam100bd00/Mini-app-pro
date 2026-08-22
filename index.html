@@ -228,6 +228,19 @@
         </div>
     </div>
 
+    <!-- 📩 INBOX NOTIFICATION OVERLAY 📩 -->
+    <div class="promo-overlay" id="inboxPopupOverlay">
+        <div class="promo-box" style="border-color: #10b981; animation: none; box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);">
+            <button class="promo-close" style="display:flex; background: var(--bg-card); border-color: var(--divider); color: var(--text-muted);" onclick="closeInboxPopup()"><span class="material-symbols-rounded">close</span></button>
+            <div class="promo-icon" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.5);"><span class="material-symbols-rounded">mark_email_read</span></div>
+            <h2 class="promo-title" style="color: #10b981; text-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);">সফল!</h2>
+            <p class="promo-desc" style="font-weight: 600;">ভিডিও আপনার ইনবক্সে পাঠানো হয়েছে।</p>
+            <button class="promo-btn" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);" onclick="checkInboxAction()">
+                <span class="material-symbols-rounded">chat</span> চেক ইনবক্স
+            </button>
+        </div>
+    </div>
+
     <header class="header">
         <div class="header-left">
             <button class="menu-btn" onclick="openOverlay('sidebarOverlay')"><span class="material-symbols-rounded">menu</span></button>
@@ -542,7 +555,6 @@
         tg.ready();
 
         // --- Added: Function to open external link & collapse app (slide down) ---
-        // tg.close() সরানো হয়েছে যাতে অ্যাপ ক্লিন না হয়। tg.collapse() ব্যবহার করা হয়েছে যেন এটি নিচে নেমে যায়।
         function openExternalLink(url) {
             try {
                 if (url.includes('t.me') || url.includes('telegram.me')) {
@@ -550,7 +562,6 @@
                 } else {
                     tg.openLink(url);
                 }
-                // অ্যাপটি একবারে কেটে (clean) না গিয়ে স্ক্রল হয়ে নিচে নামার (Minimize) জন্য
                 setTimeout(() => { tg.collapse(); }, 300); 
             } catch (e) {
                 window.open(url, '_blank');
@@ -558,9 +569,10 @@
             }
         }
 
-        // --- Added: Function to track video watch clicks and open link ---
+        // --- Modified: Show popup instead of directly opening the link ---
         function watchVideoAction(vidId, targetUrl) {
-            openExternalLink(targetUrl);
+            // Show the "Sent to Inbox" popup
+            document.getElementById('inboxPopupOverlay').classList.add('active');
             
             // Increment watch count in specific video document
             db.collection("videos").doc(vidId).update({
@@ -571,6 +583,17 @@
             db.collection("settings").doc("app_stats").set({
                 totalWatches: firebase.firestore.FieldValue.increment(1)
             }, { merge: true }).catch(e => console.log(e));
+        }
+
+        // --- Added: Close Inbox Popup & Open specific Bot ---
+        function closeInboxPopup() {
+            document.getElementById('inboxPopupOverlay').classList.remove('active');
+        }
+
+        function checkInboxAction() {
+            closeInboxPopup();
+            // User requested to set this bot link for the "Check Inbox" button
+            openExternalLink('https://t.me/video_and_earning_bot');
         }
 
         // --- Added: Function to Load Leaderboard Data ---
