@@ -541,20 +541,20 @@
         tg.expand();
         tg.ready();
 
-        // --- Added: Function to open external link & collapse app (slide down) ---
-        // tg.close() সরানো হয়েছে যাতে অ্যাপ ক্লিন না হয়। tg.collapse() ব্যবহার করা হয়েছে যেন এটি নিচে নেমে যায়।
+        // --- আপডেটেড: অ্যাপটি ক্লিন না করে সরাসরি চ্যাটে লিংক ওপেন করা এবং মিনিমাইজ করার ফাংশন ---
         function openExternalLink(url) {
             try {
+                // টেলিগ্রামের বটের লিংক হলে tg.openTelegramLink ব্যবহার করে সরাসরি চ্যাটে যাবে
                 if (url.includes('t.me') || url.includes('telegram.me')) {
                     tg.openTelegramLink(url);
                 } else {
-                    tg.openLink(url);
+                    tg.openLink(url, { try_instant_view: false });
                 }
+                
                 // অ্যাপটি একবারে কেটে (clean) না গিয়ে স্ক্রল হয়ে নিচে নামার (Minimize) জন্য
                 setTimeout(() => { tg.collapse(); }, 300); 
             } catch (e) {
-                window.open(url, '_blank');
-                setTimeout(() => { tg.collapse(); }, 300);
+                window.location.href = url;
             }
         }
 
