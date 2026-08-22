@@ -499,6 +499,21 @@
         tg.expand();
         tg.ready();
 
+        // --- Added: Function to open external link & minimize/close app ---
+        function openExternalLink(url) {
+            try {
+                if (url.includes('t.me') || url.includes('telegram.me')) {
+                    tg.openTelegramLink(url);
+                } else {
+                    tg.openLink(url);
+                }
+                setTimeout(() => { tg.close(); }, 300); // 300ms delay দিয়ে App মিনিমাইজ/ক্লোজ করা হচ্ছে
+            } catch (e) {
+                window.open(url, '_blank');
+                setTimeout(() => { tg.close(); }, 300);
+            }
+        }
+
         const ADMIN_ID = 8045432536; 
         let currentUser = { id: 123456, name: "Guest", isPremium: false }; 
         let allVideos = [];
@@ -686,7 +701,7 @@
 
                 let btnHtml = '';
                 if (currentUser.isPremium) {
-                    btnHtml = `<button class="direct-play-btn" onclick="window.open('${targetUrl}', '_blank')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
+                    btnHtml = `<button class="direct-play-btn" onclick="openExternalLink('${targetUrl}')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
                 } else if (isUnlocked) {
                     btnHtml = `${stepsHtml}
                       <button class="unlock-btn" id="btn-${vid.id}" data-step="${currentStep}" style="background:var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
@@ -829,10 +844,10 @@
         }
 
         async function handleUnlockStep(vidId, targetUrl, totalSteps) {
-            if (currentUser.isPremium) { window.open(targetUrl, '_blank'); return; }
+            if (currentUser.isPremium) { openExternalLink(targetUrl); return; }
 
             const btn = document.getElementById(`btn-${vidId}`);
-            if(btn.innerText.includes('WATCH NOW')) { window.open(targetUrl, '_blank'); return; }
+            if(btn.innerText.includes('WATCH NOW')) { openExternalLink(targetUrl); return; }
             if(btn.disabled) return;
             btn.disabled = true;
 
