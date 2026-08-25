@@ -10,6 +10,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    
+    <!-- Canvas Confetti for Leaderboard -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <!-- 1. Rewarded Popup Ad Code -->
     <script src='//libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
@@ -61,8 +64,11 @@
         .badge-vip { background: var(--gold-gradient); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 900; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); vertical-align: middle; }
 
         /* --- Search & Categories --- */
-        .search-bar { width: calc(100% - 30px); margin: 10px 15px; padding: 14px 15px; border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-card); color: var(--text-light); outline: none; display: none; font-size: 15px; transition: 0.3s;}
+        .search-container { display: flex; align-items: center; gap: 8px; margin: 10px 15px; display: none; }
+        .search-bar { flex: 1; padding: 14px 15px; border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-card); color: var(--text-light); outline: none; font-size: 15px; transition: 0.3s;}
         .search-bar:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2); }
+        .filter-btn { background: var(--bg-card); border: 1px solid var(--divider); padding: 14px 10px; border-radius: 12px; color: var(--text-light); outline: none; font-weight: bold; }
+        
         .categories-wrapper { padding: 10px 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .categories-wrapper::-webkit-scrollbar { display: none; }
         .category-pill { display: inline-block; background: var(--bg-card); border: 1px solid var(--divider); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-light);}
@@ -75,6 +81,8 @@
         .video-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--primary-accent), transparent); opacity:0.8;}
         .thumbnail-container { position: relative; width: 100%; height: auto; min-height: 200px; background-color: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .thumb-dynamic { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .thumb-blur { filter: blur(10px) brightness(0.6); } /* For Data Saver */
+        
         .badge-new { position: absolute; top: 12px; left: 12px; background-color: var(--success); color: white; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; z-index: 10; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);}
         .fav-btn { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; cursor: pointer; transition: 0.3s;}
         .fav-btn:active { transform: scale(0.8); }
@@ -195,9 +203,18 @@
             100% { box-shadow: 0 0 20px #ffa500; border-color: #ffa500; }
         }
         .vip-logo { border: 2px solid #ffd700; animation: vipShimmer 1.5s infinite alternate; }
-        .badge-rank-1 { background: rgba(255,255,255,0.1); border: 1px solid #00e5ff; color: #00e5ff; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(0,229,255,0.4); }
-        .badge-rank-2 { background: rgba(255,255,255,0.1); border: 1px solid #ffd700; color: #ffd700; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(255,215,0,0.4); }
-        .badge-rank-3 { background: rgba(255,255,255,0.1); border: 1px solid #e2e8f0; color: #e2e8f0; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(226,232,240,0.4); }
+        
+        /* --- NEW ANIMATION CLASSES --- */
+        /* Ripple Effect */
+        .ripple-btn { position: relative; overflow: hidden; transform: translate3d(0, 0, 0); }
+        .ripple-span { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-anim 0.6s linear; background: rgba(255, 255, 255, 0.3); pointer-events: none; }
+        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+        /* Heart Pop */
+        @keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
+        .pop-anim { animation: heartPop 0.3s ease-out; }
+        /* Scroll Reveal */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* --- Spinner & Ad UI --- */
         .ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 9, 14, 0.96); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
@@ -221,11 +238,11 @@
     <!-- 🌟 PREMIUM PROMO OVERLAY 🌟 -->
     <div class="promo-overlay" id="promoOverlay">
         <div class="promo-box">
-            <button class="promo-close" id="promoCloseBtn" onclick="closePromo()"><span class="material-symbols-rounded">close</span></button>
+            <button class="promo-close ripple-btn" id="promoCloseBtn" onclick="closePromo()"><span class="material-symbols-rounded">close</span></button>
             <div class="promo-icon"><span class="material-symbols-rounded">workspace_premium</span></div>
             <h2 class="promo-title">প্রিমিয়াম অফার!</h2>
             <p class="promo-desc">কোনো বিরক্তিকর অ্যাড ছাড়া আনলিমিটেড ভিডিও দেখতে আজই প্রিমিয়াম নিন। কোনো অপেক্ষা নেই, সরাসরি ভিডিও প্লে হবে!</p>
-            <button class="promo-btn" onclick="goToPremiumFromPromo()">
+            <button class="promo-btn ripple-btn" onclick="goToPremiumFromPromo()">
                 Upgrade Now <span id="promoTimerText" style="font-size: 13px; font-weight: normal; margin-left: 5px;">(10s)</span>
             </button>
         </div>
@@ -237,13 +254,13 @@
             <div class="promo-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.5);"><span class="material-symbols-rounded" style="font-size:36px;">warning</span></div>
             <h2 class="promo-title" style="color: #ff6b6b; text-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);">আপনি আগেই ফিরে এসেছেন!</h2>
             <p class="promo-desc" id="warningWaitText">আপনাকে সম্পূর্ণ 5 সেকেন্ড ভিজিট করতে হবে। তাই আবার প্রথম থেকে "Watch Ad" বাটনে ক্লিক করুন!</p>
-            <button class="promo-btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);" onclick="closeWarningOverlay()">আবার চেষ্টা করুন</button>
+            <button class="promo-btn ripple-btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);" onclick="closeWarningOverlay()">আবার চেষ্টা করুন</button>
         </div>
     </div>
 
     <header class="header">
         <div class="header-left">
-            <button class="menu-btn" onclick="openOverlay('sidebarOverlay')"><span class="material-symbols-rounded">menu</span></button>
+            <button class="menu-btn ripple-btn" onclick="openOverlay('sidebarOverlay')"><span class="material-symbols-rounded">menu</span></button>
             <div class="play-icon-wrapper"><span class="material-symbols-rounded">play_arrow</span></div>
             <div class="app-title-text" id="appLogoArea">
                 <div class="title-top"><span class="title-mini">MINI</span> <span class="title-app">APP</span></div>
@@ -251,24 +268,30 @@
             </div>
         </div>
         <div class="header-right">
-            <button class="action-btn" onclick="toggleSearch()"><span class="material-symbols-rounded">search</span></button>
-            <button class="action-btn" onclick="openOverlay('notificationsOverlay')">
+            <button class="action-btn ripple-btn" onclick="toggleSearch()"><span class="material-symbols-rounded">search</span></button>
+            <button class="action-btn ripple-btn" onclick="openOverlay('notificationsOverlay')">
                 <span class="material-symbols-rounded">notifications</span>
                 <div class="noti-dot" id="notiDotIndicator"></div>
             </button>
-            <div class="profile-avatar" id="headerProfileInitials" onclick="openOverlay('profileOverlay')">U</div>
+            <div class="profile-avatar ripple-btn" id="headerProfileInitials" onclick="openOverlay('profileOverlay')">U</div>
         </div>
     </header>
 
-    <input type="text" id="searchInput" class="search-bar" placeholder="Search viral videos..." oninput="filterVideos()">
+    <div class="search-container" id="searchContainer">
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search viral videos..." oninput="filterVideos()">
+        <select id="sortFilter" class="filter-btn ripple-btn" onchange="filterVideos()">
+            <option value="latest">Latest</option>
+            <option value="popular">Popular</option>
+        </select>
+    </div>
 
     <div class="categories-wrapper" id="categoryContainer">
-        <div class="category-pill active" onclick="setCategory('All', this)">All</div>
-        <div class="category-pill" onclick="setCategory('VIRAL', this)">VIRAL</div>
-        <div class="category-pill" onclick="setCategory('EXposed', this)">EXposed 🌵</div>
-        <div class="category-pill" onclick="setCategory('Hot', this)">🔥 Hot 🔥</div>
-        <div class="category-pill" onclick="setCategory('PREMIUM', this)">PREMIUM 🌟</div>
-        <div class="category-pill" onclick="setCategory('EXclusive', this)">EXclusive</div>
+        <div class="category-pill ripple-btn active" onclick="setCategory('All', this)">All</div>
+        <div class="category-pill ripple-btn" onclick="setCategory('VIRAL', this)">VIRAL</div>
+        <div class="category-pill ripple-btn" onclick="setCategory('EXposed', this)">EXposed 🌵</div>
+        <div class="category-pill ripple-btn" onclick="setCategory('Hot', this)">🔥 Hot 🔥</div>
+        <div class="category-pill ripple-btn" onclick="setCategory('PREMIUM', this)">PREMIUM 🌟</div>
+        <div class="category-pill ripple-btn" onclick="setCategory('EXclusive', this)">EXclusive</div>
     </div>
     
     <div class="video-count-badge">
@@ -277,25 +300,25 @@
 
     <main id="videoFeed" style="padding: 0 10px;"></main>
 
-    <a id="supportFloatingBtn" href="#" target="_blank" class="floating-support" style="display:none;">
+    <a id="supportFloatingBtn" href="#" target="_blank" class="floating-support ripple-btn" style="display:none;">
         <span class="material-symbols-rounded" style="font-size: 18px;">support_agent</span>
         <span id="supportFloatingText">Support</span>
     </a>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" onclick="navSwitch(this); closeAllOverlays();">
+        <button class="nav-item ripple-btn active" onclick="navSwitch(this); closeAllOverlays();">
             <span class="material-symbols-rounded">home</span>Home
         </button>
-        <button class="nav-item" onclick="navSwitch(this); openOverlay('favoritesOverlay'); loadFavorites();">
+        <button class="nav-item ripple-btn" onclick="navSwitch(this); openOverlay('favoritesOverlay'); loadFavorites();">
             <span class="material-symbols-rounded">favorite</span>Favorites
         </button>
-        <button class="nav-item" onclick="navSwitch(this); openOverlay('tutorialOverlay');">
+        <button class="nav-item ripple-btn" onclick="navSwitch(this); openOverlay('tutorialOverlay');">
             <span class="material-symbols-rounded">error</span>Tutorial
         </button>
-        <button class="nav-item" onclick="navSwitch(this); openOverlay('channelsOverlay');">
+        <button class="nav-item ripple-btn" onclick="navSwitch(this); openOverlay('channelsOverlay');">
             <span class="material-symbols-rounded">send</span>Channels
         </button>
-        <button class="nav-item" onclick="navSwitch(this); openOverlay('premiumOverlay');">
+        <button class="nav-item ripple-btn" onclick="navSwitch(this); openOverlay('premiumOverlay');">
             <span class="material-symbols-rounded" style="color: var(--warning);">workspace_premium</span>Premium
         </button>
     </nav>
@@ -305,31 +328,46 @@
         <div class="bottom-sheet" onclick="event.stopPropagation()" style="width: 280px; height: 100vh; max-height:100vh; border-radius: 0 24px 24px 0; transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);">
             <div class="sheet-header" style="margin-bottom: 30px;">
                 <h2><span class="material-symbols-rounded" style="color:var(--primary-accent); vertical-align:middle; margin-right:8px;">menu_open</span>Menu</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'sidebarOverlay')"><span class="material-symbols-rounded">close</span></button>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'sidebarOverlay')"><span class="material-symbols-rounded">close</span></button>
             </div>
             
-            <div class="list-item" onclick="openOverlay('profileOverlay'); closeOverlay(null, 'sidebarOverlay');">
+            <div class="list-item ripple-btn" onclick="openOverlay('profileOverlay'); closeOverlay(null, 'sidebarOverlay');">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:10px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-rounded" style="color:var(--primary-light)">person</span></div>
                     <div><b style="color:var(--text-light); font-size:14px;">My Account</b></div>
                 </div>
             </div>
             
-            <div class="list-item" onclick="loadLeaderboard(); closeOverlay(null, 'sidebarOverlay');">
+            <div class="list-item ripple-btn" onclick="loadLeaderboard(); closeOverlay(null, 'sidebarOverlay');">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:10px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-rounded" style="color:var(--warning)">leaderboard</span></div>
                     <div><b style="color:var(--text-light); font-size:14px;">Leaderboard</b></div>
                 </div>
             </div>
 
-            <div class="list-item" onclick="openOverlay('channelsOverlay'); closeOverlay(null, 'sidebarOverlay');">
+            <!-- NEW FEATURES ADDED IN SIDEBAR -->
+            <div class="list-item ripple-btn" onclick="loadWatchHistory(); closeOverlay(null, 'sidebarOverlay');">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:var(--bg-dark); padding:10px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-rounded" style="color:var(--success)">history</span></div>
+                    <div><b style="color:var(--text-light); font-size:14px;">Watch History</b></div>
+                </div>
+            </div>
+            
+            <div class="list-item ripple-btn" onclick="openOverlay('settingsOverlay'); closeOverlay(null, 'sidebarOverlay');">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:var(--bg-dark); padding:10px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-rounded" style="color:var(--text-muted)">settings</span></div>
+                    <div><b style="color:var(--text-light); font-size:14px;">App Settings</b></div>
+                </div>
+            </div>
+
+            <div class="list-item ripple-btn" onclick="openOverlay('channelsOverlay'); closeOverlay(null, 'sidebarOverlay');">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:10px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-rounded" style="color:var(--success)">groups</span></div>
                     <div><b style="color:var(--text-light); font-size:14px;">Join Community</b></div>
                 </div>
             </div>
 
-            <div class="list-item" onclick="toggleTheme()" style="cursor: pointer;">
+            <div class="list-item ripple-btn" onclick="toggleTheme()" style="cursor: pointer;">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:10px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-rounded" style="color:var(--text-light)">dark_mode</span></div>
                     <div><b style="color:var(--text-light)">Dark Theme</b><br><span style="font-size:12px; color:var(--text-muted);">Switch to Light/Dark</span></div>
@@ -348,29 +386,105 @@
     <div class="overlay" id="leaderboardOverlay" onclick="closeOverlay(event, 'leaderboardOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;">
-                <h2 style="color:var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">leaderboard</span> Leaderboard</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'leaderboardOverlay')"><span class="material-symbols-rounded">close</span></button>
+                <h2 style="color:var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">leaderboard</span> Top Users</h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'leaderboardOverlay')"><span class="material-symbols-rounded">close</span></button>
             </div>
+            <div style="text-align:center; font-size:12px; color:var(--text-muted); margin-bottom:15px;">Leaderboard resets every Monday. Top 3 get free premium!</div>
             <div id="leaderboardList" style="margin-top:10px;">Loading...</div>
         </div>
     </div>
 
     <!-- Overlays -->
-    <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>My Profile</h2><button class="close-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button></div><div style="text-align:center; margin-bottom: 25px; margin-top:10px;"><div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div><div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;"><h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2><span id="userStatusBadge" class="badge-free">Free</span></div><p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p><div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div></div><div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;"><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Favorites</p></div><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--success); font-size:24px;" id="unlockedCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Unlocked</p></div></div><div class="list-item" onclick="copyBotLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div><span style="font-weight:700; font-size:15px;">Copy My Link</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span></div><div class="list-item" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('tutorialOverlay');"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--warning)">help</span></div><span style="font-weight:700; font-size:15px;">View Tutorial</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span></div><div class="list-item" onclick="shareAppOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6">send</span></div><span style="font-weight:700; font-size:15px;">Share App</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">share</span></div><button class="unlock-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');"><span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium</button></div></div>
-    <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2><button class="close-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="notiList" style="margin-top:10px;">Loading updates...</div></div></div>
-    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে না! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
-    <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>Complete Payment</h2><button class="close-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"><b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।</div><div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--text-muted)">Selected Plan:</span><b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b></div><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span style="color:var(--text-muted)">Amount to Send:</span><b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b></div><hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;"><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p><b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p><b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b></div><div class="input-group"><label>Select Payment Method</label><select id="payMethodInput"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Binance">Binance</option></select></div><div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br><b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span></div><div id="submitTrxBox"><div class="input-group"><label>Enter Transaction ID (TrxID) / Binance ID</label><input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;"></div><button class="btn-submit" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button></div></div></div>
-    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;"><div class="sheet-header"><h2>Share Options</h2><button class="close-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="list-item" onclick="shareOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div><div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div></div></div><div class="list-item" onclick="copyVideoLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div><div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div></div></div></div></div>
-    <div class="overlay" id="tutorialOverlay" onclick="closeOverlay(event, 'tutorialOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="color:var(--primary-accent); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">help</span> How to Use</h2><button class="close-btn" onclick="closeOverlay(null, 'tutorialOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="tutorialVideoContainer" style="background: #000; width: 100%; height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow:hidden;"><video id="tutorialVideo" controls style="width: 100%; height:100%; display:none;"></video><span id="tutPlaceholderIcon" class="material-symbols-rounded" style="font-size: 48px; color: white;">play_circle</span></div><div class="tut-step"><div class="num">1</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Browse Videos</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Scroll through the home page to find videos. Use category filters to narrow your search.</p></div></div><div class="tut-step"><div class="num">2</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Unlock with Ads</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Click UNLOCK → ads show automatically. After steps finish, tap WATCH NOW to enjoy!</p></div></div><div class="tut-step"><div class="num">3</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Save Favorites</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Tap the heart icon on any video to save it to your favorites list.</p></div></div></div></div>
-    <div class="overlay" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--primary-light); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">send</span> Our Channels</h2><button class="close-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="channelListContainer">Loading channels...</div></div></div>
-    <div class="overlay" id="favoritesOverlay" onclick="closeOverlay(event, 'favoritesOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="color:var(--danger)">favorite</span> My Favorites (<span id="favHeaderCount">0</span>)</h2><button class="close-btn" onclick="closeOverlay(null, 'favoritesOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="favoritesList" style="margin-top: 10px;"></div></div></div>
+    <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>My Profile</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button></div><div style="text-align:center; margin-bottom: 25px; margin-top:10px;"><div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div><div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;"><h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2><span id="userStatusBadge" class="badge-free">Free</span></div><p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p><div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div></div><div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;"><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Favorites</p></div><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--success); font-size:24px;" id="unlockedCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Unlocked</p></div></div>
+    
+    <!-- Refer & Earn added to Profile -->
+    <div class="list-item ripple-btn" style="border-color: var(--warning); background: rgba(245, 158, 11, 0.05);" onclick="shareAppOnTelegram()">
+        <div style="display:flex; align-items:center; gap:15px;">
+            <div style="background:linear-gradient(135deg, #f59e0b, #d97706); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:white">redeem</span></div>
+            <div><span style="font-weight:700; font-size:15px; color:var(--warning)">Refer & Earn Premium</span><br><span style="font-size:11px; color:var(--text-muted);">Invite 3 friends to get 3 days free!</span></div>
+        </div>
+        <span class="material-symbols-rounded" style="color:var(--text-muted)">share</span>
+    </div>
 
-    <!-- ADMIN DASHBOARD UPDATED WITH NEW FEATURES -->
+    <div class="list-item ripple-btn" onclick="copyBotLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div><span style="font-weight:700; font-size:15px;">Copy My Link</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span></div><div class="list-item ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('tutorialOverlay');"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success)">help</span></div><span style="font-weight:700; font-size:15px;">View Tutorial</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span></div><button class="unlock-btn ripple-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');"><span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium</button></div></div>
+    
+    <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="notiList" style="margin-top:10px;">Loading updates...</div></div></div>
+    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে বিদ্যা! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn ripple-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn ripple-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn ripple-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
+    <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>Complete Payment</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"><b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।</div><div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--text-muted)">Selected Plan:</span><b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b></div><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span style="color:var(--text-muted)">Amount to Send:</span><b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b></div><hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;"><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p><b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p><b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b></div><div class="input-group"><label>Select Payment Method</label><select id="payMethodInput"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Binance">Binance</option></select></div><div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br><b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span></div><div id="submitTrxBox"><div class="input-group"><label>Enter Transaction ID (TrxID) / Binance ID</label><input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;"></div><button class="btn-submit ripple-btn" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button></div></div></div>
+    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;"><div class="sheet-header"><h2>Share Options</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="list-item ripple-btn" onclick="shareOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div><div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div></div></div><div class="list-item ripple-btn" onclick="copyVideoLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div><div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div></div></div></div></div>
+    <div class="overlay" id="tutorialOverlay" onclick="closeOverlay(event, 'tutorialOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="color:var(--primary-accent); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">help</span> How to Use</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'tutorialOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="tutorialVideoContainer" style="background: #000; width: 100%; height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow:hidden;"><video id="tutorialVideo" controls style="width: 100%; height:100%; display:none;"></video><span id="tutPlaceholderIcon" class="material-symbols-rounded" style="font-size: 48px; color: white;">play_circle</span></div><div class="tut-step"><div class="num">1</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Browse Videos</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Scroll through the home page to find videos. Use category filters to narrow your search.</p></div></div><div class="tut-step"><div class="num">2</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Unlock with Ads</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Click UNLOCK → ads show automatically. After steps finish, tap WATCH NOW to enjoy!</p></div></div><div class="tut-step"><div class="num">3</div><div><h3 style="margin-bottom: 6px; font-size:15px;">Save Favorites</h3><p style="color: var(--text-muted); font-size: 13px; line-height:1.5;">Tap the heart icon on any video to save it to your favorites list.</p></div></div></div></div>
+    <div class="overlay" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--primary-light); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">send</span> Our Channels</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="channelListContainer">Loading channels...</div></div></div>
+    
+    <div class="overlay" id="favoritesOverlay" onclick="closeOverlay(event, 'favoritesOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="color:var(--danger)">favorite</span> My Favorites (<span id="favHeaderCount">0</span>)</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'favoritesOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="favoritesList" style="margin-top: 10px;"></div></div></div>
+
+    <!-- NEW HISTORY OVERLAY -->
+    <div class="overlay" id="historyOverlay" onclick="closeOverlay(event, 'historyOverlay')">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;">
+                <h2 style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="color:var(--success)">history</span> Watch History</h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'historyOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <button onclick="clearHistory()" class="btn-submit ripple-btn" style="background:var(--bg-dark); color:var(--danger); border:1px solid var(--danger); margin-bottom:15px; font-size:13px; padding:10px;">Clear History</button>
+            <div id="historyList" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!-- NEW COMMENTS OVERLAY -->
+    <div class="overlay" id="commentsOverlay" onclick="closeOverlay(event, 'commentsOverlay')">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <h2><span class="material-symbols-rounded" style="color:var(--primary-accent);">forum</span> Comments</h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'commentsOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <input type="hidden" id="currentCommentVid">
+            <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                <input type="text" id="commentInput" placeholder="Add a public comment..." style="flex:1; padding:12px; border-radius:12px; border:1px solid var(--divider); background:var(--bg-dark); color:white; outline:none;">
+                <button onclick="postComment()" class="ripple-btn" style="background:var(--primary-accent); color:white; border:none; padding:0 20px; border-radius:12px; font-weight:bold; cursor:pointer;"><span class="material-symbols-rounded">send</span></button>
+            </div>
+            <div id="commentsList" style="max-height: 50vh; overflow-y:auto;">Loading comments...</div>
+        </div>
+    </div>
+
+    <!-- NEW SETTINGS OVERLAY -->
+    <div class="overlay" id="settingsOverlay" onclick="closeOverlay(event, 'settingsOverlay')">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <h2><span class="material-symbols-rounded" style="color:var(--text-muted);">settings</span> Settings</h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'settingsOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            
+            <div class="list-item" style="cursor:default;">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-light)">wifi_tethering</span></div>
+                    <div><b style="color:var(--text-light); font-size:15px;">Data Saver Mode</b><br><span style="font-size:12px; color:var(--text-muted);">Blur images to save data</span></div>
+                </div>
+                <input type="checkbox" id="dataSaverToggle" onchange="toggleDataSaver(this)" style="width:20px; height:20px; accent-color: var(--primary-accent);">
+            </div>
+            
+            <div class="list-item" style="cursor:default;">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success)">language</span></div>
+                    <div><b style="color:var(--text-light); font-size:15px;">Language</b></div>
+                </div>
+                <select style="background:var(--bg-dark); color:white; border:1px solid var(--divider); padding:5px 10px; border-radius:8px; outline:none;">
+                    <option>English</option>
+                    <option>Bangla (Coming Soon)</option>
+                </select>
+            </div>
+
+            <button onclick="clearAppCache()" class="btn-submit ripple-btn" style="background:var(--bg-dark); border:1px solid var(--warning); color:var(--warning); margin-bottom:15px; margin-top:15px;"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">delete_sweep</span> Clear App Cache</button>
+            
+            <button onclick="deleteMyAccount()" class="btn-submit ripple-btn" style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); color:var(--danger);"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">person_remove</span> Delete Account</button>
+        </div>
+    </div>
+
+
+    <!-- ADMIN DASHBOARD -->
     <div class="overlay" id="adminOverlay" onclick="closeOverlay(event, 'adminOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px; border-bottom: 1px solid var(--divider);">
                 <h2 style="color: var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">admin_panel_settings</span> Admin Dashboard</h2>
-                <button class="close-btn" onclick="closeOverlay(null, 'adminOverlay')"><span class="material-symbols-rounded">close</span></button>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'adminOverlay')"><span class="material-symbols-rounded">close</span></button>
             </div>
 
             <div style="display: flex; gap:15px; margin: 20px 0;">
@@ -458,8 +572,8 @@
             </div>
             
             <div style="display:flex; gap:10px;">
-                <button class="btn-submit" id="vSubmitBtn" onclick="uploadVideo()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video</button>
-                <button class="btn-submit" id="vCancelBtn" style="display:none; background:var(--text-muted);" onclick="cancelEditVideo()">Cancel Edit</button>
+                <button class="btn-submit ripple-btn" id="vSubmitBtn" onclick="uploadVideo()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video</button>
+                <button class="btn-submit ripple-btn" id="vCancelBtn" style="display:none; background:var(--text-muted);" onclick="cancelEditVideo()">Cancel Edit</button>
             </div>
 
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
@@ -487,7 +601,7 @@
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:15px;">
                  <h4 style="margin-bottom:10px; color:var(--primary-light); font-size:14px;">🎥 Tutorial Video Settings</h4>
                  <div class="input-group"><label>Tutorial Video Link (URL)</label><input type="text" id="sTutorialUrlInput" placeholder="https://.../video.mp4" oninput="document.getElementById('sTutorial').value = this.value"></div>
-                 <div class="input-group"><label>Or Upload Video from Gallery</label><input type="file" id="tutorialFileInput" accept="video/*" style="padding: 10px; font-size: 13px;"><button class="btn-submit" style="margin-top: 10px; background:var(--primary-light); padding:10px; font-size: 14px;" onclick="uploadTutorialVideo()">Upload Video</button><div id="uploadProgress" style="font-size:12px; color:var(--success); margin-top:5px;"></div></div>
+                 <div class="input-group"><label>Or Upload Video from Gallery</label><input type="file" id="tutorialFileInput" accept="video/*" style="padding: 10px; font-size: 13px;"><button class="btn-submit ripple-btn" style="margin-top: 10px; background:var(--primary-light); padding:10px; font-size: 14px;" onclick="uploadTutorialVideo()">Upload Video</button><div id="uploadProgress" style="font-size:12px; color:var(--success); margin-top:5px;"></div></div>
                  <input type="hidden" id="sTutorial"> 
             </div>
             
@@ -515,12 +629,12 @@
                 <div class="input-group"><label>Channel 2 Link</label><input type="text" id="ch2Url" placeholder="https://t.me/..."></div>
             </div>
             
-            <button class="btn-submit" style="background:var(--success);" onclick="saveSettings()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">save</span> Save Settings</button>
+            <button class="btn-submit ripple-btn" style="background:var(--success);" onclick="saveSettings()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">save</span> Save Settings</button>
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
             <h3 style="color:var(--danger); margin-bottom:15px;" id="notiFormHeading">🔔 Global Notifications System</h3>
             <input type="hidden" id="editingNotiId" value="">
             <div class="input-group"><label>Notification Text</label><textarea id="nMessage" rows="3" placeholder="Type message for all users..."></textarea></div>
-            <div style="display:flex; gap:10px; margin-bottom: 20px;"><button class="btn-submit" id="nSubmitBtn" style="background:var(--danger);" onclick="sendOrUpdateNotification()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">campaign</span> Send to All</button><button class="btn-submit" id="nCancelBtn" style="display:none; background:var(--text-muted);" onclick="cancelNotiEdit()">Cancel</button></div>
+            <div style="display:flex; gap:10px; margin-bottom: 20px;"><button class="btn-submit ripple-btn" id="nSubmitBtn" style="background:var(--danger);" onclick="sendOrUpdateNotification()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">campaign</span> Send to All</button><button class="btn-submit ripple-btn" id="nCancelBtn" style="display:none; background:var(--text-muted);" onclick="cancelNotiEdit()">Cancel</button></div>
             <h4 style="color:var(--text-light); margin-bottom:10px; font-size:14px;">Manage Existing Notifications</h4>
             <div id="adminNotiManageList" style="max-height: 200px; overflow-y:auto; padding-right:5px;">Loading notifications...</div>
         </div>
@@ -584,6 +698,7 @@
             openExternalLink(targetUrl);
             db.collection("videos").doc(vidId).update({ watchClicks: firebase.firestore.FieldValue.increment(1) }).catch(e => console.log(e));
             db.collection("settings").doc("app_stats").set({ totalWatches: firebase.firestore.FieldValue.increment(1) }, { merge: true }).catch(e => console.log(e));
+            saveToWatchHistory(vidId);
         }
 
         // ==========================================
@@ -591,6 +706,10 @@
         // ==========================================
         function loadLeaderboard() {
             openOverlay('leaderboardOverlay');
+            // Trigger Confetti
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            }
             document.getElementById('leaderboardList').innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading Top Users...</div>';
             db.collection("users").orderBy("unlockedCount", "desc").limit(20).get().then(snap => {
                 let html = "";
@@ -610,24 +729,23 @@
                         badgeHtml += `<span class="badge-vip" style="margin-right:5px;">👑 VIP</span>`;
                     }
 
-                    if (rank === 1) {
-                        cardClass = "premium-rank-card rgb-rank";
-                        badgeHtml += `<span class="badge-rank-1">💎 Diamond</span>`;
-                    } else if (rank === 2) {
-                        cardClass = "premium-rank-card rgb-rank";
-                        badgeHtml += `<span class="badge-rank-2">🏆 Golden</span>`;
-                    } else if (rank === 3) {
-                        cardClass = "premium-rank-card rgb-rank";
-                        badgeHtml += `<span class="badge-rank-3">💿 Platinum</span>`;
-                    } else if (rank <= 5) {
-                        cardClass = "premium-rank-card";
-                    }
+                    // Advanced Tier System Logic
+                    let rankName = "";
+                    if (unl >= 100) { rankName = "💎 Diamond"; cardClass = "premium-rank-card rgb-rank"; }
+                    else if (unl >= 50) { rankName = "🏆 Gold"; cardClass = "premium-rank-card"; }
+                    else if (unl >= 20) { rankName = "💿 Silver"; }
+                    else { rankName = "🥉 Bronze"; }
+                    
+                    if (rank === 1) badgeHtml += `<span class="badge-rank-1">${rankName}</span>`;
+                    else if (rank === 2) badgeHtml += `<span class="badge-rank-2">${rankName}</span>`;
+                    else if (rank === 3) badgeHtml += `<span class="badge-rank-3">${rankName}</span>`;
+                    else badgeHtml += `<span class="badge-free" style="border-color:var(--primary-accent);">${rankName}</span>`;
 
                     let userInitial = (d.name||'U').charAt(0);
                     let userPhotoHtml = d.photoUrl ? `<img src="${d.photoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : userInitial;
 
                     html += `
-                    <div class="list-item ${cardClass}" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:12px 16px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider); transition: 0.3s;">
+                    <div class="list-item ${cardClass} ripple-btn" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:12px 16px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider); transition: 0.3s;">
                         <div style="display:flex; align-items:center; gap:12px;">
                             <div style="font-size:18px; font-weight:bold; width:25px; text-align:center;">${rankIcon}</div>
                             <div class="${logoClass}" style="width:40px; height:40px; border-radius:50%; background:var(--primary-accent); display:flex; align-items:center; justify-content:center; font-weight:bold; color:white; overflow:hidden;">${userPhotoHtml}</div>
@@ -659,6 +777,7 @@
         let selectedPlan = '';
         let selectedPrice = '';
         let favorites = JSON.parse(localStorage.getItem('favVideos')) || [];
+        let watchHistory = JSON.parse(localStorage.getItem('watchHistoryData')) || [];
         let unlockedCount = parseInt(localStorage.getItem('unlockedCount')) || 0;
         let mainChannelUrl = '';
         let botBaseUrl = 'https://t.me/yourbot'; 
@@ -706,6 +825,8 @@
             document.getElementById('favCount').innerText = favorites.length;
             document.getElementById('favHeaderCount').innerText = favorites.length;
             document.getElementById('unlockedCount').innerText = unlockedCount;
+            let dSaver = localStorage.getItem('dataSaver') === 'true';
+            document.getElementById('dataSaverToggle').checked = dSaver;
         }
 
         db.collection("users").doc(currentUser.id.toString()).onSnapshot((doc) => {
@@ -817,8 +938,8 @@
                 document.getElementById('btnPrice1y').innerText = d.price1y || "900 BDT";
 
                 let channelsHtml = "";
-                if(d.ch1Name && d.ch1Url) channelsHtml += `<div class="list-item" onclick="window.open('${d.ch1Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--primary-accent);"><span class="material-symbols-rounded" style="color:var(--text-light)">campaign</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch1Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch1Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
-                if(d.ch2Name && d.ch2Url) channelsHtml += `<div class="list-item" onclick="window.open('${d.ch2Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--danger);"><span class="material-symbols-rounded" style="color:var(--text-light)">local_fire_department</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch2Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch2Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
+                if(d.ch1Name && d.ch1Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch1Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--primary-accent);"><span class="material-symbols-rounded" style="color:var(--text-light)">campaign</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch1Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch1Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
+                if(d.ch2Name && d.ch2Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch2Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--danger);"><span class="material-symbols-rounded" style="color:var(--text-light)">local_fire_department</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch2Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch2Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
                 document.getElementById('channelListContainer').innerHTML = channelsHtml || "<p style='text-align:center; color:var(--text-muted);'>No channels added yet.</p>";
 
                 if(currentUser.id === ADMIN_ID) {
@@ -862,13 +983,23 @@
 
             feed.innerHTML = '';
             let filtered = currentCategory === 'All' ? allVideos : allVideos.filter(v => v.category === currentCategory);
+            
+            // Advance Filter & Search Application
             let searchQ = document.getElementById('searchInput').value.toLowerCase();
             if(searchQ) filtered = filtered.filter(v => v.title.toLowerCase().includes(searchQ));
+            let sortVal = document.getElementById('sortFilter').value;
+            if(sortVal === 'popular') {
+                filtered.sort((a,b) => (b.likes || 0) - (a.likes || 0));
+            } else {
+                filtered.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+            }
 
             if (!isVideosLoading && filtered.length === 0) {
                 feed.innerHTML = `<div style="text-align: center; padding: 50px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size: 48px; margin-bottom: 10px; opacity: 0.5;">videocam_off</span><br>কোনো ভিডিও পাওয়া যায়নি!</div>`;
                 return;
             }
+
+            let isDataSaver = localStorage.getItem('dataSaver') === 'true';
 
             filtered.forEach(vid => {
                 let isFav = favorites.some(f => f.id === vid.id) ? 'favorite' : 'favorite_border';
@@ -877,6 +1008,8 @@
                 let likeIcon = hasLiked ? 'favorite' : 'favorite_border';
                 let likeClass = hasLiked ? 'like-container liked' : 'like-container';
                 let targetUrl = vid.adUrl || '#';
+                
+                let thumbClass = isDataSaver ? "thumb-dynamic thumb-blur" : "thumb-dynamic";
 
                 let savedState = JSON.parse(localStorage.getItem('vidProgress_' + vid.id)) || { step: 0, unlockedUntil: 0 };
                 let currentStep = parseInt(savedState.step) || 0;
@@ -897,10 +1030,10 @@
 
                 let btnHtml = '';
                 if (currentUser.isPremium) {
-                    btnHtml = `<button class="direct-play-btn" onclick="watchVideoAction('${vid.id}', '${targetUrl}')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
+                    btnHtml = `<button class="direct-play-btn ripple-btn" onclick="watchVideoAction('${vid.id}', '${targetUrl}')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
                 } else if (isUnlocked) {
                     btnHtml = `${stepsHtml}
-                      <button class="unlock-btn" id="btn-${vid.id}" data-step="${currentStep}" style="background:var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
+                      <button class="unlock-btn ripple-btn" id="btn-${vid.id}" data-step="${currentStep}" style="background:var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
                           <span class="btn-text" id="btn-text-${vid.id}"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</span>
                       </button>
                       <div id="timer-${vid.id}" class="countdown-timer" style="display:block;"></div>`;
@@ -911,18 +1044,19 @@
                                 : `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${displayStep}/${vid.adCount}</span>`;
 
                     btnHtml = `${stepsHtml}
-                      <button class="unlock-btn" id="btn-${vid.id}" data-step="${currentStep}" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
+                      <button class="unlock-btn ripple-btn" id="btn-${vid.id}" data-step="${currentStep}" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
                           <span class="btn-text" id="btn-text-${vid.id}">${btnText}</span>
                       </button>
                       <div id="timer-${vid.id}" class="countdown-timer"></div>`;
                 }
 
+                // Added reveal class and chat button
                 feed.innerHTML += `
-                    <div class="video-card" id="card-${vid.id}">
+                    <div class="video-card reveal" id="card-${vid.id}">
                         <div class="thumbnail-container">
                             <span class="badge-new">NEW</span>
-                            <button class="fav-btn" onclick="toggleFav('${vid.id}', '${vid.title.replace(/'/g, "\\'")}', '${vid.photo}')"><span class="material-symbols-rounded" id="fav-icon-${vid.id}" style="color:${favColor}">${isFav}</span></button>
-                            <img src="${vid.photo}" class="thumb-dynamic" alt="Thumbnail" onerror="this.src='https://via.placeholder.com/400x250?text=Image+Load+Error';">
+                            <button class="fav-btn ripple-btn" onclick="toggleFav('${vid.id}', '${vid.title.replace(/'/g, "\\'")}', '${vid.photo}')"><span class="material-symbols-rounded" id="fav-icon-${vid.id}" style="color:${favColor}">${isFav}</span></button>
+                            <img src="${vid.photo}" class="${thumbClass}" alt="Thumbnail" onerror="this.src='https://via.placeholder.com/400x250?text=Image+Load+Error';">
                         </div>
                         <div class="card-content">
                             <span class="category-tag">${vid.category}</span>
@@ -935,13 +1069,21 @@
                                         <span class="${likeClass}" onclick="toggleLike('${vid.id}')" id="like-box-${vid.id}"><span class="material-symbols-rounded" style="font-size: 15px;">${likeIcon}</span> <span id="like-count-${vid.id}">${vid.likes}</span></span>
                                     </div>
                                 </div>
-                                <button class="options-btn" onclick="openShareDialog('${vid.id}', '${vid.title.replace(/'/g, "\\'")}')"><span class="material-symbols-rounded">more_vert</span></button>
+                                <button class="options-btn ripple-btn" onclick="openComments('${vid.id}')"><span class="material-symbols-rounded">chat</span></button>
+                                <button class="options-btn ripple-btn" onclick="openShareDialog('${vid.id}', '${vid.title.replace(/'/g, "\\'")}')"><span class="material-symbols-rounded">more_vert</span></button>
                             </div>
                             ${btnHtml}
                         </div>
                     </div>
                 `;
             });
+
+            // Initialize Intersection Observer for reveal animation
+            const cards = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+            }, { threshold: 0.1 });
+            cards.forEach(card => revealObserver.observe(card));
 
             setTimeout(() => {
                 filtered.forEach(vid => {
@@ -971,7 +1113,11 @@
             }
         }
 
-        function toggleSearch() { let sb = document.getElementById('searchInput'); sb.style.display = sb.style.display === 'block' ? 'none' : 'block'; if(sb.style.display === 'block') sb.focus(); }
+        function toggleSearch() { 
+            let sc = document.getElementById('searchContainer'); 
+            sc.style.display = sc.style.display === 'flex' ? 'none' : 'flex'; 
+            if(sc.style.display === 'flex') document.getElementById('searchInput').focus(); 
+        }
         function setCategory(cat, btn) { document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active')); btn.classList.add('active'); currentCategory = cat; renderVideos(); }
         function filterVideos() { renderVideos(); }
         function navSwitch(btn) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); btn.classList.add('active'); }
@@ -1416,7 +1562,7 @@
         
         function toggleFav(vidId, title, thumb) {
             const icon = document.getElementById(`fav-icon-${vidId}`); const index = favorites.findIndex(v => v.id === vidId);
-            if (index === -1) { favorites.push({ id: vidId, title: title, thumb: thumb }); icon.innerText = 'favorite'; icon.style.color = 'var(--danger)'; } 
+            if (index === -1) { favorites.push({ id: vidId, title: title, thumb: thumb }); icon.innerText = 'favorite'; icon.style.color = 'var(--danger)'; icon.classList.add('pop-anim'); setTimeout(()=>icon.classList.remove('pop-anim'), 300); } 
             else { favorites.splice(index, 1); icon.innerText = 'favorite_border'; icon.style.color = 'white'; }
             localStorage.setItem('favVideos', JSON.stringify(favorites)); updateLocalStatsUI();
         }
@@ -1428,11 +1574,112 @@
             if(favorites.length === 0) { list.innerHTML = '<div style="text-align:center; padding: 40px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size:48px; margin-bottom:10px; opacity:0.5;">heart_broken</span><br>No favorites yet.</div>'; return; }
             favorites.forEach(v => {
                 let liveVid = allVideos.find(vDoc => vDoc.id === v.id); let targetUrl = liveVid ? liveVid.adUrl : '#';
-                list.innerHTML += `<div class="list-item" style="background:var(--bg-card); border: 1px solid var(--divider);" onclick="openFavVideo('${v.id}')"><div style="display:flex; gap:15px; align-items:center;"><img src="${v.thumb}" style="width:70px; height:60px; border-radius:10px; object-fit:cover; border: 1px solid var(--divider);"><div><div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text-light);">${v.title}</div><div style="font-size:12px; color:var(--success); font-weight:bold;">Tap to Open / Unlock</div></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">play_circle</span></div>`;
+                list.innerHTML += `<div class="list-item ripple-btn" style="background:var(--bg-card); border: 1px solid var(--divider);" onclick="openFavVideo('${v.id}')"><div style="display:flex; gap:15px; align-items:center;"><img src="${v.thumb}" style="width:70px; height:60px; border-radius:10px; object-fit:cover; border: 1px solid var(--divider);"><div><div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text-light);">${v.title}</div><div style="font-size:12px; color:var(--success); font-weight:bold;">Tap to Open / Unlock</div></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">play_circle</span></div>`;
             });
         }
 
         function openFavVideo(vidId) { closeOverlay(null, 'favoritesOverlay'); let el = document.getElementById(`card-${vidId}`); if(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } else { alert("Video not available right now!"); } }
+
+        // --- NEW FEATURES JS (Settings, History, Comments, Ripple, Swipe) ---
+        
+        // 1. Ripple Effect Global Listener
+        document.addEventListener('click', function(e) {
+            let target = e.target.closest('.ripple-btn');
+            if (!target) return;
+            let rect = target.getBoundingClientRect();
+            let ripple = document.createElement('span');
+            ripple.className = 'ripple-span';
+            let size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = e.clientX - rect.left - size/2 + 'px';
+            ripple.style.top = e.clientY - rect.top - size/2 + 'px';
+            target.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // 2. Swipe Down to Close Overlays
+        document.querySelectorAll('.bottom-sheet').forEach(sheet => {
+            let startY, currentY;
+            sheet.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, {passive: true});
+            sheet.addEventListener('touchmove', e => {
+                if (sheet.scrollTop === 0) {
+                    currentY = e.touches[0].clientY;
+                    if (currentY > startY) { e.preventDefault(); sheet.style.transform = `translateY(${currentY - startY}px)`; }
+                }
+            }, {passive: false});
+            sheet.addEventListener('touchend', e => {
+                if (currentY > startY + 100) { 
+                    sheet.closest('.overlay').classList.remove('active');
+                    sheet.style.transform = 'translateY(100%)'; 
+                } else { 
+                    sheet.style.transform = 'translateY(0)'; 
+                }
+                startY = 0; currentY = 0;
+            });
+        });
+
+        // 3. Settings Features
+        function toggleDataSaver(checkbox) { localStorage.setItem('dataSaver', checkbox.checked); renderVideos(); }
+        function clearAppCache() { localStorage.clear(); alert("App cache cleared successfully!"); location.reload(); }
+        function deleteMyAccount() { 
+            if(confirm("Are you sure you want to delete your account? All data will be lost!")) { 
+                db.collection("users").doc(currentUser.id.toString()).delete().then(() => { localStorage.clear(); alert("Account deleted!"); location.reload(); }); 
+            } 
+        }
+
+        // 4. Watch History Features
+        function saveToWatchHistory(vidId) {
+            let vid = allVideos.find(v => v.id === vidId);
+            if(!vid) return;
+            watchHistory = watchHistory.filter(v => v.id !== vidId);
+            watchHistory.unshift({ id: vid.id, title: vid.title, thumb: vid.photo, time: new Date().toLocaleString() });
+            if(watchHistory.length > 30) watchHistory.pop();
+            localStorage.setItem('watchHistoryData', JSON.stringify(watchHistory));
+        }
+        function loadWatchHistory() {
+            openOverlay('historyOverlay');
+            const list = document.getElementById('historyList'); list.innerHTML = '';
+            if(watchHistory.length === 0) { list.innerHTML = '<div style="text-align:center; padding: 40px 20px; color: var(--text-muted);">No history found.</div>'; return; }
+            watchHistory.forEach(v => {
+                list.innerHTML += `<div class="list-item ripple-btn" style="background:var(--bg-card); border: 1px solid var(--divider);" onclick="openFavVideo('${v.id}')"><div style="display:flex; gap:15px; align-items:center;"><img src="${v.thumb}" style="width:70px; height:60px; border-radius:10px; object-fit:cover; border: 1px solid var(--divider);"><div><div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text-light);">${v.title}</div><div style="font-size:10px; color:var(--text-muted);">${v.time}</div></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">play_circle</span></div>`;
+            });
+        }
+        function clearHistory() { watchHistory = []; localStorage.removeItem('watchHistoryData'); loadWatchHistory(); }
+
+        // 5. Comments System
+        function openComments(vidId) {
+            document.getElementById('currentCommentVid').value = vidId;
+            openOverlay('commentsOverlay');
+            loadComments(vidId);
+        }
+        function postComment() {
+            let vidId = document.getElementById('currentCommentVid').value;
+            let text = document.getElementById('commentInput').value.trim();
+            if(!text) return alert("Write a comment first!");
+            db.collection("comments").add({ vidId: vidId, userId: currentUser.id, userName: currentUser.name, text: text, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => {
+                document.getElementById('commentInput').value = ''; loadComments(vidId);
+            });
+        }
+        function loadComments(vidId) {
+            const list = document.getElementById('commentsList'); list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading comments...</div>';
+            db.collection("comments").where("vidId", "==", vidId).orderBy("timestamp", "desc").onSnapshot(snap => {
+                let html = "";
+                if(snap.empty) { html = '<div style="text-align:center; padding:20px; color:var(--text-muted);">No comments yet. Be the first to comment!</div>'; }
+                else {
+                    snap.forEach(doc => {
+                        let d = doc.data(); let initial = (d.userName||'U').charAt(0);
+                        html += `<div style="display:flex; gap:10px; margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid var(--divider);">
+                            <div style="width:35px; height:35px; border-radius:50%; background:var(--primary-accent); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; flex-shrink:0;">${initial}</div>
+                            <div>
+                                <b style="color:var(--text-light); font-size:13px;">${d.userName}</b>
+                                <div style="color:var(--text-muted); font-size:14px; margin-top:4px;">${d.text}</div>
+                            </div>
+                        </div>`;
+                    });
+                }
+                list.innerHTML = html;
+            });
+        }
 
         renderVideos();
     </script>
