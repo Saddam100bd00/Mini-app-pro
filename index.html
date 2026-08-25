@@ -117,20 +117,24 @@
 
         .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 10px; background: rgba(245, 158, 11, 0.1); padding: 8px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
 
-        /* Floating Admin Support Anim - Update #1 */
+        /* Floating Admin Support Anim - Update #2 (Small, Perfect Circle, Fixed on Premium) */
         @keyframes floatUpDownSupport {
             0% { transform: translateY(0) scale(1); box-shadow: 0 10px 25px rgba(124, 58, 237, 0.6), 0 0 15px rgba(255, 0, 127, 0.5); }
             50% { transform: translateY(-12px) scale(1.05); box-shadow: 0 20px 30px rgba(124, 58, 237, 0.4), 0 0 25px rgba(255, 0, 127, 0.8); }
             100% { transform: translateY(0) scale(1); box-shadow: 0 10px 25px rgba(124, 58, 237, 0.6), 0 0 15px rgba(255, 0, 127, 0.5); }
         }
         .floating-support { 
-            position: fixed; bottom: 85px; right: 20px; /* Above Premium menu item perfectly */
+            position: fixed; bottom: 85px; right: calc(10vw - 23px); /* Exactly centered vertically above Premium icon */
+            width: 46px; height: 46px; /* Small size */
+            border-radius: 50%; /* Perfect Circle */
             background: linear-gradient(135deg, #ff007f, #7c3aed); color: white; 
-            padding: 12px 18px; border-radius: 30px; display: flex; align-items: center; gap: 8px; 
-            z-index: 90; text-decoration: none; font-weight: 800; font-size: 13px; transition: 0.3s; 
+            display: flex; align-items: center; justify-content: center; /* Center the icon inside */
+            z-index: 90; text-decoration: none; transition: 0.3s; 
             animation: floatUpDownSupport 2.5s ease-in-out infinite;
         }
         .floating-support:active { transform: scale(0.95); animation: none; }
+        #supportFloatingText { display: none; /* Text hidden to keep the button completely round */ }
+        .floating-support .material-symbols-rounded { font-size: 24px !important; margin: 0; }
 
         /* --- Bottom Nav --- */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(16, 15, 20, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--divider); display: flex; justify-content: space-around; padding: 12px 0 20px 0; z-index: 100; transition: background-color 0.4s ease;}
@@ -316,7 +320,7 @@
 
     <!-- Admin Support Button (Beautifully Floating exactly above Premium Icon) -->
     <a id="supportFloatingBtn" href="#" target="_blank" class="floating-support ripple-btn" style="display:none;">
-        <span class="material-symbols-rounded" style="font-size: 20px;">support_agent</span>
+        <span class="material-symbols-rounded">support_agent</span>
         <span id="supportFloatingText">Support</span>
     </a>
 
