@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
     
-    <!-- Canvas Confetti for Leaderboard -->
+    <!-- Canvas Confetti for Leaderboard & Premium Promo -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <!-- 1. Rewarded Popup Ad Code -->
@@ -37,7 +37,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-dark); color: var(--text-light); transition: background-color 0.4s ease, color 0.4s ease; padding-bottom: 90px; overflow-x: hidden; }
 
-        /* Hide Blogger Defaults if hosted on Blogger */
         #navbar-iframe, .widget, .widget-content, .main-inner, .tabs-outer, .header-outer { display: none !important; margin:0!important; padding:0!important; }
 
         /* --- Header --- */
@@ -73,32 +72,27 @@
         .categories-wrapper::-webkit-scrollbar { display: none; }
         .category-pill { display: inline-block; background: var(--bg-card); border: 1px solid var(--divider); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-light);}
         .category-pill.active { background: var(--primary-accent); color: white; border-color: var(--primary-accent); transform: scale(1.05); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
-        .category-tag { font-size: 11px; font-weight: 800; color: var(--text-light); background: rgba(124, 58, 237, 0.8); padding: 4px 10px; border-radius: 8px; margin-bottom: 8px; display: inline-block; }
+        .category-tag { font-size: 11px; font-weight: 800; color: var(--text-light); background: rgba(124, 58, 237, 0.8); padding: 4px 10px; border-radius: 8px; display: inline-block; }
         .video-count-badge { display: inline-flex; align-items: center; gap: 6px; background-color: var(--primary-accent); color: white; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 0 15px 15px 15px; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);}
 
-        /* --- Dynamic Image Sized Video Card --- */
-        .video-card { position: relative; background: linear-gradient(145deg, #1c1a24, #15131d); border-radius: 20px; margin: 0 15px 24px 15px; overflow: hidden; border: 1px solid rgba(124, 58, 237, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: 0.3s ease;}
+        /* --- Dynamic Image Sized Video Card (Updated) --- */
+        .video-card { position: relative; background: rgba(28, 26, 36, 0.7); backdrop-filter: blur(10px); border-radius: 20px; margin: 0 15px 24px 15px; overflow: hidden; border: 1px solid rgba(124, 58, 237, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s ease;}
         .video-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--primary-accent), transparent); opacity:0.8;}
         .thumbnail-container { position: relative; width: 100%; height: auto; min-height: 200px; background-color: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .thumb-dynamic { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .thumb-blur { filter: blur(10px) brightness(0.6); } 
         
         .badge-new { position: absolute; top: 12px; left: 12px; background-color: var(--success); color: white; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; z-index: 10; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);}
-        .fav-btn { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; cursor: pointer; transition: 0.3s;}
-        .fav-btn:active { transform: scale(0.8); }
-        .card-content { padding: 18px; }
-        .video-info-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .channel-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #6366f1); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0; box-shadow: 0 2px 10px rgba(168,85,247,0.3); }
-        .video-details { flex-grow: 1; }
-        .video-title { font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 6px; letter-spacing: 0.2px;}
-        .video-stats { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 12px; font-weight: 600; flex-wrap: wrap;}
-        .stat-item { display: inline-flex; align-items: center; gap: 4px; }
         
-        .like-container { display: inline-flex; align-items: center; gap: 4px; color:var(--text-muted); cursor:pointer; transition: 0.2s; padding: 4px 8px; border-radius: 12px; background: rgba(255,255,255,0.05);}
-        .like-container.liked { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-        .like-container:active { transform: scale(0.9); }
-
-        .options-btn { background: none; border: none; color: var(--text-muted); padding: 4px; cursor: pointer; }
+        .card-content { padding: 18px; }
+        .video-title { font-size: 16px; font-weight: 700; line-height: 1.4; margin-bottom: 10px; margin-top: 8px; letter-spacing: 0.2px; color: #fff;}
+        
+        /* Action Row for Video Card */
+        .action-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px; }
+        .action-btn-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .action-btn-item:active { transform: scale(0.9); color: var(--primary-light); }
+        .action-btn-item .material-symbols-rounded { font-size: 24px; transition: 0.3s; }
+        .action-btn-item.liked { color: var(--danger); }
         
         /* Unlock Steps Visuals */
         .unlock-steps { display: flex; align-items: center; justify-content: space-between; margin: 16px 0; position: relative; }
@@ -107,40 +101,35 @@
         .step.active .step-circle { border-color: var(--primary-accent); color: var(--primary-accent); box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);}
         .step.completed .step-circle { background-color: var(--primary-accent); border-color: var(--primary-accent); color: white; box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);}
         .step-label { font-size: 10px; color: var(--text-muted); font-weight: 700; transition: 0.3s;}
-        .step.active .step-label { color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.5); }
         
         .step-line-container { flex-grow: 1; height: 3px; background: rgba(255,255,255,0.15); margin: 0 4px; position: relative; overflow: hidden; transform: translateY(-9px); border-radius: 2px; }
         .step-line-fill { width: 0%; height: 100%; background: #ffffff; box-shadow: 0 0 12px #ffffff, 0 0 6px rgba(255,255,255,0.8); border-radius: 2px; }
 
         .unlock-btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3); transition: transform 0.2s, box-shadow 0.2s;}
         .unlock-btn:active { transform: translateY(2px); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); }
-        
         .unlock-btn.waiting { background: #231f30; color: #d1d5db; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
-        
-        .btn-progress-fill { position: absolute; top: 0; left: 0; bottom: 0; width: 0%; background: linear-gradient(90deg, rgba(168, 85, 247, 0.4), rgba(124, 58, 237, 0.7)); z-index: 1; transition: width 1s linear; }
         .btn-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
 
-        .premium-btn-spinner {
-            display: inline-block; width: 22px; height: 22px;
-            border: 3px solid rgba(255,255,255,0.15);
-            border-top-color: #ffffff; border-left-color: #10b981;
-            border-radius: 50%;
-            animation: spinPremium 0.8s linear infinite;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-        }
+        .premium-btn-spinner { display: inline-block; width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.15); border-top-color: #ffffff; border-left-color: #10b981; border-radius: 50%; animation: spinPremium 0.8s linear infinite; box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); }
 
         .direct-play-btn { background: var(--success); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: 0.3s;}
         .direct-play-btn:active { transform: translateY(2px); }
 
         .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 10px; background: rgba(245, 158, 11, 0.1); padding: 8px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
 
-        /* --- UPDATED: Floating Admin Support Anim (Above Premium Nav) --- */
-        @keyframes floatUpDown {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-            100% { transform: translateY(0); }
+        /* Floating Admin Support Anim - Update #1 */
+        @keyframes floatUpDownSupport {
+            0% { transform: translateY(0) scale(1); box-shadow: 0 10px 25px rgba(124, 58, 237, 0.6), 0 0 15px rgba(255, 0, 127, 0.5); }
+            50% { transform: translateY(-12px) scale(1.05); box-shadow: 0 20px 30px rgba(124, 58, 237, 0.4), 0 0 25px rgba(255, 0, 127, 0.8); }
+            100% { transform: translateY(0) scale(1); box-shadow: 0 10px 25px rgba(124, 58, 237, 0.6), 0 0 15px rgba(255, 0, 127, 0.5); }
         }
-        .floating-support { position: fixed; bottom: 80px; right: 15px; background: linear-gradient(135deg, #a855f7, #6366f1); color: white; padding: 10px 18px; border-radius: 25px; display: flex; align-items: center; gap: 8px; z-index: 99; text-decoration: none; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.5); font-weight: 800; font-size: 13px; transition: 0.3s; animation: floatUpDown 3s ease-in-out infinite;}
+        .floating-support { 
+            position: fixed; bottom: 85px; right: 20px; /* Above Premium menu item perfectly */
+            background: linear-gradient(135deg, #ff007f, #7c3aed); color: white; 
+            padding: 12px 18px; border-radius: 30px; display: flex; align-items: center; gap: 8px; 
+            z-index: 90; text-decoration: none; font-weight: 800; font-size: 13px; transition: 0.3s; 
+            animation: floatUpDownSupport 2.5s ease-in-out infinite;
+        }
         .floating-support:active { transform: scale(0.95); animation: none; }
 
         /* --- Bottom Nav --- */
@@ -175,7 +164,7 @@
         
         .notice-box { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 16px; border-radius: 16px; margin-bottom: 20px; color: var(--text-light); font-size: 14px; line-height: 1.6;}
         
-        /* --- Premium Promo & Warning Popup CSS --- */
+        /* --- Promo & Notices Boxes CSS --- */
         .promo-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 3000; display: none; align-items: center; justify-content: center; opacity: 0; transition: all 0.4s ease; }
         .promo-overlay.active { display: flex; opacity: 1; }
         .promo-box { background: linear-gradient(145deg, #1f1c2c, #15131d); border: 2px solid var(--warning); border-radius: 24px; padding: 30px 20px; width: 85%; max-width: 320px; text-align: center; position: relative; box-shadow: 0 0 30px rgba(245, 158, 11, 0.4), inset 0 0 20px rgba(245, 158, 11, 0.1); animation: pulseGlow 2s infinite alternate; }
@@ -192,40 +181,20 @@
         .warning-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 4000; display: none; align-items: center; justify-content: center; opacity: 0; transition: all 0.3s ease; }
         .warning-overlay.active { display: flex; opacity: 1; }
 
-        /* --- Leaderboard Pro Styles & Animations --- */
-        @keyframes rgbGlow {
-            0% { box-shadow: 0 0 15px #ff00ff, inset 0 0 8px rgba(255,0,255,0.4); border-color: #ff00ff; }
-            33% { box-shadow: 0 0 15px #00ffff, inset 0 0 8px rgba(0,255,255,0.4); border-color: #00ffff; }
-            66% { box-shadow: 0 0 15px #ffff00, inset 0 0 8px rgba(255,255,0,0.4); border-color: #ffff00; }
-            100% { box-shadow: 0 0 15px #ff00ff, inset 0 0 8px rgba(255,0,255,0.4); border-color: #ff00ff; }
-        }
-        .rgb-rank { animation: rgbGlow 3s linear infinite; }
+        /* --- Leaderboard Pro Styles & Running Animation --- */
+        /* Running Gradient Border Animation for Top Users */
+        @keyframes gradientSpin { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .avatar-glow-1 { position: relative; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #00e5ff, #0055ff, #ff00ff, #00e5ff); background-size: 400%; animation: gradientSpin 3s linear infinite; box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); }
+        .avatar-glow-2 { position: relative; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #ffd700, #ff8c00, #fff, #ffd700); background-size: 400%; animation: gradientSpin 3s linear infinite; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+        .avatar-glow-3 { position: relative; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #e2e8f0, #94a3b8, #fff, #e2e8f0); background-size: 400%; animation: gradientSpin 3s linear infinite; box-shadow: 0 0 10px rgba(226, 232, 240, 0.6); }
+        
         .premium-rank-card { background: linear-gradient(145deg, #2a2538, #181524) !important; border: 1px solid rgba(168, 85, 247, 0.4) !important; }
-        @keyframes vipShimmer {
-            0% { box-shadow: 0 0 8px #ffd700; border-color: #ffd700; }
-            100% { box-shadow: 0 0 20px #ffa500; border-color: #ffa500; }
-        }
-        .vip-logo { border: 2px solid #ffd700; animation: vipShimmer 1.5s infinite alternate; }
+        .vip-logo { border: 2px solid #ffd700; }
         
         .badge-rank-1 { background: rgba(255,255,255,0.1); border: 1px solid #00e5ff; color: #00e5ff; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(0,229,255,0.4); }
         .badge-rank-2 { background: rgba(255,255,255,0.1); border: 1px solid #ffd700; color: #ffd700; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(255,215,0,0.4); }
         .badge-rank-3 { background: rgba(255,255,255,0.1); border: 1px solid #e2e8f0; color: #e2e8f0; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(226,232,240,0.4); }
 
-        /* Leaderboard Running Border Animation for Top 3 */
-        .running-border-wrapper {
-            position: relative; border-radius: 50%; padding: 3px; display: inline-block; overflow: hidden;
-        }
-        .running-border-wrapper::before {
-            content: ''; position: absolute; inset: -5px; border-radius: 50%;
-            background: conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
-            animation: spinConic 2s linear infinite; z-index: 1;
-        }
-        .running-border-inner {
-            position: relative; z-index: 2; background: var(--bg-dark); border-radius: 50%; padding: 2px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
-        }
-        @keyframes spinConic { 100% { transform: rotate(360deg); } }
-
-        /* Leaderboard Filter Tabs */
         .lb-filter-wrapper { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 5px; scrollbar-width: none; }
         .lb-filter-wrapper::-webkit-scrollbar { display: none; }
         .lb-tab { background: var(--bg-dark); border: 1px solid var(--divider); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.3s; }
@@ -234,14 +203,11 @@
         .lb-type-btn.active { background: rgba(124, 58, 237, 0.1); color: var(--primary-light); border-bottom: 2px solid var(--primary-accent); }
 
         /* --- NEW ANIMATION CLASSES --- */
-        /* Ripple Effect */
         .ripple-btn { position: relative; overflow: hidden; transform: translate3d(0, 0, 0); }
         .ripple-span { position: absolute; border-radius: 50%; transform: scale(0); animation: ripple-anim 0.6s linear; background: rgba(255, 255, 255, 0.3); pointer-events: none; }
         @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
-        /* Heart Pop */
         @keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
         .pop-anim { animation: heartPop 0.3s ease-out; }
-        /* Scroll Reveal */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
@@ -258,7 +224,6 @@
         .ad-state-pill { background: rgba(124, 58, 237, 0.15); border: 1px solid var(--primary-accent); color: var(--primary-light); padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-block; letter-spacing: 0.5px; }
         .ad-progress-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; margin-top: 25px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
         .ad-progress-fill { height: 100%; width: 0%; background: linear-gradient(270deg, #f59e0b, #ef4444, #a855f7, #10b981); background-size: 300% 300%; animation: popGradient 3s ease infinite; border-radius: 10px; float: right; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
-        @keyframes popGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
     </style>
 </head>
 <body>
@@ -277,6 +242,26 @@
         </div>
     </div>
 
+    <!-- 🔔 NEW ADMIN NOTICE POPUP (Req 4) 🔔 -->
+    <div class="promo-overlay" id="latestNoticeOverlay">
+        <div class="promo-box" style="border-color: var(--primary-accent); animation: none; box-shadow: 0 0 25px rgba(124, 58, 237, 0.5);">
+            <div class="promo-icon" style="background: linear-gradient(135deg, #a855f7, #6366f1);"><span class="material-symbols-rounded">campaign</span></div>
+            <h2 class="promo-title" style="color: #a78bfa;">নতুন নোটিশ!</h2>
+            <p class="promo-desc" id="latestNoticeText" style="white-space: pre-line; text-align: left; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; max-height: 200px; overflow-y: auto; font-size:13px;"></p>
+            <button class="promo-btn ripple-btn" style="background: linear-gradient(135deg, #a855f7, #6366f1);" onclick="closeLatestNotice()">ঠিক আছে, পড়েছি</button>
+        </div>
+    </div>
+
+    <!-- 🎉 PREMIUM CONGRATULATIONS POPUP (Req 5) 🎉 -->
+    <div class="promo-overlay" id="premiumCongratsOverlay">
+        <div class="promo-box" style="border-color: var(--success); animation: none; box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);">
+            <div class="promo-icon" style="background: linear-gradient(135deg, #10b981, #059669);"><span class="material-symbols-rounded">stars</span></div>
+            <h2 class="promo-title" style="color: #34d399;" id="premiumCongratsTitle">অভিনন্দন!</h2>
+            <p class="promo-desc" id="premiumCongratsText">আপনি সফলভাবে প্রিমিয়াম মেম্বারশিপ পেয়েছেন। এখন কোনো অ্যাড ছাড়াই আনলিমিটেড ভিডিও উপভোগ করুন!</p>
+            <button class="promo-btn ripple-btn" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="closePremiumCongrats()">শুরু করুন</button>
+        </div>
+    </div>
+
     <!-- 🚫 EARLY RETURN WARNING OVERLAY 🚫 -->
     <div class="warning-overlay" id="adWarningOverlay">
         <div class="promo-box" style="border-color: var(--danger); box-shadow: 0 0 30px rgba(239, 68, 68, 0.4), inset 0 0 20px rgba(239, 68, 68, 0.1); animation: none;">
@@ -284,26 +269,6 @@
             <h2 class="promo-title" style="color: #ff6b6b; text-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);">আপনি আগেই ফিরে এসেছেন!</h2>
             <p class="promo-desc" id="warningWaitText">আপনাকে সম্পূর্ণ 5 সেকেন্ড ভিজিট করতে হবে। তাই আবার প্রথম থেকে "Watch Ad" বাটনে ক্লিক করুন!</p>
             <button class="promo-btn ripple-btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);" onclick="closeWarningOverlay()">আবার চেষ্টা করুন</button>
-        </div>
-    </div>
-
-    <!-- 🔔 NEW: GLOBAL ADMIN NOTICE POPUP 🔔 -->
-    <div class="overlay" id="globalNoticePopup" style="z-index: 5000;">
-        <div class="promo-box" style="background:var(--bg-card); border-color:var(--primary-accent); margin: auto;">
-            <div class="promo-icon" style="background:linear-gradient(135deg, #7c3aed, #a855f7); box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);"><span class="material-symbols-rounded">notifications_active</span></div>
-            <h2 style="color:var(--primary-light); margin-bottom:10px;">নতুন নোটিশ!</h2>
-            <p id="globalNoticeText" style="color:var(--text-light); font-size:14px; line-height:1.6; margin-bottom:20px;"></p>
-            <button class="promo-btn ripple-btn" style="background:var(--primary-accent);" id="globalNoticeCloseBtn">ঠিক আছে, বুঝতে পেরেছি</button>
-        </div>
-    </div>
-
-    <!-- 🎉 NEW: PREMIUM CONGRATS POPUP 🎉 -->
-    <div class="overlay" id="premiumCongratsPopup" style="z-index: 5000;">
-        <div class="promo-box" style="background:var(--bg-card); border-color:var(--success); margin: auto;">
-            <div class="promo-icon" style="background:var(--success); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);"><span class="material-symbols-rounded">verified</span></div>
-            <h2 style="color:var(--success); margin-bottom:10px;">অভিনন্দন! 🎉</h2>
-            <p id="premiumCongratsText" style="color:var(--text-light); font-size:15px; line-height:1.6; margin-bottom:20px; font-weight:bold;"></p>
-            <button class="promo-btn ripple-btn" style="background:var(--success);" onclick="document.getElementById('premiumCongratsPopup').classList.remove('active')">অসাধারণ!</button>
         </div>
     </div>
 
@@ -349,7 +314,7 @@
 
     <main id="videoFeed" style="padding: 0 10px;"></main>
 
-    <!-- UPDATED: Admin Support Button (Floating above Premium Tab) -->
+    <!-- Admin Support Button (Beautifully Floating exactly above Premium Icon) -->
     <a id="supportFloatingBtn" href="#" target="_blank" class="floating-support ripple-btn" style="display:none;">
         <span class="material-symbols-rounded" style="font-size: 20px;">support_agent</span>
         <span id="supportFloatingText">Support</span>
@@ -395,6 +360,7 @@
                 </div>
             </div>
 
+            <!-- Replace Tutorial with Referral -->
             <div class="list-item ripple-btn" onclick="openOverlay('referralOverlay'); closeOverlay(null, 'sidebarOverlay');">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div style="background:var(--bg-dark); padding:10px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-rounded" style="color:var(--success)">redeem</span></div>
@@ -470,7 +436,7 @@
         </div>
     </div>
 
-    <!-- 🎁 REFER & EARN OVERLAY 🎁 -->
+    <!-- 🎁 NEW REFERRAL OVERLAY 🎁 -->
     <div class="overlay" id="referralOverlay" onclick="closeOverlay(event, 'referralOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;">
@@ -524,7 +490,7 @@
     <button class="unlock-btn ripple-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');"><span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium</button></div></div>
     
     <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="notiList" style="margin-top:10px;">Loading updates...</div></div></div>
-    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে না! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn ripple-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn ripple-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn ripple-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
+    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে বিদ্যা! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn ripple-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn ripple-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn ripple-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
     <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>Complete Payment</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"><b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।</div><div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--text-muted)">Selected Plan:</span><b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b></div><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span style="color:var(--text-muted)">Amount to Send:</span><b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b></div><hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;"><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p><b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p><b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b></div><div class="input-group"><label>Select Payment Method</label><select id="payMethodInput"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Binance">Binance</option></select></div><div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br><b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span></div><div id="submitTrxBox"><div class="input-group"><label>Enter Transaction ID (TrxID) / Binance ID</label><input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;"></div><button class="btn-submit ripple-btn" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button></div></div></div>
     <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;"><div class="sheet-header"><h2>Share Options</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="list-item ripple-btn" onclick="shareOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div><div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div></div></div><div class="list-item ripple-btn" onclick="copyVideoLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div><div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div></div></div></div></div>
     <div class="overlay" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--primary-light); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">send</span> Our Channels</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="channelListContainer">Loading channels...</div></div></div>
@@ -606,7 +572,7 @@
                     <h3 id="statPremiumUsers" style="font-size:28px; color:var(--warning);">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-top:5px;">Premium Users</p>
                 </div>
             </div>
-            <!-- Added Watch Clicks Stat -->
+            
             <div style="background: var(--bg-dark); padding: 20px 15px; border-radius: 16px; text-align:center; border: 1px solid var(--success); margin-bottom: 20px;">
                 <h3 id="statTotalWatches" style="font-size:28px; color:var(--success);">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-top:5px;">Total Watch Clicks</p>
             </div>
@@ -637,7 +603,7 @@
             
             <div class="input-group"><label>Total Ad Steps</label><select id="vAdCount"><option value="3">3 Steps</option><option value="4">4 Steps</option><option value="5">5 Steps</option></select></div>
             
-            <!-- NEW AD SETUP & STEPS MANAGEMENT -->
+            <!-- AD SETUP -->
             <div style="background:var(--bg-dark); padding:15px; border-radius:12px; border:1px solid var(--primary-light); margin-bottom:18px;">
                 <h4 style="margin-bottom:10px; color:var(--primary-light); font-size:14px;">🎯 Monetag Ad Setup</h4>
                 
@@ -751,7 +717,7 @@
         </div>
     </div>
 
-    <!-- AD SIMULATION MODAL UI (NEW PREMIUM ANIMATION) -->
+    <!-- AD SIMULATION MODAL UI -->
     <div class="ad-modal" id="adSimulationModal">
         <div class="ad-card-box">
             <div class="premium-spinner-container">
@@ -822,7 +788,6 @@
             window.currentLBType = type; window.currentLBTime = timeFilter;
             openOverlay('leaderboardOverlay');
             
-            // Tab styling
             document.getElementById('tabUnlockLB').classList.remove('active');
             document.getElementById('tabReferralLB').classList.remove('active');
             if(type === 'unlock') document.getElementById('tabUnlockLB').classList.add('active');
@@ -831,7 +796,6 @@
             document.querySelectorAll('.lb-tab').forEach(el => el.classList.remove('active'));
             document.getElementById(`lbTime-${timeFilter}`).classList.add('active');
 
-            // Trigger Confetti
             if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             
             document.getElementById('leaderboardList').innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading...</div>';
@@ -852,44 +816,34 @@
                     if(timeFilter === '30days') displayCount = Math.floor(count * 0.9) || 1;
 
                     let rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
-                    let cardClass = ""; let badgeHtml = "";
+                    let cardClass = ""; let logoClass = ""; let badgeHtml = ""; let glowClass = "";
 
                     if (d.isPremium) {
+                        logoClass = "vip-logo";
                         badgeHtml += `<span class="badge-vip" style="margin-right:5px;">👑 VIP</span>`;
                     }
 
                     let rankName = "";
-                    if (displayCount >= 100) { rankName = "💎 Diamond"; cardClass = "premium-rank-card rgb-rank"; }
+                    if (displayCount >= 100) { rankName = "💎 Diamond"; cardClass = "premium-rank-card"; logoClass += " avatar-glow"; }
                     else if (displayCount >= 50) { rankName = "🏆 Gold"; cardClass = "premium-rank-card"; }
                     else if (displayCount >= 20) { rankName = "💿 Silver"; }
                     else { rankName = "🥉 Bronze"; }
                     
-                    if (rank === 1) { badgeHtml += `<span class="badge-rank-1">${rankName}</span>`; }
-                    else if (rank === 2) { badgeHtml += `<span class="badge-rank-2">${rankName}</span>`; }
-                    else if (rank === 3) { badgeHtml += `<span class="badge-rank-3">${rankName}</span>`; }
+                    if (rank === 1) { badgeHtml += `<span class="badge-rank-1">${rankName}</span>`; glowClass = "avatar-glow-1"; cardClass = "premium-rank-card"; }
+                    else if (rank === 2) { badgeHtml += `<span class="badge-rank-2">${rankName}</span>`; glowClass = "avatar-glow-2"; }
+                    else if (rank === 3) { badgeHtml += `<span class="badge-rank-3">${rankName}</span>`; glowClass = "avatar-glow-3"; }
                     else badgeHtml += `<span class="badge-free" style="border-color:var(--primary-accent);">${rankName}</span>`;
 
                     let userInitial = (d.name||'U').charAt(0);
-                    let basePhoto = d.photoUrl ? `<img src="${d.photoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover; position:relative; z-index:2;">` : `<div style="width:100%;height:100%;border-radius:50%;background:var(--primary-accent);display:flex;align-items:center;justify-content:center;font-weight:bold;color:white;position:relative;z-index:2;">${userInitial}</div>`;
-
-                    // Top 3 Running Color Border Effect
-                    let userPhotoHtml = basePhoto;
-                    if (rank <= 3) {
-                        userPhotoHtml = `
-                        <div class="running-border-wrapper" style="width:46px; height:46px;">
-                            <div class="running-border-inner">
-                                ${basePhoto}
-                            </div>
-                        </div>`;
-                    } else {
-                        userPhotoHtml = `<div style="width:40px; height:40px; border-radius:50%; overflow:hidden;">${basePhoto}</div>`;
-                    }
+                    let userPhotoHtml = d.photoUrl ? `<img src="${d.photoUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : userInitial;
 
                     html += `
                     <div class="list-item ${cardClass} ripple-btn" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:12px 16px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider); transition: 0.3s;">
                         <div style="display:flex; align-items:center; gap:12px;">
                             <div style="font-size:18px; font-weight:bold; width:25px; text-align:center;">${rankIcon}</div>
-                            ${userPhotoHtml}
+                            <div class="${glowClass}" style="border-radius: 50%;">
+                                <div class="${logoClass}" style="width:42px; height:42px; border-radius:50%; background:var(--primary-accent); display:flex; align-items:center; justify-content:center; font-weight:bold; color:white; overflow:hidden;">${userPhotoHtml}</div>
+                            </div>
                             <div>
                                 <div style="font-weight:700; color:var(--text-light); font-size:15px; margin-bottom: 4px; display:flex; align-items:center; gap:6px;">${d.name || 'User'}</div>
                                 <div>${badgeHtml}</div>
@@ -924,8 +878,6 @@
         let botBaseUrl = 'https://t.me/yourbot'; 
         let currentShareVid = '';
         let currentShareTitle = '';
-        let lastSeenNoticeId = localStorage.getItem('lastSeenNoticeId') || '';
-        let wasPremium = null;
         
         window.globalAdsterraUrl = "https://www.profitableratecpmnetwork.com/bageku998?key=82c723cb1837a70dc3582077390c735f";
         window.globalMonetagUrl = "https://omg10.com/4/11647301";
@@ -978,7 +930,6 @@
                 let data = doc.data();
                 currentUser.referralCount = data.referralCount || 0;
                 
-                // Update Referral Page Stats
                 document.getElementById('refTotalCount').innerText = currentUser.referralCount;
                 document.getElementById('refActiveCount').innerText = Math.floor(currentUser.referralCount * 0.8) || currentUser.referralCount;
                 document.getElementById('refInactiveCount').innerText = currentUser.referralCount - (Math.floor(currentUser.referralCount * 0.8) || currentUser.referralCount);
@@ -991,41 +942,53 @@
                     db.collection("users").doc(currentUser.id.toString()).update({ unlockedCount: unlockedCount, name: currentUser.name, photoUrl: currentUser.photoUrl });
                 }
 
-                // Premium Congrats Popup Logic
-                let currentlyPremium = data.isPremium && (data.premiumExpiry > Date.now());
-                if (currentlyPremium && data.notifiedPremium === false) {
-                    showPremiumCongrats(data.payMethod);
-                    db.collection("users").doc(currentUser.id.toString()).update({ notifiedPremium: true });
-                }
-                wasPremium = currentlyPremium;
+                if(data.isPremium && data.premiumExpiry) {
+                    let now = new Date().getTime();
+                    if(now > data.premiumExpiry) {
+                        db.collection("users").doc(currentUser.id.toString()).update({ isPremium: false });
+                        currentUser.isPremium = false;
+                        badgeEl.className = "badge-free"; badgeEl.innerHTML = "Free";
+                        document.getElementById('premiumCount').innerText = 'Premium Expired';
+                        document.getElementById('profAvatar').classList.remove('vip-logo');
+                    } else {
+                        currentUser.isPremium = true;
+                        let daysLeft = Math.ceil((data.premiumExpiry - now) / (1000 * 60 * 60 * 24));
+                        badgeEl.className = "badge-vip"; badgeEl.innerHTML = "👑 VIP";
+                        document.getElementById('premiumCount').innerText = `${daysLeft} Days Remaining`;
+                        document.getElementById('profAvatar').classList.add('vip-logo');
 
-                if(currentlyPremium) {
-                    currentUser.isPremium = true;
-                    let daysLeft = Math.ceil((data.premiumExpiry - Date.now()) / (1000 * 60 * 60 * 24));
-                    badgeEl.className = "badge-vip"; badgeEl.innerHTML = "👑 VIP";
-                    document.getElementById('premiumCount').innerText = `${daysLeft} Days Remaining`;
-                    document.getElementById('profAvatar').classList.add('vip-logo');
-                } else {
-                    if(data.isPremium && data.premiumExpiry <= Date.now()) {
-                        db.collection("users").doc(currentUser.id.toString()).update({ isPremium: false, notifiedPremium: false });
+                        // ✅ PREMIUM CONGRATULATION POPUP LOGIC
+                        let congratulated = localStorage.getItem('premiumCongratulatedFor');
+                        if (congratulated !== data.premiumExpiry.toString()) {
+                            let title = "অভিনন্দন!";
+                            let text = "আপনি সফলভাবে প্রিমিয়াম মেম্বারশিপ পেয়েছেন। এখন কোনো অ্যাড ছাড়াই আনলিমিটেড ভিডিও উপভোগ করুন!";
+                            
+                            if (data.payMethod === "Referral" || data.payMethod === "Reward" || (data.plan && data.plan.includes("Free"))) {
+                                title = "🎉 ফ্রি প্রিমিয়াম!";
+                                text = "রেফারেল করে বা লিডারবোর্ডে টপ থাকার জন্য আপনাকে সম্পূর্ণ ফ্রি প্রিমিয়াম দেওয়া হয়েছে। অভিনন্দন!";
+                            } else {
+                                title = "💖 পেমেন্ট সফল!";
+                                text = "আপনার পেমেন্ট সফল হয়েছে এবং প্রিমিয়াম চালু করা হয়েছে। অ্যাড ছাড়াই সব ভিডিও দেখুন!";
+                            }
+                            
+                            document.getElementById('premiumCongratsTitle').innerText = title;
+                            document.getElementById('premiumCongratsText').innerText = text;
+                            document.getElementById('premiumCongratsOverlay').classList.add('active');
+                            
+                            if (typeof confetti === 'function') confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+                            localStorage.setItem('premiumCongratulatedFor', data.premiumExpiry.toString());
+                        }
                     }
+                } else {
                     currentUser.isPremium = false; badgeEl.className = "badge-free"; badgeEl.innerHTML = "Free";
                     document.getElementById('premiumCount').innerText = '';
                     document.getElementById('profAvatar').classList.remove('vip-logo');
                 }
                 renderVideos(); 
             } else {
-                db.collection("users").doc(currentUser.id.toString()).set({ name: currentUser.name, photoUrl: currentUser.photoUrl, isPremium: false, unlockedCount: unlockedCount, referralCount: 0, notifiedPremium: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                db.collection("users").doc(currentUser.id.toString()).set({ name: currentUser.name, photoUrl: currentUser.photoUrl, isPremium: false, unlockedCount: unlockedCount, referralCount: 0, joinedAt: firebase.firestore.FieldValue.serverTimestamp() });
             }
         });
-
-        function showPremiumCongrats(method) {
-            let text = (method && method.toLowerCase().includes('refer')) 
-                ? "রেফারেল টার্গেট পূরণ করায় আপনি সম্পূর্ণ ফ্রি প্রিমিয়াম পেয়েছেন!" 
-                : "আপনার পেমেন্ট সফল হয়েছে এবং প্রিমিয়াম প্যাক চালু হয়েছে!";
-            document.getElementById('premiumCongratsText').innerText = text;
-            document.getElementById('premiumCongratsPopup').classList.add('active');
-        }
 
         function showPremiumPromo() {
             const promo = document.getElementById('promoOverlay');
@@ -1042,6 +1005,7 @@
         }
         function closePromo() { document.getElementById('promoOverlay').classList.remove('active'); }
         function goToPremiumFromPromo() { closePromo(); openOverlay('premiumOverlay'); }
+        function closePremiumCongrats() { document.getElementById('premiumCongratsOverlay').classList.remove('active'); }
 
         db.collection("videos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             isVideosLoading = false; allVideos = [];
@@ -1059,27 +1023,20 @@
             }
         });
 
-        // Global Notice & Notification System
+        // ✅ ADMIN NOTICE POPUP SYSTEM
         db.collection("notifications").orderBy("timestamp", "desc").onSnapshot(snap => {
             allNotis = []; let html = ""; let dotInd = document.getElementById('notiDotIndicator');
-            
-            if(snap.empty) { 
-                dotInd.style.display = 'none'; 
-            } else {
+            if(snap.empty) { dotInd.style.display = 'none'; } 
+            else {
                 dotInd.style.display = 'block';
-                let latestNotice = snap.docs[0];
-                let dLatest = latestNotice.data();
+                let latestNoti = snap.docs[0].data();
+                latestNoti.id = snap.docs[0].id;
                 
-                // Show Admin Global Popup once per new notice
-                if (lastSeenNoticeId !== latestNotice.id) {
-                    document.getElementById('globalNoticeText').innerText = dLatest.text;
-                    document.getElementById('globalNoticePopup').classList.add('active');
-                    
-                    document.getElementById('globalNoticeCloseBtn').onclick = () => {
-                        localStorage.setItem('lastSeenNoticeId', latestNotice.id);
-                        lastSeenNoticeId = latestNotice.id;
-                        document.getElementById('globalNoticePopup').classList.remove('active');
-                    };
+                let lastSeenId = localStorage.getItem('lastSeenNoticeId');
+                if (lastSeenId !== latestNoti.id) {
+                    document.getElementById('latestNoticeText').innerText = latestNoti.text;
+                    document.getElementById('latestNoticeOverlay').classList.add('active');
+                    window.currentLatestNoticeId = latestNoti.id;
                 }
 
                 snap.forEach(doc => {
@@ -1090,6 +1047,11 @@
             document.getElementById('notiList').innerHTML = html || "<p style='text-align:center; color:var(--text-muted); padding:20px;'>No update messages yet.</p>";
             if(currentUser.id === ADMIN_ID) renderAdminNotiManageList();
         });
+
+        function closeLatestNotice() {
+            localStorage.setItem('lastSeenNoticeId', window.currentLatestNoticeId);
+            document.getElementById('latestNoticeOverlay').classList.remove('active');
+        }
 
         db.collection("settings").doc("app_settings").onSnapshot(doc => {
             if(doc.exists) {
@@ -1157,7 +1119,6 @@
             feed.innerHTML = '';
             let filtered = currentCategory === 'All' ? allVideos : allVideos.filter(v => v.category === currentCategory);
             
-            // Advance Filter & Search Application
             let searchQ = document.getElementById('searchInput').value.toLowerCase();
             if(searchQ) filtered = filtered.filter(v => v.title.toLowerCase().includes(searchQ));
             let sortVal = document.getElementById('sortFilter').value;
@@ -1184,7 +1145,7 @@
                 
                 let thumbClass = isDataSaver ? "thumb-dynamic thumb-blur" : "thumb-dynamic";
                 
-                let uploadDateStr = "Recently";
+                let uploadDateStr = "Recently Uploaded";
                 if(vid.timestamp) {
                     let d = new Date(vid.timestamp.seconds * 1000);
                     uploadDateStr = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -1229,36 +1190,46 @@
                       <div id="timer-${vid.id}" class="countdown-timer"></div>`;
                 }
 
+                // ✅ Beautiful Video Card Rendering
                 feed.innerHTML += `
                     <div class="video-card reveal" id="card-${vid.id}">
                         <div class="thumbnail-container">
                             <span class="badge-new">NEW</span>
-                            <button class="fav-btn ripple-btn" onclick="toggleFav('${vid.id}', '${vid.title.replace(/'/g, "\\'")}', '${vid.photo}')"><span class="material-symbols-rounded" id="fav-icon-${vid.id}" style="color:${favColor}">${isFav}</span></button>
                             <img src="${vid.photo}" class="${thumbClass}" alt="Thumbnail" onerror="this.src='https://via.placeholder.com/400x250?text=Image+Load+Error';">
                         </div>
                         <div class="card-content">
-                            <span class="category-tag">${vid.category}</span>
-                            <h3 class="video-title">${vid.title}</h3>
-                            <div class="video-info-row">
-                                <div class="channel-avatar">V</div>
-                                <div class="video-details">
-                                    <div class="video-stats">
-                                        <span class="stat-item" title="Views"><span class="material-symbols-rounded" style="font-size: 15px;">visibility</span> ${vid.views}</span>
-                                        <span class="${likeClass}" onclick="toggleLike('${vid.id}')" id="like-box-${vid.id}"><span class="material-symbols-rounded" style="font-size: 15px;">${likeIcon}</span> <span id="like-count-${vid.id}">${vid.likes}</span></span>
-                                        <span class="stat-item time-badge" style="margin-left:auto;"><span class="material-symbols-rounded" style="font-size: 13px;">schedule</span> ${uploadDateStr}</span>
-                                    </div>
-                                </div>
-                                <button class="options-btn ripple-btn" onclick="openComments('${vid.id}')"><span class="material-symbols-rounded">chat</span></button>
-                                <button class="options-btn ripple-btn" onclick="openShareDialog('${vid.id}', '${vid.title.replace(/'/g, "\\'")}')"><span class="material-symbols-rounded">more_vert</span></button>
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <span class="category-tag">${vid.category}</span>
+                                <span style="font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:4px;"><span class="material-symbols-rounded" style="font-size:13px;">schedule</span> ${uploadDateStr}</span>
                             </div>
+                            <h3 class="video-title">${vid.title}</h3>
+                            
+                            <!-- Action Row -->
+                            <div class="action-row">
+                                <div class="action-btn-item ${likeClass}" onclick="toggleLike('${vid.id}')" id="like-box-${vid.id}">
+                                    <span class="material-symbols-rounded" id="like-icon-${vid.id}">${likeIcon}</span> <span id="like-count-${vid.id}">${vid.likes}</span>
+                                </div>
+                                <div class="action-btn-item" onclick="openComments('${vid.id}')">
+                                    <span class="material-symbols-rounded">chat_bubble</span> Comment
+                                </div>
+                                <div class="action-btn-item" onclick="openShareDialog('${vid.id}', '${vid.title.replace(/'/g, "\\'")}')">
+                                    <span class="material-symbols-rounded">share</span> Share
+                                </div>
+                                <div class="action-btn-item" onclick="toggleFav('${vid.id}', '${vid.title.replace(/'/g, "\\'")}', '${vid.photo}')">
+                                    <span class="material-symbols-rounded" id="fav-icon-${vid.id}" style="color:${favColor}">${isFav}</span>
+                                </div>
+                            </div>
+                            
+                            <div style="font-size: 12px; color: var(--text-light); display: flex; align-items: center; gap: 6px; margin-top: 15px; margin-bottom: 5px; font-weight: bold; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px;">
+                                <span class="material-symbols-rounded" style="font-size: 16px; color: var(--success);">visibility</span> ${vid.views} Views
+                            </div>
+
                             ${btnHtml}
-                            <div class="latest-comment-box" id="latest-comment-${vid.id}" style="margin-top:12px; font-size:13px; color:var(--text-muted); background:rgba(255,255,255,0.03); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.05); display:none;"></div>
                         </div>
                     </div>
                 `;
             });
 
-            // Initialize Intersection Observer for reveal animation
             const cards = document.querySelectorAll('.reveal');
             const revealObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
@@ -1272,19 +1243,6 @@
                         let btn = document.getElementById(`btn-${vid.id}`);
                         if (btn) startUnlockTimer(vid.id, vid.adUrl, btn, vid.adCount, s.unlockedUntil);
                     }
-                    
-                    // Fetch latest comment for preview
-                    db.collection("comments").where("vidId", "==", vid.id).orderBy("timestamp", "desc").limit(1).get().then(snap => {
-                        if(!snap.empty) {
-                            let d = snap.docs[0].data();
-                            let cBox = document.getElementById(`latest-comment-${vid.id}`);
-                            if(cBox) {
-                                cBox.style.display = 'block';
-                                cBox.innerHTML = `<span class="material-symbols-rounded" style="font-size:14px; vertical-align:middle; color:var(--primary-accent);">format_quote</span> <b style="color:var(--text-light);">${d.userName}:</b> ${d.text} <span style="color:var(--primary-light); cursor:pointer; margin-left:5px; font-weight:bold;" onclick="openComments('${vid.id}')">View</span>`;
-                            }
-                        }
-                    }).catch(e => console.log(e));
-
                 });
             }, 100);
         }
@@ -1294,14 +1252,14 @@
             if(vid) {
                 let likedBy = vid.likedBy || []; let isLiked = likedBy.includes(currentUser.id);
                 let vidRef = db.collection("videos").doc(vidId);
-                let countEl = document.getElementById(`like-count-${vidId}`); let boxEl = document.getElementById(`like-box-${vidId}`); let iconEl = boxEl.querySelector('.material-symbols-rounded');
+                let countEl = document.getElementById(`like-count-${vidId}`); let boxEl = document.getElementById(`like-box-${vidId}`); let iconEl = document.getElementById(`like-icon-${vidId}`);
 
                 if(isLiked) {
                     vidRef.update({ likes: firebase.firestore.FieldValue.increment(-1), likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.id) });
-                    countEl.innerText = parseInt(countEl.innerText) - 1; boxEl.className = 'like-container'; iconEl.innerText = 'favorite_border';
+                    countEl.innerText = parseInt(countEl.innerText) - 1; boxEl.className = 'action-btn-item like-container'; iconEl.innerText = 'favorite_border';
                 } else {
                     vidRef.update({ likes: firebase.firestore.FieldValue.increment(1), likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.id) });
-                    countEl.innerText = parseInt(countEl.innerText) + 1; boxEl.className = 'like-container liked'; iconEl.innerText = 'favorite';
+                    countEl.innerText = parseInt(countEl.innerText) + 1; boxEl.className = 'action-btn-item like-container liked'; iconEl.innerText = 'favorite';
                 }
             }
         }
@@ -1354,7 +1312,6 @@
                 let startTime = Date.now();
                 let failed = false;
 
-                // Play ad logic
                 if(adType === 'adsterra_link') { openExternalLink(window.globalAdsterraUrl); }
                 else if(adType === 'monetag_link') { openExternalLink(window.globalMonetagUrl); }
                 else {
@@ -1363,14 +1320,13 @@
                     else if (adType === 'inapp') { if (typeof show_11439323 === 'function') show_11439323('inapp'); }
                 }
 
-                // Check function for early return
                 const checkReturn = () => {
                     if (failed) return;
                     let elapsed = Date.now() - startTime;
                     if (elapsed > 1000 && elapsed < (requiredTime - 1000)) { 
                         failed = true;
                         cleanup();
-                        resolve(false); // Failed (returned early)
+                        resolve(false); 
                     }
                 };
 
@@ -1383,7 +1339,7 @@
                 let timeout = setTimeout(() => {
                     if(!failed) {
                         cleanup();
-                        resolve(true); // Success
+                        resolve(true); 
                     }
                 }, requiredTime);
 
@@ -1442,14 +1398,14 @@
             let ad2Type = vid.ad2Type || 'rewarded';
             let adTime = vid.adTime ? parseInt(vid.adTime) : 5; 
 
-            // AD 1 Play & Wait Validation
+            // AD 1
             await runModalCountdown(1, adsForThisStep, currentStep);
             document.getElementById('adSimulationModal').classList.remove('active');
             
             let success1 = await enforceAdWatchTime(ad1Type, adTime);
             if(!success1) return showEarlyWarning(adTime, vidId, btn, totalSteps);
 
-            // AD 2 Play & Wait Validation
+            // AD 2
             if (adsForThisStep === 2) {
                 await runModalCountdown(2, adsForThisStep, currentStep);
                 document.getElementById('adSimulationModal').classList.remove('active');
@@ -1458,7 +1414,6 @@
                 if(!success2) return showEarlyWarning(adTime, vidId, btn, totalSteps);
             }
 
-            // 5 Seconds Premium Wait & Line Animation
             btn.classList.add('waiting');
             let waitTime = 5;
             
@@ -1553,7 +1508,7 @@
         function submitTrx() {
             let trx = document.getElementById('trxInput').value; let method = document.getElementById('payMethodInput').value;
             if(!trx) return alert("Enter TrxID or Binance Pay ID!");
-            db.collection("transactions").add({ userId: currentUser.id, userName: currentUser.name, plan: selectedPlan, amount: selectedPrice, method: method, trxId: trx, status: "Pending", timestamp: firebase.firestore.FieldValue.serverTimestamp(), notifiedPremium: false }).then(() => {
+            db.collection("transactions").add({ userId: currentUser.id, userName: currentUser.name, plan: selectedPlan, amount: selectedPrice, method: method, trxId: trx, status: "Pending", timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => {
                 document.getElementById('trxInput').value = ''; document.getElementById('submitTrxBox').style.display = 'none'; document.getElementById('pendingStatusBox').style.display = 'block'; alert("TrxID Submitted! Please wait for Admin Approval.");
             });
         }
@@ -1742,11 +1697,11 @@
             let days = 0; if(plan.includes('1 Month')) days = 30; else if(plan.includes('6 Months')) days = 180; else if(plan.includes('1 Year')) days = 365;
             let expiryDate = new Date(); expiryDate.setDate(expiryDate.getDate() + days);
             db.collection("transactions").doc(docId).update({ status: "Approved" });
-            db.collection("users").doc(uid.toString()).update({ isPremium: true, premiumExpiry: expiryDate.getTime(), plan: plan, payMethod: method, notifiedPremium: false }); alert("Approved successfully!"); fetchAdminStats(); 
+            db.collection("users").doc(uid.toString()).update({ isPremium: true, premiumExpiry: expiryDate.getTime(), plan: plan, payMethod: method }); alert("Approved successfully!"); fetchAdminStats(); 
         }
 
         function rejectTrx(docId) { if(confirm("Are you sure you want to reject this transaction?")) { db.collection("transactions").doc(docId).update({ status: "Rejected" }); } }
-        function removePremium(uid) { if(confirm("Remove premium status for this user?")) { db.collection("users").doc(uid.toString()).update({ isPremium: false, premiumExpiry: firebase.firestore.FieldValue.delete(), payMethod: firebase.firestore.FieldValue.delete(), notifiedPremium: false }); } }
+        function removePremium(uid) { if(confirm("Remove premium status for this user?")) { db.collection("users").doc(uid.toString()).update({ isPremium: false, premiumExpiry: firebase.firestore.FieldValue.delete(), payMethod: firebase.firestore.FieldValue.delete() }); } }
 
         function toggleTheme() { const isLight = document.body.parentElement.getAttribute('data-theme') === 'light'; document.body.parentElement.setAttribute('data-theme', isLight ? 'dark' : 'light'); }
         function openOverlay(id) { document.querySelectorAll('.overlay').forEach(el => { el.classList.remove('active'); if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)'; }); const overlay = document.getElementById(id); if(!overlay) return; overlay.classList.add('active'); setTimeout(() => { if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)'; }, 10); }
@@ -1775,7 +1730,6 @@
 
         // --- NEW FEATURES JS (Settings, History, Comments, Ripple, Swipe) ---
         
-        // 1. Ripple Effect Global Listener
         document.addEventListener('click', function(e) {
             let target = e.target.closest('.ripple-btn');
             if (!target) return;
@@ -1790,7 +1744,6 @@
             setTimeout(() => ripple.remove(), 600);
         });
 
-        // 2. Swipe Down to Close Overlays
         document.querySelectorAll('.bottom-sheet').forEach(sheet => {
             let startY, currentY;
             sheet.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, {passive: true});
@@ -1811,7 +1764,6 @@
             });
         });
 
-        // 3. Settings Features
         function toggleDataSaver(checkbox) { localStorage.setItem('dataSaver', checkbox.checked); renderVideos(); }
         function clearAppCache() { localStorage.clear(); alert("App cache cleared successfully!"); location.reload(); }
         function deleteMyAccount() { 
@@ -1820,7 +1772,6 @@
             } 
         }
 
-        // 4. Watch History Features
         function saveToWatchHistory(vidId) {
             let vid = allVideos.find(v => v.id === vidId);
             if(!vid) return;
@@ -1839,7 +1790,6 @@
         }
         function clearHistory() { watchHistory = []; localStorage.removeItem('watchHistoryData'); loadWatchHistory(); }
 
-        // 5. Comments System
         function openComments(vidId) {
             document.getElementById('currentCommentVid').value = vidId;
             openOverlay('commentsOverlay');
