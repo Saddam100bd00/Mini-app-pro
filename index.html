@@ -85,14 +85,15 @@
         .badge-new { position: absolute; top: 12px; left: 12px; background-color: var(--success); color: white; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; z-index: 10; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);}
         
         .card-content { padding: 18px; }
-        .video-title { font-size: 16px; font-weight: 700; line-height: 1.4; margin-bottom: 10px; margin-top: 8px; letter-spacing: 0.2px; color: #fff;}
+        .video-title { font-size: 16px; font-weight: 700; line-height: 1.4; margin-bottom: 12px; margin-top: 10px; letter-spacing: 0.2px; color: #fff;}
         
         /* Action Row for Video Card */
-        .action-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px; }
-        .action-btn-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .action-row { display: flex; justify-content: space-around; align-items: center; margin-top: 5px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .action-btn-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .action-btn-item:active { transform: scale(0.9); color: var(--primary-light); }
-        .action-btn-item .material-symbols-rounded { font-size: 24px; transition: 0.3s; }
-        .action-btn-item.liked { color: var(--danger); }
+        .action-btn-item .material-symbols-rounded { font-size: 22px; transition: 0.3s; }
+        .action-btn-item.liked { color: var(--primary-light); }
+        .action-btn-item.fav { color: var(--danger); }
         
         /* Unlock Steps Visuals */
         .unlock-steps { display: flex; align-items: center; justify-content: space-between; margin: 16px 0; position: relative; }
@@ -117,24 +118,26 @@
 
         .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 10px; background: rgba(245, 158, 11, 0.1); padding: 8px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
 
-        /* Floating Admin Support Anim - Update #2 (Small, Perfect Circle, Fixed on Premium) */
+        /* Floating Admin Support Anim - Small, Perfect Circle, Fixed on Premium Menu */
         @keyframes floatUpDownSupport {
-            0% { transform: translateY(0) scale(1); box-shadow: 0 10px 25px rgba(124, 58, 237, 0.6), 0 0 15px rgba(255, 0, 127, 0.5); }
-            50% { transform: translateY(-12px) scale(1.05); box-shadow: 0 20px 30px rgba(124, 58, 237, 0.4), 0 0 25px rgba(255, 0, 127, 0.8); }
-            100% { transform: translateY(0) scale(1); box-shadow: 0 10px 25px rgba(124, 58, 237, 0.6), 0 0 15px rgba(255, 0, 127, 0.5); }
+            0% { transform: translateY(0) scale(1); box-shadow: 0 8px 20px rgba(124, 58, 237, 0.6), 0 0 15px rgba(255, 0, 127, 0.5); }
+            50% { transform: translateY(-10px) scale(1.05); box-shadow: 0 15px 25px rgba(124, 58, 237, 0.4), 0 0 20px rgba(255, 0, 127, 0.8); }
+            100% { transform: translateY(0) scale(1); box-shadow: 0 8px 20px rgba(124, 58, 237, 0.6), 0 0 15px rgba(255, 0, 127, 0.5); }
         }
         .floating-support { 
-            position: fixed; bottom: 85px; right: calc(10vw - 23px); /* Exactly centered vertically above Premium icon */
-            width: 46px; height: 46px; /* Small size */
-            border-radius: 50%; /* Perfect Circle */
-            background: linear-gradient(135deg, #ff007f, #7c3aed); color: white; 
-            display: flex; align-items: center; justify-content: center; /* Center the icon inside */
-            z-index: 90; text-decoration: none; transition: 0.3s; 
-            animation: floatUpDownSupport 2.5s ease-in-out infinite;
+            position: fixed !important; 
+            bottom: 75px !important; /* Perfect height above bottom nav */
+            right: calc(10% - 24px) !important; /* Horizontally aligned exactly above the 5th icon */
+            width: 48px !important; height: 48px !important; 
+            border-radius: 50% !important; 
+            background: linear-gradient(135deg, #ff007f, #7c3aed) !important; color: white !important; 
+            display: flex !important; align-items: center !important; justify-content: center !important; 
+            z-index: 9999 !important; text-decoration: none !important; transition: 0.3s !important; 
+            animation: floatUpDownSupport 2.5s ease-in-out infinite !important;
         }
-        .floating-support:active { transform: scale(0.95); animation: none; }
-        #supportFloatingText { display: none; /* Text hidden to keep the button completely round */ }
-        .floating-support .material-symbols-rounded { font-size: 24px !important; margin: 0; }
+        .floating-support:active { transform: scale(0.90) !important; animation: none !important; }
+        #supportFloatingText { display: none !important; /* Hidden to keep the button completely round */ }
+        .floating-support .material-symbols-rounded { font-size: 26px !important; margin: 0 !important; padding: 0 !important; }
 
         /* --- Bottom Nav --- */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(16, 15, 20, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--divider); display: flex; justify-content: space-around; padding: 12px 0 20px 0; z-index: 100; transition: background-color 0.4s ease;}
@@ -318,7 +321,7 @@
 
     <main id="videoFeed" style="padding: 0 10px;"></main>
 
-    <!-- Admin Support Button (Beautifully Floating exactly above Premium Icon) -->
+    <!-- Admin Support Button (Small, Perfect Circle, Floating exactly above Premium Icon) -->
     <a id="supportFloatingBtn" href="#" target="_blank" class="floating-support ripple-btn" style="display:none;">
         <span class="material-symbols-rounded">support_agent</span>
         <span id="supportFloatingText">Support</span>
@@ -961,7 +964,6 @@
                         document.getElementById('premiumCount').innerText = `${daysLeft} Days Remaining`;
                         document.getElementById('profAvatar').classList.add('vip-logo');
 
-                        // ✅ PREMIUM CONGRATULATION POPUP LOGIC
                         let congratulated = localStorage.getItem('premiumCongratulatedFor');
                         if (congratulated !== data.premiumExpiry.toString()) {
                             let title = "অভিনন্দন!";
@@ -1027,7 +1029,6 @@
             }
         });
 
-        // ✅ ADMIN NOTICE POPUP SYSTEM
         db.collection("notifications").orderBy("timestamp", "desc").onSnapshot(snap => {
             allNotis = []; let html = ""; let dotInd = document.getElementById('notiDotIndicator');
             if(snap.empty) { dotInd.style.display = 'none'; } 
@@ -1093,7 +1094,7 @@
                 }
 
                 if(d.supportUrl && d.supportName) {
-                    let supBtn = document.getElementById('supportFloatingBtn'); supBtn.style.display = 'flex'; supBtn.href = d.supportUrl; document.getElementById('supportFloatingText').innerText = d.supportName;
+                    let supBtn = document.getElementById('supportFloatingBtn'); supBtn.style.display = 'flex'; supBtn.href = d.supportUrl;
                 }
             }
         });
@@ -1141,10 +1142,10 @@
 
             filtered.forEach(vid => {
                 let isFav = favorites.some(f => f.id === vid.id) ? 'favorite' : 'favorite_border';
-                let favColor = isFav === 'favorite' ? 'var(--danger)' : 'white';
+                let favColor = isFav === 'favorite' ? 'var(--danger)' : 'var(--text-muted)';
                 let hasLiked = (vid.likedBy || []).includes(currentUser.id);
-                let likeIcon = hasLiked ? 'favorite' : 'favorite_border';
-                let likeClass = hasLiked ? 'like-container liked' : 'like-container';
+                let likeIcon = hasLiked ? 'thumb_up' : 'thumb_up_off_alt';
+                let likeClass = hasLiked ? 'liked' : '';
                 let targetUrl = vid.adUrl || '#';
                 
                 let thumbClass = isDataSaver ? "thumb-dynamic thumb-blur" : "thumb-dynamic";
@@ -1194,7 +1195,6 @@
                       <div id="timer-${vid.id}" class="countdown-timer"></div>`;
                 }
 
-                // ✅ Beautiful Video Card Rendering
                 feed.innerHTML += `
                     <div class="video-card reveal" id="card-${vid.id}">
                         <div class="thumbnail-container">
@@ -1202,30 +1202,31 @@
                             <img src="${vid.photo}" class="${thumbClass}" alt="Thumbnail" onerror="this.src='https://via.placeholder.com/400x250?text=Image+Load+Error';">
                         </div>
                         <div class="card-content">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <span class="category-tag">${vid.category}</span>
-                                <span style="font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:4px;"><span class="material-symbols-rounded" style="font-size:13px;">schedule</span> ${uploadDateStr}</span>
+                            <!-- Category, Views & Date Top Row -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                                <span class="category-tag" style="margin-bottom:0;">${vid.category}</span>
+                                <div style="display:flex; align-items:center; gap:12px; font-size:11px; color:var(--text-muted); font-weight:600; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 12px;">
+                                    <span style="display:flex; align-items:center; gap:4px;"><span class="material-symbols-rounded" style="font-size:14px; color:var(--success);">visibility</span> ${vid.views}</span>
+                                    <span style="display:flex; align-items:center; gap:4px;"><span class="material-symbols-rounded" style="font-size:14px;">schedule</span> ${uploadDateStr}</span>
+                                </div>
                             </div>
+                            
                             <h3 class="video-title">${vid.title}</h3>
                             
-                            <!-- Action Row -->
+                            <!-- Action Row (Like, Comment, Share, Save) -->
                             <div class="action-row">
                                 <div class="action-btn-item ${likeClass}" onclick="toggleLike('${vid.id}')" id="like-box-${vid.id}">
                                     <span class="material-symbols-rounded" id="like-icon-${vid.id}">${likeIcon}</span> <span id="like-count-${vid.id}">${vid.likes}</span>
                                 </div>
                                 <div class="action-btn-item" onclick="openComments('${vid.id}')">
-                                    <span class="material-symbols-rounded">chat_bubble</span> Comment
+                                    <span class="material-symbols-rounded">chat_bubble</span> <span>Comment</span>
                                 </div>
                                 <div class="action-btn-item" onclick="openShareDialog('${vid.id}', '${vid.title.replace(/'/g, "\\'")}')">
-                                    <span class="material-symbols-rounded">share</span> Share
+                                    <span class="material-symbols-rounded">share</span> <span>Share</span>
                                 </div>
                                 <div class="action-btn-item" onclick="toggleFav('${vid.id}', '${vid.title.replace(/'/g, "\\'")}', '${vid.photo}')">
-                                    <span class="material-symbols-rounded" id="fav-icon-${vid.id}" style="color:${favColor}">${isFav}</span>
+                                    <span class="material-symbols-rounded" id="fav-icon-${vid.id}" style="color:${favColor}">${isFav}</span> <span>Save</span>
                                 </div>
-                            </div>
-                            
-                            <div style="font-size: 12px; color: var(--text-light); display: flex; align-items: center; gap: 6px; margin-top: 15px; margin-bottom: 5px; font-weight: bold; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px;">
-                                <span class="material-symbols-rounded" style="font-size: 16px; color: var(--success);">visibility</span> ${vid.views} Views
                             </div>
 
                             ${btnHtml}
@@ -1260,10 +1261,10 @@
 
                 if(isLiked) {
                     vidRef.update({ likes: firebase.firestore.FieldValue.increment(-1), likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.id) });
-                    countEl.innerText = parseInt(countEl.innerText) - 1; boxEl.className = 'action-btn-item like-container'; iconEl.innerText = 'favorite_border';
+                    countEl.innerText = parseInt(countEl.innerText) - 1; boxEl.className = 'action-btn-item'; iconEl.innerText = 'thumb_up_off_alt';
                 } else {
                     vidRef.update({ likes: firebase.firestore.FieldValue.increment(1), likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.id) });
-                    countEl.innerText = parseInt(countEl.innerText) + 1; boxEl.className = 'action-btn-item like-container liked'; iconEl.innerText = 'favorite';
+                    countEl.innerText = parseInt(countEl.innerText) + 1; boxEl.className = 'action-btn-item liked'; iconEl.innerText = 'thumb_up';
                 }
             }
         }
@@ -1715,7 +1716,7 @@
         function toggleFav(vidId, title, thumb) {
             const icon = document.getElementById(`fav-icon-${vidId}`); const index = favorites.findIndex(v => v.id === vidId);
             if (index === -1) { favorites.push({ id: vidId, title: title, thumb: thumb }); icon.innerText = 'favorite'; icon.style.color = 'var(--danger)'; icon.classList.add('pop-anim'); setTimeout(()=>icon.classList.remove('pop-anim'), 300); } 
-            else { favorites.splice(index, 1); icon.innerText = 'favorite_border'; icon.style.color = 'white'; }
+            else { favorites.splice(index, 1); icon.innerText = 'favorite_border'; icon.style.color = 'var(--text-muted)'; }
             localStorage.setItem('favVideos', JSON.stringify(favorites)); updateLocalStatsUI();
         }
 
