@@ -992,7 +992,29 @@
                 }
                 renderVideos(); 
             } else {
-                db.collection("users").doc(currentUser.id.toString()).set({ name: currentUser.name, photoUrl: currentUser.photoUrl, isPremium: false, unlockedCount: unlockedCount, referralCount: 0, joinedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                // --- NEW REFERRAL SYSTEM FIX ---
+                let startParam = (tg.initDataUnsafe && tg.initDataUnsafe.start_param) ? tg.initDataUnsafe.start_param : '';
+                let referrerId = '';
+                
+                if (startParam.startsWith('ref_')) {
+                    referrerId = startParam.replace('ref_', '');
+                    // Update referrer's count in database
+                    if (referrerId && referrerId !== currentUser.id.toString()) {
+                        db.collection("users").doc(referrerId).update({
+                            referralCount: firebase.firestore.FieldValue.increment(1)
+                        }).catch(e => console.log("Referral tracking error:", e));
+                    }
+                }
+
+                db.collection("users").doc(currentUser.id.toString()).set({ 
+                    name: currentUser.name, 
+                    photoUrl: currentUser.photoUrl, 
+                    isPremium: false, 
+                    unlockedCount: unlockedCount, 
+                    referralCount: 0, 
+                    referredBy: referrerId,
+                    joinedAt: firebase.firestore.FieldValue.serverTimestamp() 
+                });
             }
         });
 
