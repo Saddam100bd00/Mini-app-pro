@@ -1531,6 +1531,16 @@
         </div>
     </div>
 
+    <!-- ⚠️ AD EARLY EXIT WARNING MODAL ⚠️ -->
+    <div class="promo-overlay" id="adWarningOverlay">
+        <div class="promo-box" style="border-color: var(--warning); animation: none; box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);">
+            <div class="promo-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><span class="material-symbols-rounded">warning</span></div>
+            <h2 class="promo-title" style="color: #fbbf24;">সময় শেষ হওয়ার আগেই ফিরে এসেছেন!</h2>
+            <p class="promo-desc" id="warningWaitText">আপনাকে সম্পূর্ণ নির্ধারিত সময় বিজ্ঞাপন দেখতে হবে। সময় শেষ হওয়ার আগেই ফিরে এলে ভিডিও আনলক হবে না। দয়া করে সম্পূর্ণ সময় অপেক্ষা করুন।</p>
+            <button class="promo-btn ripple-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="closeWarningOverlay()">আবার চেষ্টা করুন</button>
+        </div>
+    </div>
+
     
 
     <header class="header">
@@ -3457,26 +3467,86 @@
         // CLASSIC AD FLOW & DEDICATED UNLOCK LOGIC
         // ==========================================
         let isAdFlowRunning = false;
+        let activeAdCountdownInt = null;
+        let activeCountdownStartTime = 0;
+        let activeRequiredWaitMs = 0;
+        let activeAdPhase = 0; // 0: idle, 1: ad1 countdown, 2: ad1 watching, 3: ad2 countdown, 4: ad2 watching
 
-        async function triggerMonetagSdkAd() {
+        function showEarlyWarning(waitTime, vidId, btn, totalSteps) {
+            if (activeAdCountdownInt) {
+                clearInterval(activeAdCountdownInt);
+                activeAdCountdownInt = null;
+            }
+            isAdFlowRunning = false;
+            activeAdPhase = 0;
+
+            const detailBtn = document.getElementById('detailUnlockBtn');
+            if (detailBtn) {
+                detailBtn.classList.remove('waiting');
+                detailBtn.disabled = false;
+            }
+            if (btn) {
+                btn.classList.remove('waiting');
+                btn.disabled = false;
+            }
+
+            if (currentDetailVidId) {
+                let vid = allVideos.find(v => v.id === currentDetailVidId);
+                if (vid) updateDetailUnlockUI(vid);
+            }
+
+            let waitSec = waitTime || 5;
+            let waitMsg = `আপনাকে সম্পূর্ণ ${waitSec} সেকেন্ড বিজ্ঞাপন দেখতে হবে। সময় শেষ হওয়ার আগেই ফিরে এলে ভিডিও আনলক হবে না। দয়া করে সম্পূর্ণ সময় অপেক্ষা করুন।`;
+            let waitEl = document.getElementById('warningWaitText');
+            if (waitEl) waitEl.innerText = waitMsg;
+
+            let warningOverlay = document.getElementById('adWarningOverlay');
+            if (warningOverlay) warningOverlay.classList.add('active');
+        }
+
+        function closeWarningOverlay() {
+            let warningOverlay = document.getElementById('adWarningOverlay');
+            if (warningOverlay) warningOverlay.classList.remove('active');
+        }
+
+        // Anti-skip detection: if user minimizes/exits during countdown
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                if (isAdFlowRunning && (activeAdPhase === 1 || activeAdPhase === 3) && activeAdCountdownInt) {
+                    let elapsed = Date.now() - activeCountdownStartTime;
+                    if (elapsed < (activeRequiredWaitMs - 800)) {
+                        showEarlyWarning(Math.round(activeRequiredWaitMs / 1000));
+                    }
+                }
+            }
+        });
+
+        async function triggerMonetagSdkAd(adType) {
             try {
                 let sdkTriggered = false;
                 for (let k in window) {
                     if (k.startsWith('show_') && typeof window[k] === 'function') {
                         try {
-                            window[k]();
+                            if (adType === 'rewarded') {
+                                window[k]('rewarded');
+                            } else {
+                                window[k]();
+                            }
                             sdkTriggered = true;
                             break;
                         } catch (e) {
-                            try { window[k]('rewarded'); sdkTriggered = true; break; } catch(e2){}
+                            try { window[k](); sdkTriggered = true; break; } catch(e2){}
                         }
                     }
                 }
-                if (!sdkTriggered && window.globalMonetagUrl && window.globalMonetagUrl.startsWith('http')) {
-                    openExternalLink(window.globalMonetagUrl);
+                if (!sdkTriggered) {
+                    let adUrl = window.globalMonetagUrl || window.globalAdsterraUrl || '';
+                    if (adUrl && adUrl.startsWith('http')) {
+                        openExternalLink(adUrl);
+                    }
                 }
             } catch (err) {
-                console.warn("Monetag trigger error:", err);
+                console.warn("Ad trigger error:", err);
             }
         }
 
@@ -3505,46 +3575,105 @@
             let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
             let adminSetWaitTime = parseInt(vid.adTime) || 5;
 
-            // Trigger Ad 1 in Telegram
-            await triggerMonetagSdkAd();
-
-            // Button countdown wait (e.g. 5s, 10s, 15s)
+            // Phase 1: 1st Ad Loading Countdown
+            activeAdPhase = 1;
             let waitSeconds = adminSetWaitTime;
-            btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
-            
-            let waitInterval = setInterval(async () => {
+            activeRequiredWaitMs = waitSeconds * 1000;
+            activeCountdownStartTime = Date.now();
+
+            btnText.innerHTML = `<span class="premium-btn-spinner"></span> ১ম বিজ্ঞাপন লোড হচ্ছে... (${waitSeconds}s)`;
+
+            if (activeAdCountdownInt) clearInterval(activeAdCountdownInt);
+            activeAdCountdownInt = setInterval(async () => {
                 waitSeconds--;
                 if (waitSeconds > 0) {
-                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
+                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> ১ম বিজ্ঞাপন লোড হচ্ছে... (${waitSeconds}s)`;
                 } else {
-                    clearInterval(waitInterval);
+                    clearInterval(activeAdCountdownInt);
+                    activeAdCountdownInt = null;
 
-                    // If step requires 2 ads -> Trigger 2nd Ad and countdown
+                    // 1st Ad timer finished -> Trigger Ad 1!
+                    activeAdPhase = 2;
+                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> ১ম বিজ্ঞাপন ওপেন হচ্ছে...`;
+                    await triggerMonetagSdkAd(vid.ad1Type || 'pop');
+
+                    // If this step requires 2 ads:
                     if (adsForThisStep === 2) {
-                        btnText.innerHTML = `<span class="premium-btn-spinner"></span> ২য় বিজ্ঞাপন লোড হচ্ছে...`;
-                        await triggerMonetagSdkAd();
-                        
-                        let waitSeconds2 = adminSetWaitTime;
-                        btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds2}s`;
-                        let waitInterval2 = setInterval(() => {
-                            waitSeconds2--;
-                            if (waitSeconds2 > 0) {
-                                btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds2}s`;
-                            } else {
-                                clearInterval(waitInterval2);
-                                finishUnlockStep(vid, currentStep, totalSteps, btn);
-                            }
-                        }, 1000);
+                        const runSecondAd = () => {
+                            if (activeAdPhase !== 2) return;
+                            activeAdPhase = 3;
+                            let waitSeconds2 = adminSetWaitTime;
+                            activeRequiredWaitMs = waitSeconds2 * 1000;
+                            activeCountdownStartTime = Date.now();
+                            btnText.innerHTML = `<span class="premium-btn-spinner"></span> ২য় বিজ্ঞাপন লোড হচ্ছে... (${waitSeconds2}s)`;
+
+                            if (activeAdCountdownInt) clearInterval(activeAdCountdownInt);
+                            activeAdCountdownInt = setInterval(async () => {
+                                waitSeconds2--;
+                                if (waitSeconds2 > 0) {
+                                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> ২য় বিজ্ঞাপন লোড হচ্ছে... (${waitSeconds2}s)`;
+                                } else {
+                                    clearInterval(activeAdCountdownInt);
+                                    activeAdCountdownInt = null;
+
+                                    // 2nd Ad timer finished -> Trigger Ad 2!
+                                    activeAdPhase = 4;
+                                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> ২য় বিজ্ঞাপন ওপেন হচ্ছে...`;
+                                    await triggerMonetagSdkAd(vid.ad2Type || 'rewarded');
+
+                                    const onReturnAd2 = () => {
+                                        window.removeEventListener('focus', onReturnAd2);
+                                        document.removeEventListener('visibilitychange', onVisAd2);
+                                        finishUnlockStep(vid, currentStep, totalSteps, btn);
+                                    };
+                                    const onVisAd2 = () => {
+                                        if (document.visibilityState === 'visible') onReturnAd2();
+                                    };
+                                    window.addEventListener('focus', onReturnAd2, { once: true });
+                                    document.addEventListener('visibilitychange', onVisAd2);
+                                    setTimeout(onReturnAd2, 2000);
+                                }
+                            }, 1000);
+                        };
+
+                        const onReturnAd1 = () => {
+                            window.removeEventListener('focus', onReturnAd1);
+                            document.removeEventListener('visibilitychange', onVisAd1);
+                            runSecondAd();
+                        };
+                        const onVisAd1 = () => {
+                            if (document.visibilityState === 'visible') onReturnAd1();
+                        };
+                        window.addEventListener('focus', onReturnAd1, { once: true });
+                        document.addEventListener('visibilitychange', onVisAd1);
+                        setTimeout(onReturnAd1, 1800);
                     } else {
-                        finishUnlockStep(vid, currentStep, totalSteps, btn);
+                        // Only 1 ad for this step
+                        const onReturnSingle = () => {
+                            window.removeEventListener('focus', onReturnSingle);
+                            document.removeEventListener('visibilitychange', onVisSingle);
+                            finishUnlockStep(vid, currentStep, totalSteps, btn);
+                        };
+                        const onVisSingle = () => {
+                            if (document.visibilityState === 'visible') onReturnSingle();
+                        };
+                        window.addEventListener('focus', onReturnSingle, { once: true });
+                        document.addEventListener('visibilitychange', onVisSingle);
+                        setTimeout(onReturnSingle, 1800);
                     }
                 }
             }, 1000);
         }
 
         function finishUnlockStep(vid, currentStep, totalSteps, btn) {
-            btn.classList.remove('waiting');
+            if (activeAdCountdownInt) {
+                clearInterval(activeAdCountdownInt);
+                activeAdCountdownInt = null;
+            }
+            if (btn) btn.classList.remove('waiting');
             isAdFlowRunning = false;
+            activeAdPhase = 0;
+
             currentStep++;
             if (currentStep >= totalSteps) {
                 let expiry = Date.now() + (5 * 60 * 1000);
@@ -3557,8 +3686,14 @@
                     name: currentUser.name,
                     photoUrl: currentUser.photoUrl
                 }).catch(e => console.log(e));
+
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                }
+                showToast("🎉 অভিনন্দন! ভিডিওটি আনলক হয়েছে!", "success");
             } else {
                 localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep }));
+                showToast(`ধাপ ${currentStep}/${totalSteps} সম্পন্ন হয়েছে!`, "info");
             }
             updateDetailUnlockUI(vid);
         }
