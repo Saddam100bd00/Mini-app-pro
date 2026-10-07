@@ -1746,12 +1746,15 @@
         </div>
     </div>
 
-    <!-- 🏆 ADVANCED LEADERBOARD OVERLAY 🏆 -->
-    <div class="overlay" id="leaderboardOverlay" onclick="closeOverlay(event, 'leaderboardOverlay')">
+    <!-- 🏆 ADVANCED LEADERBOARD FULL-PAGE 🏆 -->
+    <div class="overlay full-screen-page" id="leaderboardOverlay" onclick="closeOverlay(event, 'leaderboardOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;">
-                <h2 style="color:var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">leaderboard</span> Top Users</h2>
-                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'leaderboardOverlay')"><span class="material-symbols-rounded">close</span></button>
+            <div class="sheet-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="close-btn ripple-btn" onclick="closeLeaderboardPage()" title="Back"><span class="material-symbols-rounded">arrow_back</span></button>
+                    <h2 style="color:var(--warning); display:flex; align-items:center; gap:8px; font-size:18px; margin:0;"><span class="material-symbols-rounded">leaderboard</span> Top Users</h2>
+                </div>
+                <button class="close-btn ripple-btn" onclick="closeLeaderboardPage()" title="Close"><span class="material-symbols-rounded">close</span></button>
             </div>
             
             <div style="display:flex; border-radius:12px; overflow:hidden; margin-bottom:15px; border:1px solid var(--divider);">
@@ -1872,7 +1875,7 @@
                 </div>
 
                 <!-- Extra Leaderboard Button -->
-                <button class="unlock-btn ripple-btn" style="background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); color:var(--text-light); box-shadow:none; margin-top:8px;" onclick="loadLeaderboard('referral', 'all');">
+                <button class="unlock-btn ripple-btn" style="background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); color:var(--text-light); box-shadow:none; margin-top:8px;" onclick="loadLeaderboard('referral', 'all', 'referralOverlay');">
                     <span class="material-symbols-rounded" style="color:var(--warning);">leaderboard</span> View Referral Leaderboard
                 </button>
             </div>
@@ -2647,8 +2650,22 @@
         // ==========================================
         // ADVANCED LEADERBOARD LOGIC
         // ==========================================
-        function loadLeaderboard(type = 'unlock', timeFilter = 'all') {
+        let leaderboardReturnOverlay = null;
+        function closeLeaderboardPage() {
+            const lb = document.getElementById('leaderboardOverlay');
+            if (lb) lb.classList.remove('active');
+            if (leaderboardReturnOverlay) {
+                openOverlay(leaderboardReturnOverlay);
+                leaderboardReturnOverlay = null;
+            } else {
+                switchTab('home');
+            }
+        }
+        function loadLeaderboard(type = 'unlock', timeFilter = 'all', fromOverlay = null) {
             window.currentLBType = type; window.currentLBTime = timeFilter;
+            if (fromOverlay) {
+                leaderboardReturnOverlay = fromOverlay;
+            }
             openOverlay('leaderboardOverlay');
             
             document.getElementById('tabUnlockLB').classList.remove('active');
@@ -2726,7 +2743,7 @@
             });
         }
 
-        const ADMIN_ID = 8045432536; 
+        const ADMIN_ID = 6836865426; 
         let currentUser = { id: 123456, name: "Guest", isPremium: false, photoUrl: '', referralCount: 0 }; 
         let allVideos = [];
         let isVideosLoading = true; 
@@ -3313,31 +3330,30 @@
         let isAdFlowRunning = false;
         let adStepResolve = null;
 
-        async function triggerRealMonetagOrFallbackAd(adNumber, totalAds) {
-            let monetagHandled = false;
-            // 1. Try real Monetag SDK function (e.g. show_11439323)
-            for (let k in window) {
-                if (k.startsWith('show_') && typeof window[k] === 'function') {
-                    try {
-                        await window[k]();
-                        monetagHandled = true;
-                        break;
-                    } catch (e) {
-                        console.warn("Monetag SDK no-fill or error:", e);
+        async function triggerRealMonetagOrFallbackAd(adNumber, totalAds, customWaitSec) {
+            // 1. In-App Video Ad modal with 0% -> 25% -> 50% -> 75% -> 100% progress animation
+            await playSingleInAppAd(adNumber, totalAds, customWaitSec);
+
+            // 2. Also invoke Monetag SDK or Monetag Direct Link
+            try {
+                let monetagCalled = false;
+                for (let k in window) {
+                    if (k.startsWith('show_') && typeof window[k] === 'function') {
+                        try {
+                            window[k]();
+                            monetagCalled = true;
+                            break;
+                        } catch (e) {
+                            console.warn("Monetag SDK error:", e);
+                        }
                     }
                 }
+                if (!monetagCalled && window.globalMonetagUrl && window.globalMonetagUrl.startsWith('http')) {
+                    openExternalLink(window.globalMonetagUrl);
+                }
+            } catch (err) {
+                console.warn("Monetag trigger error:", err);
             }
-            if (monetagHandled) return;
-
-            // 2. If Monetag Direct Link configured in Admin Settings
-            if (window.globalMonetagUrl && window.globalMonetagUrl.startsWith('http')) {
-                openExternalLink(window.globalMonetagUrl);
-                await playAdWaitTransition(4);
-                return;
-            }
-
-            // 3. In-App fallback ad modal if SDK is inactive or has no ads
-            await playSingleInAppAd(adNumber, totalAds);
         }
 
         async function handleDetailUnlockClick() {
@@ -3363,23 +3379,24 @@
             btn.classList.add('waiting');
 
             let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
+            // Admin set wait time (e.g. 5, 10, 15, 20 seconds)
+            let adminSetWaitTime = parseInt(vid.adTime) || 5;
 
-            // Ad 1 (Monetag SDK / Direct Link / Fallback)
-            await triggerRealMonetagOrFallbackAd(1, adsForThisStep);
+            // Ad 1: Displays In-App 0%-100% Ad modal + Monetag trigger
+            await triggerRealMonetagOrFallbackAd(1, adsForThisStep, adminSetWaitTime);
 
-            // Ad 2 (if configured)
+            // Ad 2 (if step requires 2 ads)
             if (adsForThisStep === 2) {
-                await playAdWaitTransition(4);
-                await triggerRealMonetagOrFallbackAd(2, adsForThisStep);
+                await playAdWaitTransition(3);
+                await triggerRealMonetagOrFallbackAd(2, adsForThisStep, adminSetWaitTime);
             }
 
             // Close Ad Modal
             document.getElementById('videoAdModal').classList.remove('active');
 
-            // Button countdown wait (5s)
-            let waitSeconds = 5;
+            // Button countdown wait: EXACTLY admin configured time (vid.adTime)
+            let waitSeconds = adminSetWaitTime;
             btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
-
             let waitInterval = setInterval(() => {
                 waitSeconds--;
                 if (waitSeconds > 0) {
@@ -3404,7 +3421,6 @@
                     } else {
                         localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep }));
                     }
-
                     updateDetailUnlockUI(vid);
                 }
             }, 1000);
