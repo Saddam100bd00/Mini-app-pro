@@ -39,23 +39,148 @@
 
         #navbar-iframe, .widget, .widget-content, .main-inner, .tabs-outer, .header-outer { display: none !important; margin:0!important; padding:0!important; }
 
-        /* --- Header --- */
-        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background-color: var(--bg-header); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--divider); transition: background-color 0.4s ease;}
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .menu-btn { background: #231d3b; border: none; color: #a855f7; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;}
-        .menu-btn:active { transform: scale(0.9); }
-        .play-icon-wrapper { background: var(--success); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
-        .play-icon-wrapper span { color: white; font-size: 24px; }
-        .app-title-text { font-weight: 900; line-height: 1.1; letter-spacing: -0.5px;}
-        .title-top { font-size: 17px; }
-        .title-mini { color: var(--danger); }
-        .title-app { color: var(--text-light); }
-        .title-pro { color: var(--success); font-size: 15px; }
-        .header-right { display: flex; align-items: center; gap: 10px; }
-        .action-btn { background: var(--btn-bg); border: none; color: var(--text-muted); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.3s;}
-        .action-btn:active { transform: scale(0.9); }
-        .noti-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: none; box-shadow: 0 0 8px var(--danger);}
-        .profile-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #c084fc, #818cf8); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: white; cursor: pointer; border: 2px solid var(--primary-accent); transition: 0.3s; overflow: hidden;}
+        /* --- Animated Ultra Modern Slim Live Header (Req 5 & 6) --- */
+        @keyframes liveHeaderGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes bellSwing {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(15deg); }
+            30% { transform: rotate(-14deg); }
+            45% { transform: rotate(10deg); }
+            60% { transform: rotate(-6deg); }
+            75% { transform: rotate(2deg); }
+        }
+        @keyframes profilePulseRing {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4), 0 0 10px rgba(124, 58, 237, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.25), 0 0 16px rgba(168, 85, 247, 0.6);
+                transform: scale(1.05);
+            }
+        }
+        @keyframes logoPulseFloat {
+            0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.45)); }
+            50% { transform: translateY(-2px) scale(1.06); filter: drop-shadow(0 0 14px rgba(236, 72, 153, 0.65)); }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 50px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #0e0d16, #1f1236, #0e1c31, #230f2c);
+            background-size: 300% 300%;
+            animation: liveHeaderGradient 10s ease infinite;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+            transition: all 0.3s ease;
+        }
+        [data-theme="light"] .header {
+            background: linear-gradient(135deg, #f8fafc, #ede9fe, #e0f2fe, #fae8ff);
+            background-size: 300% 300%;
+            animation: liveHeaderGradient 10s ease infinite;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .header-left { display: flex; align-items: center; gap: 6px; }
+        .header-icon-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-light);
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        [data-theme="light"] .header-icon-btn {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+        .header-icon-btn:active { transform: scale(0.92); }
+        .header-icon-btn .material-symbols-rounded { font-size: 20px; }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .header-logo-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            animation: logoPulseFloat 3s ease-in-out infinite;
+        }
+        .header-logo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+        .header-logo-box .logo-fallback { color: white; font-size: 20px; }
+        .header-app-name {
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: -0.3px;
+            background: linear-gradient(90deg, #ffffff 0%, #c084fc 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 16px rgba(168, 85, 247, 0.35);
+            white-space: nowrap;
+        }
+        [data-theme="light"] .header-app-name {
+            background: linear-gradient(90deg, #0f172a 0%, #6366f1 60%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .bell-btn .bell-icon {
+            display: inline-block;
+            transform-origin: top center;
+            animation: bellSwing 3.5s ease-in-out infinite;
+            color: #ffd700;
+        }
+        .noti-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; background: var(--danger); border-radius: 50%; display: none; box-shadow: 0 0 8px var(--danger); }
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c084fc, #818cf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            color: white;
+            cursor: pointer;
+            border: 1.5px solid var(--primary-accent);
+            animation: profilePulseRing 2.8s ease-in-out infinite;
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
         .profile-avatar:active { transform: scale(0.9); }
 
         /* --- Badges --- */
@@ -63,31 +188,193 @@
         .badge-vip { background: var(--gold-gradient); color: #000; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 900; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); vertical-align: middle; }
 
         /* --- Search & Categories --- */
-        .search-container { display: flex; align-items: center; gap: 8px; margin: 10px 15px; display: none; }
-        .search-bar { flex: 1; padding: 14px 15px; border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-card); color: var(--text-light); outline: none; font-size: 15px; transition: 0.3s;}
+        .search-container { display: flex; align-items: center; gap: 8px; margin: 8px 14px 14px 14px; display: none; }
+        .search-bar { flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-card); color: var(--text-light); outline: none; font-size: 14px; transition: 0.3s;}
         .search-bar:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2); }
-        .filter-btn { background: var(--bg-card); border: 1px solid var(--divider); padding: 14px 10px; border-radius: 12px; color: var(--text-light); outline: none; font-weight: bold; }
+        .filter-btn { background: var(--bg-card); border: 1px solid var(--divider); padding: 12px 10px; border-radius: 12px; color: var(--text-light); outline: none; font-weight: bold; font-size: 13px; }
         
-        .categories-wrapper { padding: 10px 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+        .categories-wrapper { padding: 10px 14px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .categories-wrapper::-webkit-scrollbar { display: none; }
-        .category-pill { display: inline-block; background: var(--bg-card); border: 1px solid var(--divider); padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-right: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-light);}
-        .category-pill.active { background: var(--primary-accent); color: white; border-color: var(--primary-accent); transform: scale(1.05); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);}
+        .category-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--divider); padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-right: 8px; cursor: pointer; transition: all 0.25s ease; color: var(--text-light);}
+        .category-pill.active { background: var(--primary-accent); color: white; border-color: var(--primary-accent); transform: scale(1.04); box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);}
+        .cat-pill-count { background: rgba(255, 255, 255, 0.18); font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 10px; margin-left: 2px; }
+        .category-pill.active .cat-pill-count { background: rgba(255, 255, 255, 0.28); color: #fff; }
         .category-tag { font-size: 11px; font-weight: 800; color: var(--text-light); background: rgba(124, 58, 237, 0.8); padding: 4px 10px; border-radius: 8px; display: inline-block; }
-        .video-count-badge { display: inline-flex; align-items: center; gap: 6px; background-color: var(--primary-accent); color: white; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 0 15px 15px 15px; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);}
 
-        /* --- 2-Column Home Video Grid --- */
+        /* --- Home Feed Header with Search Button (Req 4) --- */
+        .home-feed-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px 12px 14px;
+            margin-top: 2px;
+        }
+        .feed-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .feed-header-left .feed-icon {
+            font-size: 22px;
+            color: var(--primary-light);
+        }
+        .feed-title-text {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--text-light);
+            letter-spacing: -0.2px;
+        }
+        .feed-count-pill {
+            background: rgba(124, 58, 237, 0.18);
+            color: var(--primary-light);
+            border: 1px solid rgba(124, 58, 237, 0.35);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        .feed-search-btn {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(59, 130, 246, 0.15));
+            border: 1px solid rgba(124, 58, 237, 0.35);
+            color: var(--text-light);
+            padding: 6px 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .feed-search-btn:active {
+            transform: scale(0.94);
+            background: var(--primary-accent);
+            color: white;
+        }
+        .feed-search-btn .material-symbols-rounded {
+            font-size: 17px;
+            color: var(--primary-light);
+        }
+
+        /* --- 🌟 Professional High Quality Shimmer Skeleton Loader (Req 4) --- */
+        @keyframes shimmerSweep {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.03) 75%);
+            background-size: 200% 100%;
+            animation: shimmerSweep 1.6s ease-in-out infinite;
+            border-radius: 8px;
+        }
+        .skeleton-video-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--divider);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .skeleton-thumb-box {
+            position: relative;
+            width: 100%;
+            padding-top: 62%;
+            background: #14111f;
+        }
+        .skeleton-play-bubble {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .skeleton-info-box {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .skeleton-line-title1 { width: 90%; height: 12px; border-radius: 6px; }
+        .skeleton-line-title2 { width: 60%; height: 12px; border-radius: 6px; }
+        .skeleton-bottom-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+        .skeleton-pill-cat { width: 44px; height: 15px; border-radius: 6px; }
+        .skeleton-pill-views { width: 32px; height: 13px; border-radius: 6px; }
+        .skeleton-loading-banner {
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 10px 4px 10px;
+            color: var(--primary-light);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* --- 2-Column Home Video Grid (Premium Cards Req 7) --- */
         .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 12px 25px 12px; }
-        .grid-video-card { background: var(--bg-card); border-radius: 16px; overflow: hidden; border: 1px solid var(--divider); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
-        .grid-video-card:active { transform: scale(0.97); }
+        .grid-video-card {
+            background: linear-gradient(155deg, #181525 0%, #110e1a 100%);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(124, 58, 237, 0.22);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+            position: relative;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+        }
+        [data-theme="light"] .grid-video-card {
+            background: linear-gradient(155deg, #ffffff 0%, #f7f6fc 100%);
+            border-color: rgba(99, 102, 241, 0.18);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.08);
+        }
+        .grid-video-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(168, 85, 247, 0.55);
+            box-shadow: 0 12px 28px rgba(124, 58, 237, 0.3);
+        }
+        .grid-video-card:active { transform: scale(0.96); }
         .grid-thumb-box { position: relative; width: 100%; padding-top: 62%; background: #000; overflow: hidden; }
-        .grid-thumb-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-        .grid-center-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); border: 2px solid rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 2; transition: 0.2s; }
-        .grid-center-play span { font-size: 24px; margin-left: 2px; }
-        .grid-video-card:hover .grid-center-play { transform: translate(-50%, -50%) scale(1.1); background: var(--primary-accent); }
+        .grid-thumb-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
+        .grid-video-card:hover .grid-thumb-img { transform: scale(1.05); }
+        .grid-center-play {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(16, 15, 20, 0.75);
+            backdrop-filter: blur(6px);
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6), 0 0 12px rgba(168, 85, 247, 0.4);
+            z-index: 2;
+            transition: all 0.25s ease;
+        }
+        .grid-center-play span { font-size: 22px; margin-left: 2px; }
+        .grid-video-card:hover .grid-center-play {
+            transform: translate(-50%, -50%) scale(1.15);
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.7);
+        }
         .grid-card-info { padding: 10px 10px 12px 10px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
         .grid-card-title { font-size: 13px; font-weight: 700; color: var(--text-light); line-height: 1.35; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 35px; }
         .grid-card-meta { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
-        .grid-cat-badge { background: rgba(124, 58, 237, 0.15); color: var(--primary-light); border: 1px solid rgba(124, 58, 237, 0.3); padding: 2px 7px; border-radius: 8px; font-weight: 700; font-size: 10px; max-width: 55%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .grid-cat-badge { background: rgba(124, 58, 237, 0.16); color: var(--primary-light); border: 1px solid rgba(124, 58, 237, 0.35); padding: 2px 7px; border-radius: 8px; font-weight: 700; font-size: 10px; max-width: 55%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .grid-views-badge { display: flex; align-items: center; gap: 3px; font-weight: 600; color: var(--text-muted); font-size: 11px; }
         .grid-views-badge .material-symbols-rounded { font-size: 14px; color: var(--success); }
 
@@ -115,10 +402,74 @@
         .detail-progress-track { width: 100%; height: 8px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
         .detail-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 10px; transition: width 0.4s ease; box-shadow: 0 0 12px rgba(168, 85, 247, 0.6); }
 
-        .detail-unlock-btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4); transition: 0.2s; }
-        .detail-unlock-btn:active { transform: translateY(2px); }
-        .detail-unlock-btn.waiting { background: #231f30; color: #d1d5db; pointer-events: none; }
-        .detail-unlock-btn.unlocked { background: var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4); }
+        /* --- Video Unlock Button Ultra Animation (Req 8) --- */
+        @keyframes unlockBtnGlow {
+            0%, 100% {
+                box-shadow: 0 8px 25px rgba(124, 58, 237, 0.45), 0 0 15px rgba(168, 85, 247, 0.3);
+            }
+            50% {
+                box-shadow: 0 12px 35px rgba(168, 85, 247, 0.7), 0 0 25px rgba(236, 72, 153, 0.55);
+            }
+        }
+        @keyframes unlockShineSweep {
+            0% { transform: translateX(-120%) skewX(-20deg); }
+            35%, 100% { transform: translateX(220%) skewX(-20deg); }
+        }
+        @keyframes iconBouncePlay {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.18); }
+        }
+        .detail-unlock-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.45);
+            animation: unlockBtnGlow 2.8s ease-in-out infinite;
+            transition: all 0.25s ease;
+        }
+        .detail-unlock-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            animation: unlockShineSweep 3s infinite;
+        }
+        .detail-unlock-btn:active { transform: scale(0.97); }
+        .detail-unlock-btn #detailBtnIcon {
+            font-size: 24px;
+            animation: iconBouncePlay 1.8s ease-in-out infinite;
+        }
+        .detail-unlock-btn.waiting {
+            background: #231f30 !important;
+            color: #d1d5db !important;
+            box-shadow: none !important;
+            animation: none !important;
+            pointer-events: none;
+        }
+        .detail-unlock-btn.waiting::before { display: none; }
+        .detail-unlock-btn.unlocked {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%) !important;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.6) !important;
+            animation: none !important;
+        }
+        .detail-unlock-btn.unlocked::before { display: none; }
 
         .detail-helper-note { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.4; }
         .detail-action-buttons { display: flex; gap: 10px; margin-top: 14px; }
@@ -190,12 +541,12 @@
         #supportFloatingText { display: none !important; /* Hidden to keep the button completely round */ }
         .floating-support .material-symbols-rounded { font-size: 26px !important; margin: 0 !important; padding: 0 !important; }
 
-        /* --- Bottom Nav --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(16, 15, 20, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--divider); display: flex; justify-content: space-around; padding: 12px 0 20px 0; z-index: 100; transition: background-color 0.4s ease;}
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 11px; font-weight: 600; background: none; border: none; cursor: pointer; transition: 0.3s ease; width: 20%;}
-        .nav-item.active { color: var(--primary-light); transform: translateY(-3px);}
-        .nav-item .material-symbols-rounded { font-size: 26px; margin-bottom: 4px; transition: 0.3s;}
-        .nav-item.active .material-symbols-rounded { font-variation-settings: 'FILL' 1; }
+        /* --- Bottom Nav (Smooth & Floating over full page views) --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(16, 15, 20, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--divider); display: flex; justify-content: space-around; padding: 10px 4px 18px 4px; z-index: 1000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 11px; font-weight: 700; background: none; border: none; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); width: 20%; padding: 4px 0; }
+        .nav-item.active { color: var(--primary-light); transform: translateY(-2px); }
+        .nav-item .material-symbols-rounded { font-size: 24px; margin-bottom: 2px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        .nav-item.active .material-symbols-rounded { font-variation-settings: 'FILL' 1; transform: scale(1.1); }
 
         /* --- Full Screen Overlay System --- */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 3500; opacity: 0; visibility: hidden; display: flex; align-items: flex-end; transition: all 0.3s ease; }
@@ -204,6 +555,55 @@
         .bottom-sheet { background: var(--bg-card); width: 100%; border-radius: 24px 24px 0 0; padding: 25px 20px; height: 92vh; max-height: 92vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1); box-shadow: 0 -10px 40px rgba(0,0,0,0.6);}
         .overlay.active .bottom-sheet { transform: translateY(0); }
         .bottom-sheet::-webkit-scrollbar { display: none; }
+
+        /* Full Screen Page Views (Starts cleanly below the 50px slim live header) */
+        .overlay.full-screen-page {
+            position: fixed !important;
+            top: 50px !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100vh - 50px) !important;
+            height: calc(100dvh - 50px) !important;
+            max-height: calc(100dvh - 50px) !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            background: var(--bg-dark) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            z-index: 950 !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        .overlay.full-screen-page .bottom-sheet {
+            background: transparent !important;
+            border-radius: 0 !important;
+            width: 100% !important;
+            min-height: 100% !important;
+            max-height: none !important;
+            height: auto !important;
+            padding: 8px 14px 110px 14px !important;
+            transform: none !important;
+            box-shadow: none !important;
+            overflow-y: visible !important;
+        }
+        .overlay.full-screen-page .sheet-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(16, 15, 20, 0.96);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 10px 12px;
+            margin-top: 0 !important;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         
         .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .sheet-header h2 { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px;}
@@ -738,6 +1138,339 @@
         .share-option-texts b { font-size: 14px; color: var(--text-light); }
         .share-option-texts span { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
         .share-option-card .chevron { color: var(--text-muted); font-size: 20px; }
+
+        /* ======================================================== */
+        /* 🎁 VIDEO-STYLE ULTRA REFER & EARN PAGE (Req 1) 🎁 */
+        /* ======================================================== */
+        .ref-page-wrap { display: flex; flex-direction: column; gap: 14px; padding-bottom: 25px; }
+        .ref-hero-card {
+            background: linear-gradient(145deg, #1f1633, #151024);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 20px;
+            padding: 16px 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(168, 85, 247, 0.1);
+        }
+        .ref-hero-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+            flex-shrink: 0;
+        }
+        .ref-hero-icon span { font-size: 28px; }
+        .ref-hero-texts { display: flex; flex-direction: column; }
+        .ref-hero-title { font-size: 18px; font-weight: 900; color: #fff; letter-spacing: -0.3px; }
+        .ref-hero-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        .ref-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .ref-stat-box {
+            background: #14111f;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .ref-stat-val { font-size: 24px; font-weight: 900; color: #fff; line-height: 1.1; }
+        .ref-stat-val.purple { color: #c084fc; text-shadow: 0 0 10px rgba(192, 132, 252, 0.4); }
+        .ref-stat-val.blue { color: #60a5fa; text-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
+        .ref-stat-val.pink { color: #f472b6; text-shadow: 0 0 10px rgba(244, 114, 182, 0.4); }
+        .ref-stat-lbl { font-size: 10px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.8px; margin-top: 5px; text-transform: uppercase; }
+
+        .ref-next-card {
+            background: #161224;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 18px;
+            padding: 15px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+        .ref-next-header { display: flex; align-items: center; justify-content: space-between; }
+        .ref-next-left { display: flex; align-items: center; gap: 8px; }
+        .ref-next-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ref-next-icon span { font-size: 18px; }
+        .ref-next-title { font-size: 13px; font-weight: 800; color: #fff; }
+        .ref-next-pill {
+            background: rgba(168, 85, 247, 0.25);
+            color: #e9d5ff;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }
+        .ref-next-desc { font-size: 12px; color: var(--text-muted); }
+        .ref-next-desc b { color: #38bdf8; }
+        .ref-bar-track { width: 100%; height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; position: relative; }
+        .ref-bar-fill { height: 100%; background: linear-gradient(90deg, #7c3aed, #a855f7, #38bdf8); border-radius: 10px; transition: width 0.4s ease; box-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
+
+        .ref-link-card {
+            background: #14111f;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 18px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .ref-link-label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 4px; }
+        .ref-link-row { display: flex; align-items: center; gap: 8px; }
+        .ref-link-input {
+            flex: 1;
+            background: #0d0a14;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            outline: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: monospace;
+        }
+        .ref-copy-btn {
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            color: #fff;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .ref-copy-btn:active { transform: scale(0.95); }
+
+        .ref-share-big-btn {
+            background: linear-gradient(135deg, #0284c7, #6366f1, #a855f7);
+            background-size: 200% 200%;
+            animation: gradientSpin 4s ease infinite;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .ref-share-big-btn:active { transform: scale(0.98); }
+
+        .ref-live-card { background: #14111f; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 14px 16px; }
+        .ref-live-header { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .ref-pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulseDot 1.5s infinite; }
+        .ref-live-empty { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12px; padding: 4px 0; }
+
+        .ref-tiers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .ref-tier-card {
+            background: #14111f;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 125px;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .ref-tier-card.unlocked {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: linear-gradient(145deg, #12211d, #14111f);
+        }
+        .ref-tier-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .ref-tier-icon-box span { font-size: 20px; color: #fff; }
+        .ref-tier-title { font-size: 13px; font-weight: 800; color: #fff; line-height: 1.2; }
+        .ref-tier-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .ref-tier-prog-wrap { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .ref-tier-pill { background: rgba(255, 255, 255, 0.06); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800; color: #e2e8f0; }
+        .ref-tier-card.unlocked .ref-tier-pill { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+        /* ======================================================== */
+        /* 👑 PRO VIP 3 SUBSCRIPTION BUTTONS / CARDS (Req 3) 👑 */
+        /* ======================================================== */
+        .vip-plans-vertical { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+        .vip-card {
+            background: linear-gradient(145deg, #191428, #110e1c);
+            border: 1.5px solid rgba(168, 85, 247, 0.25);
+            border-radius: 20px;
+            padding: 18px 16px;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .vip-card:active { transform: scale(0.99); }
+        .vip-card.popular {
+            border-color: rgba(245, 158, 11, 0.7);
+            box-shadow: 0 10px 32px rgba(245, 158, 11, 0.25), inset 0 0 20px rgba(245, 158, 11, 0.08);
+            background: linear-gradient(145deg, #241a33, #151022);
+        }
+        .vip-card.ultimate {
+            border-color: rgba(16, 185, 129, 0.7);
+            box-shadow: 0 10px 32px rgba(16, 185, 129, 0.25), inset 0 0 20px rgba(16, 185, 129, 0.08);
+            background: linear-gradient(145deg, #14251f, #101916);
+        }
+
+        /* Clean integrated inline badge (NO weird cut-off floating button) */
+        .vip-inline-badge {
+            align-self: flex-start;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+        }
+        .vip-inline-badge.gold {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(245, 158, 11, 0.45);
+        }
+        .vip-inline-badge.emerald {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.45);
+        }
+
+        .vip-card-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .vip-card-brand { display: flex; align-items: center; gap: 12px; }
+        .vip-icon-square {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+        }
+        .vip-icon-square.popular { background: rgba(245, 158, 11, 0.25); color: #ffd700; }
+        .vip-icon-square.ultimate { background: rgba(16, 185, 129, 0.25); color: #34d399; }
+        .vip-icon-square span { font-size: 24px; }
+
+        .vip-header-texts { display: flex; flex-direction: column; }
+        .vip-plan-title { font-size: 16px; font-weight: 900; color: #fff; }
+        .vip-plan-title.gold { color: #ffd700; }
+        .vip-plan-title.emerald { color: #34d399; }
+        .vip-plan-dur { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* Taka Price Container with authentic Bengali currency symbol */
+        .vip-price-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .vip-price-main {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+        .vip-taka-symbol {
+            font-size: 18px;
+            font-weight: 900;
+            color: #c084fc;
+        }
+        .vip-price-box.gold .vip-taka-symbol { color: #ffd700; }
+        .vip-price-box.emerald .vip-taka-symbol { color: #34d399; }
+        .vip-price-val {
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+        .vip-price-box.gold .vip-price-val { color: #ffd700; text-shadow: 0 0 14px rgba(255, 215, 0, 0.45); }
+        .vip-price-box.emerald .vip-price-val { color: #34d399; text-shadow: 0 0 14px rgba(52, 211, 153, 0.45); }
+        .vip-price-sub {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .vip-perks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 8px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .vip-perk-line { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #cbd5e1; }
+        .vip-perk-line span { font-size: 16px; color: #10b981; }
+
+        .vip-action-btn-full {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 14px;
+            border: none;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+        .vip-action-btn-full:active { transform: scale(0.98); }
+        .vip-action-btn-full.starter-btn {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+        }
+        .vip-action-btn-full.popular-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+        }
+        .vip-action-btn-full.ultimate-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -788,30 +1521,29 @@
 
     <header class="header">
         <div class="header-left">
-            <button class="menu-btn ripple-btn" onclick="openOverlay('sidebarOverlay')"><span class="material-symbols-rounded">menu</span></button>
-            <div class="play-icon-wrapper"><span class="material-symbols-rounded">play_arrow</span></div>
-            <div class="app-title-text" id="appLogoArea">
-                <div class="title-top"><span class="title-mini">MINI</span> <span class="title-app">APP</span></div>
-                <div class="title-pro">PRO 2.0</div>
-            </div>
+            <button class="header-icon-btn ripple-btn" onclick="openOverlay('sidebarOverlay')" title="Menu">
+                <span class="material-symbols-rounded">more_vert</span>
+            </button>
+            <button class="header-icon-btn ripple-btn" onclick="toggleTheme()" title="Toggle Theme">
+                <span class="material-symbols-rounded" id="headerThemeIcon">dark_mode</span>
+            </button>
         </div>
+
+        <div class="header-center" onclick="switchTab('home')">
+            <div class="header-logo-box" id="appLogoArea">
+                <span class="material-symbols-rounded logo-fallback">play_arrow</span>
+            </div>
+            <div class="header-app-name" id="headerAppName">Viral Link</div>
+        </div>
+
         <div class="header-right">
-            <button class="action-btn ripple-btn" onclick="toggleSearch()"><span class="material-symbols-rounded">search</span></button>
-            <button class="action-btn ripple-btn" onclick="openOverlay('notificationsOverlay')">
-                <span class="material-symbols-rounded">notifications</span>
+            <button class="header-icon-btn bell-btn ripple-btn" onclick="openOverlay('notificationsOverlay')" title="Notifications">
+                <span class="material-symbols-rounded bell-icon">notifications</span>
                 <div class="noti-dot" id="notiDotIndicator"></div>
             </button>
-            <div class="profile-avatar ripple-btn" id="headerProfileInitials" onclick="openOverlay('profileOverlay')">U</div>
+            <div class="profile-avatar ripple-btn" id="headerProfileInitials" onclick="switchTab('profile')" title="My Profile">U</div>
         </div>
     </header>
-
-    <div class="search-container" id="searchContainer">
-        <input type="text" id="searchInput" class="search-bar" placeholder="Search viral videos..." oninput="filterVideos()">
-        <select id="sortFilter" class="filter-btn ripple-btn" onchange="filterVideos()">
-            <option value="latest">Latest</option>
-            <option value="popular">Popular</option>
-        </select>
-    </div>
 
     <div class="categories-wrapper" id="categoryContainer">
         <div class="category-pill ripple-btn active" onclick="setCategory('All', this)">All</div>
@@ -821,9 +1553,26 @@
         <div class="category-pill ripple-btn" onclick="setCategory('PREMIUM', this)">PREMIUM 🌟</div>
         <div class="category-pill ripple-btn" onclick="setCategory('EXclusive', this)">EXclusive</div>
     </div>
-    
-    <div class="video-count-badge">
-        <span class="material-symbols-rounded" style="font-size: 18px;">videocam</span> Videos <span id="totalVidCount" style="margin-left:4px;">0</span>
+
+    <!-- Home Feed Section Header with Search Button on Right (Req 4) -->
+    <div class="home-feed-header">
+        <div class="feed-header-left">
+            <span class="material-symbols-rounded feed-icon">play_circle</span>
+            <span class="feed-title-text">All Videos</span>
+            <span class="feed-count-pill" id="totalVidCount">0</span>
+        </div>
+        <button class="feed-search-btn ripple-btn" onclick="toggleSearch()" title="Search Videos">
+            <span class="material-symbols-rounded">search</span>
+            <span>খুঁজুন</span>
+        </button>
+    </div>
+
+    <div class="search-container" id="searchContainer">
+        <input type="text" id="searchInput" class="search-bar" placeholder="ভিডিও খুঁজুন (Search)..." oninput="filterVideos()">
+        <select id="sortFilter" class="filter-btn ripple-btn" onchange="filterVideos()">
+            <option value="latest">Latest</option>
+            <option value="popular">Popular</option>
+        </select>
     </div>
 
     <main id="videoFeed" class="video-grid"></main>
@@ -908,21 +1657,26 @@
         <span id="supportFloatingText">Support</span>
     </a>
 
-    <nav class="bottom-nav">
-        <button class="nav-item ripple-btn active" onclick="navSwitch(this); closeAllOverlays();">
-            <span class="material-symbols-rounded">home</span>Home
+    <nav class="bottom-nav" id="mainBottomNav">
+        <button class="nav-item ripple-btn active" id="navBtn-home" onclick="switchTab('home')">
+            <span class="material-symbols-rounded">home</span>
+            <span>Home</span>
         </button>
-        <button class="nav-item ripple-btn" onclick="navSwitch(this); openOverlay('favoritesOverlay'); loadFavorites();">
-            <span class="material-symbols-rounded">favorite</span>Favorites
+        <button class="nav-item ripple-btn" id="navBtn-favorites" onclick="switchTab('favorites')">
+            <span class="material-symbols-rounded">favorite</span>
+            <span>Favorites</span>
         </button>
-        <button class="nav-item ripple-btn" onclick="navSwitch(this); openOverlay('referralOverlay');">
-            <span class="material-symbols-rounded" style="color:var(--success);">redeem</span>Referral
+        <button class="nav-item ripple-btn" id="navBtn-referral" onclick="switchTab('referral')">
+            <span class="material-symbols-rounded" style="color:var(--success);">redeem</span>
+            <span>Refer</span>
         </button>
-        <button class="nav-item ripple-btn" onclick="navSwitch(this); openOverlay('channelsOverlay');">
-            <span class="material-symbols-rounded">send</span>Channels
+        <button class="nav-item ripple-btn" id="navBtn-channels" onclick="switchTab('channels')">
+            <span class="material-symbols-rounded">send</span>
+            <span>Group</span>
         </button>
-        <button class="nav-item ripple-btn" onclick="navSwitch(this); openOverlay('premiumOverlay');">
-            <span class="material-symbols-rounded" style="color: var(--warning);">workspace_premium</span>Premium
+        <button class="nav-item ripple-btn" id="navBtn-premium" onclick="switchTab('premium')">
+            <span class="material-symbols-rounded" style="color: var(--warning);">workspace_premium</span>
+            <span>Premium</span>
         </button>
     </nav>
 
@@ -1024,57 +1778,117 @@
         </div>
     </div>
 
-    <!-- 🎁 NEW REFERRAL OVERLAY 🎁 -->
-    <div class="overlay" id="referralOverlay" onclick="closeOverlay(event, 'referralOverlay')">
+    <!-- 🎁 VIDEO-STYLE ULTRA REFER & EARN FULL-PAGE (Req 1 & 5) 🎁 -->
+    <div class="overlay full-screen-page" id="referralOverlay" onclick="closeOverlay(event, 'referralOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
-            <div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;">
-                <h2 style="color:var(--success); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">redeem</span> Refer & Earn</h2>
-                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'referralOverlay')"><span class="material-symbols-rounded">close</span></button>
+            <div class="sheet-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Back to Home"><span class="material-symbols-rounded">arrow_back</span></button>
+                    <h2 style="color:#fff; font-size:18px; margin:0;"><span class="material-symbols-rounded" style="color:#c084fc; vertical-align:middle;">redeem</span> Refer & Earn</h2>
+                </div>
+                <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Close"><span class="material-symbols-rounded">close</span></button>
             </div>
             
-            <div class="notice-box" style="border-color:var(--success); background:rgba(16, 185, 129, 0.1);">
-                <b style="font-size:16px; color:var(--success);">কিভাবে রেফার করবেন এবং কী পাবেন?</b><br><br>
-                আপনার ইউনিক রেফার লিংকটি কপি করে বন্ধুদের সাথে শেয়ার করুন। তারা ব বটে জয়েন করলেই আপনার রেফার কাউন্ট হবে! রেফারেল লিডারবোর্ডে টপ ৩ জনের ভেতরে থাকলে আপনি পাবেন সম্পূর্ণ <b>ফ্রি প্রিমিয়াম!</b><br><br>
-                🥇 <b>টপ ১:</b> ১ মাসের প্রিমিয়াম<br>
-                🥈 <b>টপ ২:</b> ১৫ দিনের প্রিমিয়াম<br>
-                🥉 <b>টপ ৩:</b> ৭ দিনের প্রিমিয়াম<br><br>
-                <i style="color:var(--text-muted);">* প্রতি ৭ দিন পর পর (শনিবার) লিডারবোর্ড থেকে টপ ৩ জনকে বিজয়ী ঘোষণা করা হবে এবং তারা প্রিমিয়ামের জন্য আবেদন করতে পারবে।</i>
-            </div>
+            <div class="ref-page-wrap">
+                <!-- 1. Hero Card -->
+                <div class="ref-hero-card">
+                    <div class="ref-hero-icon">
+                        <span class="material-symbols-rounded">redeem</span>
+                    </div>
+                    <div class="ref-hero-texts">
+                        <div class="ref-hero-title">Refer & Earn</div>
+                        <div class="ref-hero-sub">Invite friends → Unlock rewards & Free VIP</div>
+                    </div>
+                </div>
 
-            <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:20px;">
-                <div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--primary-accent);">
-                    <h3 style="color:var(--primary-light); font-size:24px;" id="refTotalCount">0</h3>
-                    <p style="font-size:11px; color:var(--text-muted); font-weight:600;">Total Referred</p>
+                <!-- 2. 3-Column Stats Row (Invited, Rewards, Next) -->
+                <div class="ref-stats-row">
+                    <div class="ref-stat-box">
+                        <div class="ref-stat-val purple" id="refStatInvited">0</div>
+                        <div class="ref-stat-lbl">INVITED</div>
+                    </div>
+                    <div class="ref-stat-box">
+                        <div class="ref-stat-val blue" id="refStatRewards">0</div>
+                        <div class="ref-stat-lbl">REWARDS</div>
+                    </div>
+                    <div class="ref-stat-box">
+                        <div class="ref-stat-val pink" id="refStatNext">3</div>
+                        <div class="ref-stat-lbl">NEXT</div>
+                    </div>
                 </div>
-                <div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--success);">
-                    <h3 style="color:var(--success); font-size:24px;" id="refActiveCount">0</h3>
-                    <p style="font-size:11px; color:var(--text-muted); font-weight:600;">Active Users</p>
-                </div>
-                <div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--danger);">
-                    <h3 style="color:var(--danger); font-size:24px;" id="refInactiveCount">0</h3>
-                    <p style="font-size:11px; color:var(--text-muted); font-weight:600;">Inactive</p>
-                </div>
-            </div>
 
-            <button class="unlock-btn ripple-btn" style="background:var(--primary-accent); margin-bottom:12px;" onclick="copyBotLink()">
-                <span class="material-symbols-rounded">content_copy</span> Copy My Referral Link
-            </button>
-            <button class="unlock-btn ripple-btn" style="background:#3b82f6; margin-bottom:12px;" onclick="shareAppOnTelegram()">
-                <span class="material-symbols-rounded">send</span> Share to Telegram Friends
-            </button>
-            <button class="unlock-btn ripple-btn" style="background:var(--bg-dark); border:1px solid var(--warning); color:var(--warning); box-shadow:none;" onclick="closeOverlay(null, 'referralOverlay'); loadLeaderboard('referral', 'all');">
-                <span class="material-symbols-rounded">leaderboard</span> View Referral Leaderboard
-            </button>
+                <!-- 3. Next Reward Progress Banner Card -->
+                <div class="ref-next-card">
+                    <div class="ref-next-header">
+                        <div class="ref-next-left">
+                            <div class="ref-next-icon">
+                                <span class="material-symbols-rounded">videocam</span>
+                            </div>
+                            <div class="ref-next-title">Next Reward</div>
+                        </div>
+                        <span class="ref-next-pill" id="refNextRatio">0/3</span>
+                    </div>
+                    <div class="ref-next-desc" id="refNextDesc">Invite <b>3 friends</b> → Get <b>1 FREE unlock</b></div>
+                    <div class="ref-bar-track">
+                        <div class="ref-bar-fill" id="refNextBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- 4. Referral Link Box -->
+                <div class="ref-link-card">
+                    <div class="ref-link-label">
+                        <span class="material-symbols-rounded" style="font-size:14px;">link</span> YOUR REFERRAL LINK
+                    </div>
+                    <div class="ref-link-row">
+                        <input type="text" id="refShareLinkInput" readonly class="ref-link-input" value="https://t.me/your_bot?start=ref_..." onclick="this.select();">
+                        <button class="ref-copy-btn ripple-btn" onclick="copyBotLink()">
+                            <span class="material-symbols-rounded">content_copy</span> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. Big Glowing Share Button -->
+                <button class="ref-share-big-btn ripple-btn" onclick="shareAppOnTelegram()">
+                    <span class="material-symbols-rounded">send</span> Share with Friends
+                </button>
+
+                <!-- 6. Live Activity Box -->
+                <div class="ref-live-card">
+                    <div class="ref-live-header">
+                        <span class="ref-pulse-dot"></span>
+                        <span>Live Activity</span>
+                    </div>
+                    <div id="refLiveActivityContent" class="ref-live-empty">
+                        <span class="material-symbols-rounded" style="font-size:16px;">hourglass_empty</span> No recent activity
+                    </div>
+                </div>
+
+                <!-- 7. Rewards Grid (6 Milestone Cards, 2 Columns) -->
+                <div style="font-size:14px; font-weight:800; color:#fff; margin-top:6px; display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-rounded" style="color:#ffd700; font-size:20px;">military_tech</span> Reward Milestones
+                </div>
+                <div class="ref-tiers-grid" id="refTiersGrid">
+                    <!-- Populated dynamically by updateReferralPageUI() -->
+                </div>
+
+                <!-- Extra Leaderboard Button -->
+                <button class="unlock-btn ripple-btn" style="background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); color:var(--text-light); box-shadow:none; margin-top:8px;" onclick="loadLeaderboard('referral', 'all');">
+                    <span class="material-symbols-rounded" style="color:var(--warning);">leaderboard</span> View Referral Leaderboard
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Overlays -->
-    <!-- 👤 PRO USER PROFILE OVERLAY 👤 -->
-    <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')">
+    <!-- 👤 PRO USER PROFILE FULL-PAGE (Req 5) 👤 -->
+    <div class="overlay full-screen-page" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')">
         <div class="bottom-sheet profile-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header">
-                <h2><span class="material-symbols-rounded" style="color:var(--primary-accent);">account_circle</span> মাই প্রোফাইল</h2>
-                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Back to Home"><span class="material-symbols-rounded">arrow_back</span></button>
+                    <h2 style="font-size:18px; margin:0;"><span class="material-symbols-rounded" style="color:var(--primary-accent); vertical-align:middle;">account_circle</span> মাই প্রোফাইল</h2>
+                </div>
+                <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Close"><span class="material-symbols-rounded">close</span></button>
             </div>
 
             <!-- Profile Hero Card -->
@@ -1203,103 +2017,147 @@
     </div>
     
     <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="notiList" style="margin-top:10px;">Loading updates...</div></div></div>
-    <!-- 👑 PRO VIP SUBSCRIPTION PLANS OVERLAY 👑 -->
-    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')">
+    <!-- 👑 PRO VIP SUBSCRIPTION PLANS FULL-PAGE (Req 2 & 5) 👑 -->
+    <div class="overlay full-screen-page" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')">
         <div class="bottom-sheet premium-sheet" onclick="event.stopPropagation()">
             <div class="sheet-header">
-                <h2><span class="material-symbols-rounded" style="color: var(--warning);">workspace_premium</span> VIP সাবস্ক্রিপশন</h2>
-                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Back to Home"><span class="material-symbols-rounded">arrow_back</span></button>
+                    <h2 style="color:#fff; font-size:18px; margin:0;"><span class="material-symbols-rounded" style="color:var(--warning); vertical-align:middle;">workspace_premium</span> VIP সাবস্ক্রিপশন</h2>
+                </div>
+                <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Close"><span class="material-symbols-rounded">close</span></button>
             </div>
 
             <!-- Premium Benefits Banner -->
             <div class="premium-benefits-box">
                 <div class="benefits-header">
-                    <span class="material-symbols-rounded" style="color:var(--warning); font-size:26px;">star</span>
-                    <b>কেন ভিআইপি মেম্বারশিপ নিবেন?</b>
+                    <span class="material-symbols-rounded" style="color:var(--warning); font-size:24px;">verified</span>
+                    <b>ভিআইপি মেম্বারশিপের সুবিধাসমূহ</b>
                 </div>
                 <div class="benefits-list">
                     <div class="benefit-item">
                         <span class="material-symbols-rounded check-icon">check_circle</span>
-                        <span><b>১০০% বিজ্ঞাপন মুক্ত:</b> কোনো অ্যাড না দেখে এক ক্লিকে "WATCH NOW"!</span>
+                        <span><b>১০০% বিজ্ঞাপন মুক্ত:</b> কোনো অ্যাড না দেখে সরাসরি এক ক্লিকে ফুল ভিডিও!</span>
                     </div>
                     <div class="benefit-item">
                         <span class="material-symbols-rounded check-icon">check_circle</span>
-                        <span><b>আনলিমিটেড ভিডিও:</b> যেকোনো ভিডিও যতখুশি দেখুন কোনো বাধা ছাড়া।</span>
+                        <span><b>আনলিমিটেড অ্যাক্সেস:</b> প্রতিটি ভিডিও যতখুশি দেখুন কোনো লিমিট ছাড়া।</span>
                     </div>
                     <div class="benefit-item">
                         <span class="material-symbols-rounded check-icon">check_circle</span>
-                        <span><b>গোল্ডেন VIP ব্যাজ:</b> আপনার প্রোফাইলে ভিআইপি মেম্বার ব্যাজ যুক্ত হবে।</span>
+                        <span><b>গোল্ডেন VIP ব্যাজ:</b> আপনার প্রোফাইলে ও নামের পাশে ভিআইপি ব্যাজ থাকবে।</span>
                     </div>
                     <div class="benefit-item">
                         <span class="material-symbols-rounded check-icon">check_circle</span>
-                        <span><b>সহজ পেমেন্ট:</b> বিকাশ, নগদ, রকেট এবং বাইনান্স সাপোর্ট।</span>
+                        <span><b>ইনস্ট্যান্ট অ্যাক্টিভেশন:</b> বিকাশ, নগদ, রকেট এবং বাইনান্স পেমেন্ট সাপোর্ট।</span>
                     </div>
                 </div>
             </div>
 
-            <div class="plans-section-title">পছন্দের প্যাকেজ বেছে নিন</div>
+            <div class="plans-section-title">পছন্দের ভিআইপি প্যাকেজ বেছে নিন</div>
 
-            <!-- 3 SUBSCRIPTION PLAN CARDS -->
-            <div class="plans-container">
-                <!-- 1 Month Plan -->
-                <div class="plan-card ripple-btn" onclick="selectPlanAndPay('1 Month')">
-                    <div class="plan-card-left">
-                        <div class="plan-icon-box">
-                            <span class="material-symbols-rounded">star</span>
+            <!-- 3 ATTRACTIVE LUXURY SUBSCRIPTION PLAN CARDS (Req 3) -->
+            <div class="vip-plans-vertical">
+                <!-- 1 Month Starter Plan -->
+                <div class="vip-card ripple-btn" onclick="selectPlanAndPay('1 Month')">
+                    <div class="vip-card-header">
+                        <div class="vip-card-brand">
+                            <div class="vip-icon-square">
+                                <span class="material-symbols-rounded">stars</span>
+                            </div>
+                            <div class="vip-header-texts">
+                                <div class="vip-plan-title">১ মাস প্ল্যান (Starter VIP)</div>
+                                <div class="vip-plan-dur">৩০ দিন সম্পূর্ণ VIP অ্যাক্সেস</div>
+                            </div>
                         </div>
-                        <div class="plan-details">
-                            <b class="plan-name">১ মাস প্ল্যান (Starter)</b>
-                            <span class="plan-duration">৩০ দিন ফুল ভিআইপি অ্যাক্সেস</span>
+                        <div class="vip-price-box">
+                            <div class="vip-price-main">
+                                <span class="vip-taka-symbol">৳</span>
+                                <span class="vip-price-val" id="planPrice1m">30</span>
+                            </div>
+                            <span class="vip-price-sub">/ ১ মাস</span>
+                            <span id="btnPrice1m" style="display:none;">30</span>
                         </div>
                     </div>
-                    <div class="plan-card-right">
-                        <div class="plan-price" id="planPrice1m">100 BDT</div>
-                        <span id="btnPrice1m" style="display:none;">100 BDT</span>
-                        <button class="plan-action-btn">পেমেন্ট করুন</button>
+                    <div class="vip-perks-list">
+                        <div class="vip-perk-line"><span class="material-symbols-rounded">check_circle</span> কোনো বিজ্ঞাপন ছাড়া সরাসরি ফুল প্লে</div>
+                        <div class="vip-perk-line"><span class="material-symbols-rounded">check_circle</span> হাই স্পিড আল্ট্রা এইচডি স্ট্রিমিং</div>
                     </div>
+                    <button class="vip-action-btn-full starter-btn">
+                        <span>✨ এই প্ল্যানটি নিন</span>
+                        <span class="material-symbols-rounded">arrow_forward</span>
+                    </button>
                 </div>
 
-                <!-- 6 Months Plan (Popular) -->
-                <div class="plan-card popular-plan ripple-btn" onclick="selectPlanAndPay('6 Months')">
-                    <div class="popular-ribbon">🔥 সবচেয়ে জনপ্রিয়</div>
-                    <div class="plan-card-left">
-                        <div class="plan-icon-box" style="background: rgba(245, 158, 11, 0.2); color: var(--warning);">
-                            <span class="material-symbols-rounded">hotel_class</span>
+                <!-- 6 Months Super Plan (Most Popular) -->
+                <div class="vip-card popular ripple-btn" onclick="selectPlanAndPay('6 Months')">
+                    <div class="vip-inline-badge gold">🔥 সবচেয়ে জনপ্রিয় অফার (৫০% সাশ্রয়ী)</div>
+                    <div class="vip-card-header">
+                        <div class="vip-card-brand">
+                            <div class="vip-icon-square popular">
+                                <span class="material-symbols-rounded">workspace_premium</span>
+                            </div>
+                            <div class="vip-header-texts">
+                                <div class="vip-plan-title gold">৬ মাস প্ল্যান (Super VIP)</div>
+                                <div class="vip-plan-dur">১৮০ দিন আনলিমিটেড মেম্বারশিপ</div>
+                            </div>
                         </div>
-                        <div class="plan-details">
-                            <b class="plan-name">৬ মাস প্ল্যান (Super VIP)</b>
-                            <span class="plan-duration">১৮০ দিন আনলিমিটেড (সাশ্রয়ী)</span>
+                        <div class="vip-price-box gold">
+                            <div class="vip-price-main">
+                                <span class="vip-taka-symbol">৳</span>
+                                <span class="vip-price-val" id="planPrice6m">100</span>
+                            </div>
+                            <span class="vip-price-sub">/ ৬ মাস</span>
+                            <span id="btnPrice6m" style="display:none;">100</span>
                         </div>
                     </div>
-                    <div class="plan-card-right">
-                        <div class="plan-price highlight" id="planPrice6m">500 BDT</div>
-                        <span id="btnPrice6m" style="display:none;">500 BDT</span>
-                        <button class="plan-action-btn highlight">পেমেন্ট করুন</button>
+                    <div class="vip-perks-list">
+                        <div class="vip-perk-line"><span class="material-symbols-rounded">check_circle</span> সমস্ত ভিডিও সীমাহীন ফ্রি দেখা</div>
+                        <div class="vip-perk-line"><span class="material-symbols-rounded">check_circle</span> প্রোফাইলে গোল্ডেন VIP ব্যাজ</div>
+                        <div class="vip-perk-line"><span class="material-symbols-rounded">check_circle</span> এক্সক্লুসিভ সিক্রেট ভিডিও অ্যাক্সেস</div>
                     </div>
+                    <button class="vip-action-btn-full popular-btn">
+                        <span>👑 ভিআইপি মেম্বারশিপ নিন</span>
+                        <span class="material-symbols-rounded">arrow_forward</span>
+                    </button>
                 </div>
 
-                <!-- 1 Year Plan (Best Value) -->
-                <div class="plan-card ripple-btn" onclick="selectPlanAndPay('1 Year')">
-                    <div class="best-value-ribbon">👑 সেরা সাশ্রয়ী</div>
-                    <div class="plan-card-left">
-                        <div class="plan-icon-box" style="background: rgba(16, 185, 129, 0.2); color: var(--success);">
-                            <span class="material-symbols-rounded">military_tech</span>
+                <!-- 1 Year Ultimate Plan (Best Value) -->
+                <div class="vip-card ultimate ripple-btn" onclick="selectPlanAndPay('1 Year')">
+                    <div class="vip-inline-badge emerald">👑 সেরা সাশ্রয়ী প্যাকেজ (Ultimate)</div>
+                    <div class="vip-card-header">
+                        <div class="vip-card-brand">
+                            <div class="vip-icon-square ultimate">
+                                <span class="material-symbols-rounded">diamond</span>
+                            </div>
+                            <div class="vip-header-texts">
+                                <div class="vip-plan-title emerald">১ বছর প্ল্যান (Ultimate VIP)</div>
+                                <div class="vip-plan-dur">৩৬৫ দিন অল-ইনক্লুসিভ অ্যাক্সেস</div>
+                            </div>
                         </div>
-                        <div class="plan-details">
-                            <b class="plan-name">১ বছর প্ল্যান (Ultimate)</b>
-                            <span class="plan-duration">৩৬৫ দিন অল-ইনক্লুসিভ ভিআইপি</span>
+                        <div class="vip-price-box emerald">
+                            <div class="vip-price-main">
+                                <span class="vip-taka-symbol">৳</span>
+                                <span class="vip-price-val" id="planPrice1y">250</span>
+                            </div>
+                            <span class="vip-price-sub">/ ১ বছর</span>
+                            <span id="btnPrice1y" style="display:none;">250</span>
                         </div>
                     </div>
-                    <div class="plan-card-right">
-                        <div class="plan-price" id="planPrice1y">900 BDT</div>
-                        <span id="btnPrice1y" style="display:none;">900 BDT</span>
-                        <button class="plan-action-btn">পেমেন্ট করুন</button>
+                    <div class="vip-perks-list">
+                        <div class="vip-perk-line"><span class="material-symbols-rounded">check_circle</span> ১ বছর সম্পূর্ণ ঝামেলামুক্ত VIP উপভোগ</div>
+                        <div class="vip-perk-line"><span class="material-symbols-rounded">check_circle</span> সবার আগে নতুন রিলিজ ও হট ভিডিও</div>
+                        <div class="vip-perk-line"><span class="material-symbols-rounded">check_circle</span> ২৪/৭ ডিরেক্ট ভিআইপি সাপোর্ট ও প্রাইভেট বট</div>
                     </div>
+                    <button class="vip-action-btn-full ultimate-btn">
+                        <span>💎 আলটিমেট মেম্বারশিপ নিন</span>
+                        <span class="material-symbols-rounded">arrow_forward</span>
+                    </button>
                 </div>
             </div>
 
             <div class="payment-partners-badge">
-                <span>পেমেন্ট মেথড:</span>
+                <span>পেমেন্ট পার্টনারস:</span>
                 <b>bKash • Nagad • Rocket • Binance Pay</b>
             </div>
         </div>
@@ -1450,9 +2308,31 @@
             </div>
         </div>
     </div>
-    <div class="overlay" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--primary-light); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">send</span> Our Channels</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="channelListContainer">Loading channels...</div></div></div>
+    <div class="overlay full-screen-page" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Back to Home"><span class="material-symbols-rounded">arrow_back</span></button>
+                    <h2 style="color:var(--primary-light); font-size:18px; margin:0;"><span class="material-symbols-rounded" style="vertical-align:middle;">send</span> Our Channels</h2>
+                </div>
+                <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Close"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div id="channelListContainer">Loading channels...</div>
+        </div>
+    </div>
     
-    <div class="overlay" id="favoritesOverlay" onclick="closeOverlay(event, 'favoritesOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="color:var(--danger)">favorite</span> My Favorites (<span id="favHeaderCount">0</span>)</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'favoritesOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="favoritesList" style="margin-top: 10px;"></div></div></div>
+    <div class="overlay full-screen-page" id="favoritesOverlay" onclick="closeOverlay(event, 'favoritesOverlay')">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Back to Home"><span class="material-symbols-rounded">arrow_back</span></button>
+                    <h2 style="color:#fff; font-size:18px; margin:0;"><span class="material-symbols-rounded" style="color:var(--danger); vertical-align:middle;">favorite</span> My Favorites (<span id="favHeaderCount">0</span>)</h2>
+                </div>
+                <button class="close-btn ripple-btn" onclick="switchTab('home')" title="Close"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div id="favoritesList" style="margin-top: 10px;"></div>
+        </div>
+    </div>
 
     <div class="overlay" id="historyOverlay" onclick="closeOverlay(event, 'historyOverlay')">
         <div class="bottom-sheet" onclick="event.stopPropagation()">
@@ -1622,8 +2502,9 @@
             <div id="premiumUsersList" style="max-height: 250px; overflow-y:auto; padding-right:5px;">Loading...</div>
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
             
-            <h3 style="color:var(--success); margin-bottom:15px;">⚙️ App Settings & Bot Link</h3>
-            <div class="input-group"><label>App Logo URL</label><input type="text" id="sAppLogo" placeholder="https://..."></div>
+            <h3 style="color:var(--success); margin-bottom:15px;">⚙️ App Settings & Branding</h3>
+            <div class="input-group"><label>🏷️ App Name (টপ বাড়ে অ্যাপসের নাম)</label><input type="text" id="sAppName" placeholder="e.g. Viral Link, SWORD MASTER"></div>
+            <div class="input-group"><label>🖼️ App Logo URL (টপ বাড়ে অ্যাপসের লোগো লিংক)</label><input type="text" id="sAppLogo" placeholder="https://..."></div>
             <div class="input-group"><label>Adsterra Direct Link</label><input type="text" id="sAdsterraUrl" placeholder="https://..."></div>
             <div class="input-group"><label>Monetag Direct Link</label><input type="text" id="sMonetagUrl" placeholder="https://..."></div>
 
@@ -1917,6 +2798,7 @@
                 if (document.getElementById('refTotalCount')) document.getElementById('refTotalCount').innerText = currentUser.referralCount;
                 if (document.getElementById('refActiveCount')) document.getElementById('refActiveCount').innerText = Math.floor(currentUser.referralCount * 0.8) || currentUser.referralCount;
                 if (document.getElementById('refInactiveCount')) document.getElementById('refInactiveCount').innerText = currentUser.referralCount - (Math.floor(currentUser.referralCount * 0.8) || currentUser.referralCount);
+                updateReferralPageUI();
 
                 if (data.unlockedCount !== undefined && data.unlockedCount > unlockedCount) {
                     unlockedCount = data.unlockedCount;
@@ -2021,6 +2903,7 @@
                 allVideos.push(data);
             });
             document.getElementById('totalVidCount').innerText = allVideos.length;
+            updateCategoryTabs();
             renderVideos();
             if(currentUser.id === ADMIN_ID) renderAdminVideoManageList();
             if (!window.promoShown && !currentUser.isPremium) {
@@ -2064,27 +2947,35 @@
                 document.getElementById('binanceShow').innerText = d.binanceId || "Not Set";
                 mainChannelUrl = d.ch1Url || ''; if(d.botUsername) botBaseUrl = d.botUsername;
                 
+                let appName = d.appName || "Viral Link";
+                window.globalAppName = appName;
+                if(document.getElementById('headerAppName')) document.getElementById('headerAppName').innerText = appName;
+
                 if(d.appLogoUrl) {
-                    document.getElementById('appLogoArea').innerHTML = `<img src="${d.appLogoUrl}" style="max-height: 40px; border-radius: 8px; display: block;">`;
+                    document.getElementById('appLogoArea').innerHTML = `<img src="${d.appLogoUrl}" alt="Logo" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">`;
                 } else {
-                    document.getElementById('appLogoArea').innerHTML = `<div class="title-top"><span class="title-mini">MINI</span> <span class="title-app">APP</span></div><div class="title-pro">PRO 2.0</div>`;
+                    document.getElementById('appLogoArea').innerHTML = `<span class="material-symbols-rounded logo-fallback">play_arrow</span>`;
                 }
                 if(d.adsterraUrl) window.globalAdsterraUrl = d.adsterraUrl;
                 if(d.monetagUrl) window.globalMonetagUrl = d.monetagUrl;
 
-                let p1 = d.price1m || "100 BDT";
-                let p6 = d.price6m || "500 BDT";
-                let py = d.price1y || "900 BDT";
+                let p1 = d.price1m || "30";
+                let p6 = d.price6m || "100";
+                let py = d.price1y || "250";
                 livePrices['1 Month'] = p1;
                 livePrices['6 Months'] = p6;
                 livePrices['1 Year'] = py;
 
-                if (document.getElementById('planPrice1m')) document.getElementById('planPrice1m').innerText = p1;
-                if (document.getElementById('planPrice6m')) document.getElementById('planPrice6m').innerText = p6;
-                if (document.getElementById('planPrice1y')) document.getElementById('planPrice1y').innerText = py;
-                if (document.getElementById('btnPrice1m')) document.getElementById('btnPrice1m').innerText = p1;
-                if (document.getElementById('btnPrice6m')) document.getElementById('btnPrice6m').innerText = p6;
-                if (document.getElementById('btnPrice1y')) document.getElementById('btnPrice1y').innerText = py;
+                let cleanP1 = (p1 || "30").replace(/[^0-9]/g, '') || p1;
+                let cleanP6 = (p6 || "100").replace(/[^0-9]/g, '') || p6;
+                let cleanPy = (py || "250").replace(/[^0-9]/g, '') || py;
+
+                if (document.getElementById('planPrice1m')) document.getElementById('planPrice1m').innerText = cleanP1;
+                if (document.getElementById('planPrice6m')) document.getElementById('planPrice6m').innerText = cleanP6;
+                if (document.getElementById('planPrice1y')) document.getElementById('planPrice1y').innerText = cleanPy;
+                if (document.getElementById('btnPrice1m')) document.getElementById('btnPrice1m').innerText = `৳ ${cleanP1}`;
+                if (document.getElementById('btnPrice6m')) document.getElementById('btnPrice6m').innerText = `৳ ${cleanP6}`;
+                if (document.getElementById('btnPrice1y')) document.getElementById('btnPrice1y').innerText = `৳ ${cleanPy}`;
 
                 let channelsHtml = "";
                 if(d.ch1Name && d.ch1Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch1Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--primary-accent);"><span class="material-symbols-rounded" style="color:var(--text-light)">campaign</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch1Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch1Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
@@ -2092,6 +2983,7 @@
                 document.getElementById('channelListContainer').innerHTML = channelsHtml || "<p style='text-align:center; color:var(--text-muted);'>No channels added yet.</p>";
 
                 if(currentUser.id === ADMIN_ID) {
+                    if(document.getElementById('sAppName')) document.getElementById('sAppName').value = d.appName || "";
                     document.getElementById('sAppLogo').value = d.appLogoUrl || "";
                     document.getElementById('sAdsterraUrl').value = d.adsterraUrl || "";
                     document.getElementById('sMonetagUrl').value = d.monetagUrl || "";
@@ -2162,12 +3054,32 @@
         function renderVideos() {
             const feed = document.getElementById('videoFeed');
             if (isVideosLoading) {
-                feed.innerHTML = `
-                    <div style="grid-column: span 2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center;">
-                        <div style="position: relative; width: 60px; height: 60px; margin-bottom: 20px;"><div class="premium-spinner" style="border-width: 4px;"></div></div>
-                        <h3 style="color: var(--text-light); font-size: 16px; margin-bottom: 8px; font-weight: 700;">ভিডিও লোডিং হচ্ছে...</h3>
-                        <p style="color: var(--text-muted); font-size: 13px;">দয়া করে একটু অপেক্ষা করুন</p>
-                    </div>`;
+                let skeletonHtml = `
+                    <div class="skeleton-loading-banner">
+                        <div class="premium-spinner" style="width:16px; height:16px; border-width:2px; display:inline-block; vertical-align:middle; margin-right:6px;"></div>
+                        <span>লেটেস্ট ভিডিও লোড হচ্ছে...</span>
+                    </div>
+                `;
+                for (let i = 0; i < 6; i++) {
+                    skeletonHtml += `
+                        <div class="skeleton-video-card">
+                            <div class="skeleton-thumb-box skeleton-shimmer">
+                                <div class="skeleton-play-bubble">
+                                    <span class="material-symbols-rounded" style="font-size:20px;">play_arrow</span>
+                                </div>
+                            </div>
+                            <div class="skeleton-info-box">
+                                <div class="skeleton-line-title1 skeleton-shimmer"></div>
+                                <div class="skeleton-line-title2 skeleton-shimmer"></div>
+                                <div class="skeleton-bottom-row">
+                                    <div class="skeleton-pill-cat skeleton-shimmer"></div>
+                                    <div class="skeleton-pill-views skeleton-shimmer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                feed.innerHTML = skeletonHtml;
                 return;
             }
 
@@ -2728,18 +3640,19 @@
         // PAYMENT SUBMISSION & VIP PLAN MANAGEMENT
         // ==========================================
         let livePrices = {
-            '1 Month': '100 BDT',
-            '6 Months': '500 BDT',
-            '1 Year': '900 BDT'
+            '1 Month': '30',
+            '6 Months': '100',
+            '1 Year': '250'
         };
 
         function selectPlanAndPay(plan) {
             selectedPlan = plan;
-            let price = livePrices[plan] || (plan.includes('1 Month') ? '100 BDT' : (plan.includes('6 Months') ? '500 BDT' : '900 BDT'));
-            selectedPrice = price;
+            let rawPrice = livePrices[plan] || (plan.includes('1 Month') ? '30' : (plan.includes('6 Months') ? '100' : '250'));
+            let numPrice = rawPrice.replace(/[^0-9]/g, '') || rawPrice;
+            selectedPrice = `৳ ${numPrice}`;
             
             document.getElementById('selectedPlanShow').innerText = plan;
-            document.getElementById('selectedAmountShow').innerText = price;
+            document.getElementById('selectedAmountShow').innerText = selectedPrice;
             
             db.collection("transactions").where("userId", "==", currentUser.id).where("status", "==", "Pending").get().then(snap => {
                 if(!snap.empty) {
@@ -2947,6 +3860,7 @@
 
         function saveSettings() {
             db.collection("settings").doc("app_settings").set({
+                appName: document.getElementById('sAppName') ? document.getElementById('sAppName').value : "",
                 appLogoUrl: document.getElementById('sAppLogo').value,
                 adsterraUrl: document.getElementById('sAdsterraUrl').value,
                 monetagUrl: document.getElementById('sMonetagUrl').value,
@@ -3009,32 +3923,180 @@
             window.toastTimer = setTimeout(() => { t.classList.remove('show'); }, 2200);
         }
 
-        function toggleTheme() { const isLight = document.body.parentElement.getAttribute('data-theme') === 'light'; document.body.parentElement.setAttribute('data-theme', isLight ? 'dark' : 'light'); }
-        function openOverlay(id) {
-            document.querySelectorAll('.overlay').forEach(el => {
-                if (el.id !== id) {
-                    el.classList.remove('active');
-                    if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
+        function toggleTheme() {
+            const isLight = document.body.parentElement.getAttribute('data-theme') === 'light';
+            document.body.parentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+            const icon = document.getElementById('headerThemeIcon');
+            if (icon) icon.innerText = isLight ? 'dark_mode' : 'light_mode';
+        }
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const targetNav = document.getElementById(`navBtn-${tab}`);
+            if (targetNav) targetNav.classList.add('active');
+
+            const fullPages = ['referralOverlay', 'premiumOverlay', 'favoritesOverlay', 'channelsOverlay', 'profileOverlay', 'leaderboardOverlay'];
+            fullPages.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+
+            if (tab === 'home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            let overlayId = '';
+            if (tab === 'referral') { overlayId = 'referralOverlay'; updateReferralPageUI(); }
+            else if (tab === 'premium') { overlayId = 'premiumOverlay'; }
+            else if (tab === 'favorites') { overlayId = 'favoritesOverlay'; loadFavorites(); }
+            else if (tab === 'channels') { overlayId = 'channelsOverlay'; }
+            else if (tab === 'profile') { overlayId = 'profileOverlay'; }
+
+            if (overlayId) {
+                const overlay = document.getElementById(overlayId);
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.scrollTop = 0;
+                }
+            }
+        }
+
+        function updateCategoryTabs() {
+            const container = document.getElementById('categoryContainer');
+            if (!container) return;
+
+            const baseCats = [
+                { id: 'All', label: 'All', icon: '' },
+                { id: 'VIRAL', label: 'VIRAL', icon: '🔥' },
+                { id: 'EXposed', label: 'EXposed', icon: '🌵' },
+                { id: 'Hot', label: 'Hot', icon: '⚡' },
+                { id: 'PREMIUM', label: 'PREMIUM', icon: '🌟' },
+                { id: 'EXclusive', label: 'EXclusive', icon: '👑' }
+            ];
+
+            allVideos.forEach(v => {
+                if (v.category && !baseCats.some(c => c.id.toLowerCase() === v.category.trim().toLowerCase())) {
+                    baseCats.push({ id: v.category.trim(), label: v.category.trim(), icon: '🎬' });
                 }
             });
+
+            let html = '';
+            baseCats.forEach(cat => {
+                let count = (cat.id === 'All') 
+                    ? allVideos.length 
+                    : allVideos.filter(v => (v.category || '').trim().toLowerCase() === cat.id.toLowerCase()).length;
+                let isActive = (currentCategory.toLowerCase() === cat.id.toLowerCase()) ? 'active' : '';
+                html += `
+                    <div class="category-pill ripple-btn ${isActive}" onclick="setCategory('${cat.id}', this)">
+                        ${cat.icon ? cat.icon + ' ' : ''}${cat.label} <span class="cat-pill-count">${count}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateReferralPageUI() {
+            let count = currentUser.referralCount || 0;
+            
+            const milestones = [
+                { id: 1, invites: 3, title: '1 FREE Unlock', sub: '3 Invites', icon: 'videocam', color: '#3b82f6', bg: 'rgba(59,130,246,0.2)' },
+                { id: 2, invites: 5, title: '3 FREE Unlocks', sub: '5 Invites', icon: 'card_giftcard', color: '#ec4899', bg: 'rgba(236,72,153,0.2)' },
+                { id: 3, invites: 10, title: '1 Day Premium', sub: '10 Invites', icon: 'star', color: '#f59e0b', bg: 'rgba(245,158,11,0.2)' },
+                { id: 4, invites: 20, title: '7 Days Premium', sub: '20 Invites', icon: 'local_fire_department', color: '#ef4444', bg: 'rgba(239,68,68,0.2)' },
+                { id: 5, invites: 50, title: '30 Days Premium', sub: '50 Invites', icon: 'diamond', color: '#06b6d4', bg: 'rgba(6,182,212,0.2)' },
+                { id: 6, invites: 100, title: 'Lifetime VIP', sub: '100 Invites', icon: 'workspace_premium', color: '#a855f7', bg: 'rgba(168,85,247,0.2)' }
+            ];
+
+            let rewardsAchieved = milestones.filter(m => count >= m.invites).length;
+            let nextMilestone = milestones.find(m => count < m.invites);
+            let nextNeeded = nextMilestone ? (nextMilestone.invites - count) : 0;
+
+            if (document.getElementById('refStatInvited')) document.getElementById('refStatInvited').innerText = count;
+            if (document.getElementById('refStatRewards')) document.getElementById('refStatRewards').innerText = rewardsAchieved;
+            if (document.getElementById('refStatNext')) document.getElementById('refStatNext').innerText = nextNeeded;
+
+            if (nextMilestone) {
+                if (document.getElementById('refNextRatio')) document.getElementById('refNextRatio').innerText = `${count}/${nextMilestone.invites}`;
+                if (document.getElementById('refNextDesc')) document.getElementById('refNextDesc').innerHTML = `Invite <b>${nextMilestone.invites} friends</b> → Get <b>${nextMilestone.title}</b>`;
+                let pct = Math.min(100, Math.round((count / nextMilestone.invites) * 100));
+                if (document.getElementById('refNextBar')) document.getElementById('refNextBar').style.width = `${pct}%`;
+            } else {
+                if (document.getElementById('refNextRatio')) document.getElementById('refNextRatio').innerText = `${count}/100`;
+                if (document.getElementById('refNextDesc')) document.getElementById('refNextDesc').innerHTML = `🎉 <b>All milestone rewards unlocked!</b>`;
+                if (document.getElementById('refNextBar')) document.getElementById('refNextBar').style.width = `100%`;
+            }
+
+            if (document.getElementById('refShareLinkInput')) {
+                document.getElementById('refShareLinkInput').value = getBotLinkWithRef();
+            }
+
+            const gridEl = document.getElementById('refTiersGrid');
+            if (gridEl) {
+                let gridHtml = '';
+                milestones.forEach(m => {
+                    let isUnlocked = count >= m.invites;
+                    let progVal = Math.min(count, m.invites);
+                    gridHtml += `
+                        <div class="ref-tier-card ${isUnlocked ? 'unlocked' : ''}">
+                            <div>
+                                <div class="ref-tier-icon-box" style="background:${m.bg}; color:${m.color};">
+                                    <span class="material-symbols-rounded">${m.icon}</span>
+                                </div>
+                                <div class="ref-tier-title">${m.title}</div>
+                                <div class="ref-tier-sub">${m.sub}</div>
+                            </div>
+                            <div class="ref-tier-prog-wrap">
+                                <span class="ref-tier-pill">${isUnlocked ? 'UNLOCKED 🎉' : `${progVal}/${m.invites}`}</span>
+                                ${isUnlocked ? '<span class="material-symbols-rounded" style="color:#10b981; font-size:18px;">check_circle</span>' : '<span class="material-symbols-rounded" style="color:var(--text-muted); font-size:18px;">lock</span>'}
+                            </div>
+                        </div>
+                    `;
+                });
+                gridEl.innerHTML = gridHtml;
+            }
+        }
+
+        function openOverlay(id) {
             const overlay = document.getElementById(id);
             if(!overlay) return;
+            const isFullPage = overlay.classList.contains('full-screen-page');
+
+            document.querySelectorAll('.overlay').forEach(el => {
+                if (el.id !== id) {
+                    if (isFullPage || el.classList.contains('full-screen-page')) {
+                        el.classList.remove('active');
+                    }
+                    if (el.querySelector('.bottom-sheet') && !el.classList.contains('full-screen-page')) {
+                        el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
+                    }
+                }
+            });
+
             overlay.classList.add('active');
-            setTimeout(() => {
-                if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)';
-            }, 10);
+            if (!isFullPage && overlay.querySelector('.bottom-sheet')) {
+                setTimeout(() => {
+                    overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)';
+                }, 10);
+            }
         }
+
         function closeOverlay(e, id) {
             if (e && e.target !== e.currentTarget) return;
             const overlay = document.getElementById(id);
             if(!overlay) return;
+            if (overlay.classList.contains('full-screen-page')) {
+                switchTab('home');
+                return;
+            }
             if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
             setTimeout(() => {
                 overlay.classList.remove('active');
             }, 250);
         }
+
         function closeAllOverlays() {
-            document.querySelectorAll('.overlay').forEach(el => {
+            switchTab('home');
+            document.querySelectorAll('.overlay:not(.full-screen-page)').forEach(el => {
                 if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
                 setTimeout(() => { el.classList.remove('active'); }, 250);
             });
@@ -3111,25 +4173,7 @@
             setTimeout(() => ripple.remove(), 600);
         });
 
-        document.querySelectorAll('.bottom-sheet').forEach(sheet => {
-            let startY, currentY;
-            sheet.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, {passive: true});
-            sheet.addEventListener('touchmove', e => {
-                if (sheet.scrollTop === 0) {
-                    currentY = e.touches[0].clientY;
-                    if (currentY > startY) { e.preventDefault(); sheet.style.transform = `translateY(${currentY - startY}px)`; }
-                }
-            }, {passive: false});
-            sheet.addEventListener('touchend', e => {
-                if (currentY > startY + 100) { 
-                    sheet.closest('.overlay').classList.remove('active');
-                    sheet.style.transform = 'translateY(100%)'; 
-                } else { 
-                    sheet.style.transform = 'translateY(0)'; 
-                }
-                startY = 0; currentY = 0;
-            });
-        });
+        // Gesture pull-to-dismiss disabled to allow smooth scrolling without accidental home navigation (Req 2)
 
         function toggleDataSaver(checkbox) { localStorage.setItem('dataSaver', checkbox.checked); renderVideos(); }
         function clearAppCache() { localStorage.clear(); alert("App cache cleared successfully!"); location.reload(); }
