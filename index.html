@@ -3313,6 +3313,33 @@
         let isAdFlowRunning = false;
         let adStepResolve = null;
 
+        async function triggerRealMonetagOrFallbackAd(adNumber, totalAds) {
+            let monetagHandled = false;
+            // 1. Try real Monetag SDK function (e.g. show_11439323)
+            for (let k in window) {
+                if (k.startsWith('show_') && typeof window[k] === 'function') {
+                    try {
+                        await window[k]();
+                        monetagHandled = true;
+                        break;
+                    } catch (e) {
+                        console.warn("Monetag SDK no-fill or error:", e);
+                    }
+                }
+            }
+            if (monetagHandled) return;
+
+            // 2. If Monetag Direct Link configured in Admin Settings
+            if (window.globalMonetagUrl && window.globalMonetagUrl.startsWith('http')) {
+                openExternalLink(window.globalMonetagUrl);
+                await playAdWaitTransition(4);
+                return;
+            }
+
+            // 3. In-App fallback ad modal if SDK is inactive or has no ads
+            await playSingleInAppAd(adNumber, totalAds);
+        }
+
         async function handleDetailUnlockClick() {
             if (!currentDetailVidId) return;
             let vid = allVideos.find(v => v.id === currentDetailVidId);
@@ -3337,13 +3364,13 @@
 
             let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
 
-            // Ad 1
-            await playSingleInAppAd(1, adsForThisStep);
+            // Ad 1 (Monetag SDK / Direct Link / Fallback)
+            await triggerRealMonetagOrFallbackAd(1, adsForThisStep);
 
             // Ad 2 (if configured)
             if (adsForThisStep === 2) {
-                await playAdWaitTransition(5);
-                await playSingleInAppAd(2, adsForThisStep);
+                await playAdWaitTransition(4);
+                await triggerRealMonetagOrFallbackAd(2, adsForThisStep);
             }
 
             // Close Ad Modal
