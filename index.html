@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <!-- 1. Rewarded Popup Ad Code -->
-    <script src='//libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
+    <script src='https://libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
     
     <style>
         /* --- CSS Variables & Theme --- */
@@ -75,47 +75,98 @@
         .category-tag { font-size: 11px; font-weight: 800; color: var(--text-light); background: rgba(124, 58, 237, 0.8); padding: 4px 10px; border-radius: 8px; display: inline-block; }
         .video-count-badge { display: inline-flex; align-items: center; gap: 6px; background-color: var(--primary-accent); color: white; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 0 15px 15px 15px; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);}
 
-        /* --- Dynamic Image Sized Video Card (Updated) --- */
-        .video-card { position: relative; background: rgba(28, 26, 36, 0.7); backdrop-filter: blur(10px); border-radius: 20px; margin: 0 15px 24px 15px; overflow: hidden; border: 1px solid rgba(124, 58, 237, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s ease;}
-        .video-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--primary-accent), transparent); opacity:0.8;}
-        .thumbnail-container { position: relative; width: 100%; height: auto; min-height: 200px; background-color: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .thumb-dynamic { width: 100%; height: auto; max-height: 450px; object-fit: contain; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .thumb-blur { filter: blur(10px) brightness(0.6); } 
-        
-        .badge-new { position: absolute; top: 12px; left: 12px; background-color: var(--success); color: white; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; z-index: 10; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);}
-        
-        .card-content { padding: 18px; }
-        .video-title { font-size: 16px; font-weight: 700; line-height: 1.4; margin-bottom: 12px; margin-top: 10px; letter-spacing: 0.2px; color: #fff;}
-        
-        /* Action Row for Video Card */
-        .action-row { display: flex; justify-content: space-around; align-items: center; margin-top: 5px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); }
-        .action-btn-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .action-btn-item:active { transform: scale(0.9); color: var(--primary-light); }
-        .action-btn-item .material-symbols-rounded { font-size: 22px; transition: 0.3s; }
-        .action-btn-item.liked { color: var(--primary-light); }
-        .action-btn-item.fav { color: var(--danger); }
-        
-        /* Unlock Steps Visuals */
-        .unlock-steps { display: flex; align-items: center; justify-content: space-between; margin: 16px 0; position: relative; }
-        .step { display: flex; flex-direction: column; align-items: center; z-index: 2; transition: 0.3s; position: relative;}
-        .step-circle { width: 26px; height: 26px; border-radius: 50%; background-color: var(--bg-card); border: 2px solid var(--divider); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; transition: 0.3s;}
-        .step.active .step-circle { border-color: var(--primary-accent); color: var(--primary-accent); box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);}
-        .step.completed .step-circle { background-color: var(--primary-accent); border-color: var(--primary-accent); color: white; box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);}
-        .step-label { font-size: 10px; color: var(--text-muted); font-weight: 700; transition: 0.3s;}
-        
-        .step-line-container { flex-grow: 1; height: 3px; background: rgba(255,255,255,0.15); margin: 0 4px; position: relative; overflow: hidden; transform: translateY(-9px); border-radius: 2px; }
-        .step-line-fill { width: 0%; height: 100%; background: #ffffff; box-shadow: 0 0 12px #ffffff, 0 0 6px rgba(255,255,255,0.8); border-radius: 2px; }
+        /* --- 2-Column Home Video Grid --- */
+        .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 12px 25px 12px; }
+        .grid-video-card { background: var(--bg-card); border-radius: 16px; overflow: hidden; border: 1px solid var(--divider); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+        .grid-video-card:active { transform: scale(0.97); }
+        .grid-thumb-box { position: relative; width: 100%; padding-top: 62%; background: #000; overflow: hidden; }
+        .grid-thumb-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .grid-center-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); border: 2px solid rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 2; transition: 0.2s; }
+        .grid-center-play span { font-size: 24px; margin-left: 2px; }
+        .grid-video-card:hover .grid-center-play { transform: translate(-50%, -50%) scale(1.1); background: var(--primary-accent); }
+        .grid-card-info { padding: 10px 10px 12px 10px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .grid-card-title { font-size: 13px; font-weight: 700; color: var(--text-light); line-height: 1.35; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 35px; }
+        .grid-card-meta { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+        .grid-cat-badge { background: rgba(124, 58, 237, 0.15); color: var(--primary-light); border: 1px solid rgba(124, 58, 237, 0.3); padding: 2px 7px; border-radius: 8px; font-weight: 700; font-size: 10px; max-width: 55%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .grid-views-badge { display: flex; align-items: center; gap: 3px; font-weight: 600; color: var(--text-muted); font-size: 11px; }
+        .grid-views-badge .material-symbols-rounded { font-size: 14px; color: var(--success); }
 
-        .unlock-btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3); transition: transform 0.2s, box-shadow 0.2s;}
-        .unlock-btn:active { transform: translateY(2px); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); }
-        .unlock-btn.waiting { background: #231f30; color: #d1d5db; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
-        .btn-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        /* --- Fullscreen Video Detail Overlay --- */
+        .detail-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 1200; overflow-y: auto; display: none; flex-direction: column; }
+        .detail-overlay.active { display: flex; }
+        .detail-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-header); position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--divider); }
+        .detail-back-btn { background: var(--btn-bg); border: none; color: var(--text-light); width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .detail-hero-box { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 220px; max-height: 420px; }
+        .detail-hero-img { width: 100%; height: auto; max-height: 420px; object-fit: contain; display: block; }
+        .detail-hero-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 62px; height: 62px; border-radius: 50%; background: rgba(124, 58, 237, 0.9); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 0 25px rgba(124, 58, 237, 0.6); cursor: pointer; }
+        .detail-hero-play span { font-size: 38px; margin-left: 3px; }
+        .detail-body { padding: 18px 16px 40px 16px; }
+        .detail-step-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 12px; }
+        .detail-title { font-size: 18px; font-weight: 800; color: #fff; line-height: 1.4; margin-bottom: 14px; }
+        .detail-stats-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+        .detail-stat-pill { flex: 1; background: var(--bg-card); border: 1px solid var(--divider); padding: 10px 8px; border-radius: 12px; text-align: center; }
+        .detail-stat-pill b { display: block; font-size: 15px; color: var(--text-light); margin-bottom: 2px; }
+        .detail-stat-pill span { font-size: 11px; color: var(--text-muted); }
 
-        .premium-btn-spinner { display: inline-block; width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.15); border-top-color: #ffffff; border-left-color: #10b981; border-radius: 50%; animation: spinPremium 0.8s linear infinite; box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); }
+        .detail-unlock-card { background: var(--bg-card); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 20px; padding: 20px 16px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
+        .detail-unlock-card-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .detail-unlock-card-title span { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .detail-unlock-card-title b { color: var(--primary-light); font-size: 14px; }
+        .detail-progress-track { width: 100%; height: 8px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
+        .detail-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 10px; transition: width 0.4s ease; box-shadow: 0 0 12px rgba(168, 85, 247, 0.6); }
 
-        .direct-play-btn { background: var(--success); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: 0.3s;}
-        .direct-play-btn:active { transform: translateY(2px); }
+        .detail-unlock-btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4); transition: 0.2s; }
+        .detail-unlock-btn:active { transform: translateY(2px); }
+        .detail-unlock-btn.waiting { background: #231f30; color: #d1d5db; pointer-events: none; }
+        .detail-unlock-btn.unlocked { background: var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4); }
 
+        .detail-helper-note { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.4; }
+        .detail-action-buttons { display: flex; gap: 10px; margin-top: 14px; }
+        .detail-action-btn { flex: 1; background: var(--btn-bg); border: 1px solid var(--divider); color: var(--text-light); padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: 0.2s; }
+        .detail-action-btn:active { transform: scale(0.96); }
+
+        /* More to Watch Section */
+        .more-watch-title { font-size: 16px; font-weight: 800; color: var(--text-light); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+        /* --- In-App Rewarded Ad Modal System (Video Style) --- */
+        .video-ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 4, 8, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 15px; }
+        .video-ad-modal.active { display: flex; }
+        
+        /* Spinner Loading Screen (Stage 1) */
+        .ad-loader-screen { text-align: center; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .ad-spin-icon { width: 70px; height: 70px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.1); border-top-color: #a855f7; border-left-color: #00e5ff; animation: spinPremium 0.9s linear infinite; margin-bottom: 20px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .ad-spin-icon .material-symbols-rounded { font-size: 32px; color: white; animation: spinReverse 0.9s linear infinite; }
+        @keyframes spinReverse { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+        .ad-loader-title { font-size: 19px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .ad-loader-sub { font-size: 13px; color: var(--text-muted); }
+
+        /* In-App Ad Creative Card (Stage 2) */
+        .ad-creative-card { background: #15131f; border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 20px; width: 100%; max-width: 360px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.9); display: none; flex-direction: column; position: relative; }
+        .ad-creative-top { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .ad-sponsor-tag { font-size: 11px; font-weight: 800; color: #ffd700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
+        .ad-close-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .ad-close-btn:active { transform: scale(0.85); background: var(--danger); }
+        
+        .ad-banner-visual { position: relative; width: 100%; height: 210px; background: linear-gradient(135deg, #1e1b2e, #110e1c); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .ad-banner-bg { width: 100%; height: 100%; object-fit: cover; }
+        
+        .ad-info-section { padding: 14px; }
+        .ad-headline { font-size: 15px; font-weight: 800; color: #fff; line-height: 1.3; margin-bottom: 4px; }
+        .ad-subline { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+        
+        /* The 0% - 25% - 50% - 75% - 100% Loading / Action Button */
+        .ad-progress-btn-container { position: relative; width: 100%; height: 50px; background: #262238; border-radius: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); }
+        .ad-progress-btn-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #60a5fa); transition: width 0.3s ease; }
+        .ad-progress-btn-text { position: relative; z-index: 2; font-size: 15px; font-weight: 900; color: #fff; letter-spacing: 0.5px; }
+        .ad-join-btn-ready { background: linear-gradient(135deg, #2563eb, #1d4ed8) !important; box-shadow: 0 0 20px rgba(37, 99, 235, 0.6); cursor: pointer; animation: pulseGlowJoin 1.5s infinite alternate; }
+        @keyframes pulseGlowJoin { 0% { transform: scale(1); } 100% { transform: scale(1.02); } }
+
+        /* Countdown Transition Screen (Stage 3) */
+        .ad-wait-screen { text-align: center; color: white; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .ad-wait-hourglass { font-size: 48px; color: var(--warning); margin-bottom: 15px; animation: bounceHourglass 1.5s infinite; }
+        @keyframes bounceHourglass { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        .premium-btn-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #fff; border-left-color: #10b981; border-radius: 50%; animation: spinPremium 0.8s linear infinite; }
         .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 10px; background: rgba(245, 158, 11, 0.1); padding: 8px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
 
         /* Floating Admin Support Anim - Small, Perfect Circle, Fixed on Premium Menu */
@@ -147,10 +198,10 @@
         .nav-item.active .material-symbols-rounded { font-variation-settings: 'FILL' 1; }
 
         /* --- Full Screen Overlay System --- */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1000; opacity: 0; visibility: hidden; display: flex; align-items: flex-end; transition: all 0.3s ease; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 3500; opacity: 0; visibility: hidden; display: flex; align-items: flex-end; transition: all 0.3s ease; }
         .overlay.active { opacity: 1; visibility: visible; }
         
-        .bottom-sheet { background: var(--bg-card); width: 100%; border-radius: 24px 24px 0 0; padding: 25px 20px; height: 92vh; max-height: 92vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); box-shadow: 0 -10px 40px rgba(0,0,0,0.5);}
+        .bottom-sheet { background: var(--bg-card); width: 100%; border-radius: 24px 24px 0 0; padding: 25px 20px; height: 92vh; max-height: 92vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1); box-shadow: 0 -10px 40px rgba(0,0,0,0.6);}
         .overlay.active .bottom-sheet { transform: translateY(0); }
         .bottom-sheet::-webkit-scrollbar { display: none; }
         
@@ -231,6 +282,462 @@
         .ad-state-pill { background: rgba(124, 58, 237, 0.15); border: 1px solid var(--primary-accent); color: var(--primary-light); padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-block; letter-spacing: 0.5px; }
         .ad-progress-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; margin-top: 25px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
         .ad-progress-fill { height: 100%; width: 0%; background: linear-gradient(270deg, #f59e0b, #ef4444, #a855f7, #10b981); background-size: 300% 300%; animation: popGradient 3s ease infinite; border-radius: 10px; float: right; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+
+        /* --- Grid Video Card Heart Button --- */
+        .grid-card-fav-btn {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            z-index: 5;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .grid-card-fav-btn:active { transform: scale(0.85); }
+        .grid-card-fav-btn.active {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.8);
+            color: #ef4444;
+        }
+
+        /* --- Video Detail Action Button Saved State --- */
+        .detail-action-btn.saved {
+            background: rgba(239, 68, 68, 0.16) !important;
+            border-color: rgba(239, 68, 68, 0.5) !important;
+            color: #ef4444 !important;
+        }
+        .detail-action-btn.saved .material-symbols-rounded {
+            color: #ef4444 !important;
+            font-variation-settings: 'FILL' 1;
+        }
+
+        /* --- Toast Notification System --- */
+        .app-toast {
+            position: fixed;
+            bottom: 82px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px);
+            background: rgba(20, 17, 30, 0.96);
+            color: #ffffff;
+            padding: 11px 22px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(168, 85, 247, 0.3);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .app-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* --- Enhanced Profile UI --- */
+        .profile-sheet { padding-bottom: 35px; }
+        .profile-hero-card {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(245, 158, 11, 0.1));
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 20px;
+            padding: 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-avatar-wrapper { position: relative; flex-shrink: 0; }
+        .profile-avatar-pro {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+        .avatar-badge-icon {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: var(--primary-accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+        .avatar-badge-icon span { font-size: 14px; }
+        .profile-info-block { flex: 1; min-width: 0; }
+        .profile-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+        .profile-name-row h2 { font-size: 18px; font-weight: 800; color: #fff; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+        .profile-username { font-size: 13px; color: var(--text-muted); margin: 0 0 6px 0; }
+        .profile-premium-exp { font-size: 12px; font-weight: 700; color: var(--warning); display: flex; align-items: center; gap: 4px; }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .profile-stat-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--divider);
+            border-radius: 16px;
+            padding: 14px 10px;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .profile-stat-box:active { transform: scale(0.96); border-color: var(--primary-accent); }
+        .profile-stat-box .stat-icon { font-size: 24px; margin-bottom: 4px; display: inline-block; }
+        .profile-stat-box h3 { font-size: 20px; font-weight: 800; color: #fff; margin: 0 0 2px 0; }
+        .profile-stat-box p { font-size: 11px; font-weight: 600; color: var(--text-muted); margin: 0; }
+
+        /* VIP Upgrade Card */
+        .vip-upgrade-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.28));
+            border: 1.5px solid rgba(245, 158, 11, 0.6);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.25);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .vip-upgrade-card:active { transform: scale(0.98); }
+        .vip-card-shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transform: skewX(-25deg);
+            animation: vipShine 3.5s infinite;
+        }
+        @keyframes vipShine { 0% { left: -100%; } 40% { left: 160%; } 100% { left: 160%; } }
+        .vip-card-content { display: flex; align-items: center; gap: 12px; }
+        .vip-crown-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            flex-shrink: 0;
+        }
+        .vip-crown-icon span { font-size: 26px; }
+        .vip-card-text { display: flex; flex-direction: column; }
+        .vip-card-title { font-size: 15px; font-weight: 900; color: #ffd700; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+        .vip-card-subtitle { font-size: 11px; color: #fef3c7; line-height: 1.3; margin-top: 2px; }
+        .vip-cta-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            border: none;
+            padding: 9px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .vip-cta-btn span { font-size: 14px; }
+
+        /* Profile Menu List */
+        .profile-menu-section { display: flex; flex-direction: column; gap: 10px; }
+        .profile-menu-item {
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: var(--bg-dark);
+            border: 1px solid var(--divider);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .profile-menu-item:active { transform: scale(0.98); border-color: var(--primary-accent); }
+        .profile-menu-item .menu-left { display: flex; align-items: center; gap: 14px; }
+        .profile-menu-item .menu-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .profile-menu-item .menu-icon-box span { font-size: 22px; }
+        .profile-menu-item .menu-texts { display: flex; flex-direction: column; }
+        .profile-menu-item .menu-texts b { font-size: 14px; color: var(--text-light); }
+        .profile-menu-item .menu-texts span { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* --- Enhanced Premium Plans UI --- */
+        .premium-sheet { padding-bottom: 30px; }
+        .premium-benefits-box {
+            background: linear-gradient(145deg, #1b1629, #13101c);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 20px;
+            padding: 18px 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+        .benefits-header { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 800; color: #ffd700; margin-bottom: 12px; }
+        .benefits-list { display: flex; flex-direction: column; gap: 9px; }
+        .benefit-item { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--text-light); line-height: 1.4; }
+        .benefit-item .check-icon { font-size: 17px; color: #10b981; flex-shrink: 0; margin-top: 1px; }
+
+        .plans-section-title { font-size: 14px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; padding-left: 2px; }
+        .plans-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .plan-card {
+            background: var(--bg-dark);
+            border: 1.5px solid var(--divider);
+            border-radius: 18px;
+            padding: 16px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .plan-card:active { transform: scale(0.98); }
+        .plan-card.popular-plan {
+            background: linear-gradient(145deg, #251d38, #181426);
+            border-color: rgba(245, 158, 11, 0.6);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+        }
+        .popular-ribbon {
+            position: absolute;
+            top: -10px;
+            right: 14px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 900;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.5);
+            letter-spacing: 0.5px;
+        }
+        .best-value-ribbon {
+            position: absolute;
+            top: -10px;
+            right: 14px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 900;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
+            letter-spacing: 0.5px;
+        }
+        .plan-card-left { display: flex; align-items: center; gap: 12px; }
+        .plan-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--primary-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .plan-icon-box span { font-size: 24px; }
+        .plan-details { display: flex; flex-direction: column; }
+        .plan-name { font-size: 14px; font-weight: 800; color: #fff; }
+        .plan-duration { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .plan-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .plan-price { font-size: 16px; font-weight: 900; color: #fff; }
+        .plan-price.highlight { color: #ffd700; font-size: 17px; }
+        .plan-action-btn {
+            background: var(--primary-accent);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .plan-action-btn.highlight {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+        .payment-partners-badge {
+            text-align: center;
+            padding: 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--divider);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .payment-partners-badge b { color: var(--text-light); margin-left: 4px; }
+
+        /* --- Payment Modal Styles --- */
+        .payment-sheet { padding-bottom: 30px; }
+        .payment-summary-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--divider);
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+        .pay-summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; color: var(--text-muted); }
+        .pay-summary-row:last-child { margin-bottom: 0; }
+        .pay-accounts-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--divider);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+        .pay-account-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .account-meta { display: flex; flex-direction: column; }
+        .pay-type-badge { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 3px; }
+        .account-number { font-size: 17px; font-weight: 800; color: #fff; letter-spacing: 0.8px; user-select: all; }
+        .copy-pill-btn {
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: var(--primary-light);
+            padding: 7px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .copy-pill-btn:active { transform: scale(0.92); background: var(--primary-accent); color: #fff; }
+        .copy-pill-btn span { font-size: 14px; }
+        .pay-account-divider { border: 0; border-top: 1px dashed var(--divider); margin: 12px 0; }
+        .pay-methods-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 6px; }
+        .pay-method-pill {
+            background: var(--bg-dark);
+            border: 1px solid var(--divider);
+            color: var(--text-muted);
+            padding: 10px 4px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pay-method-pill.active {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: #10b981;
+            color: #10b981;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+        }
+        .change-plan-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            width: 100%;
+            padding: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* --- Enhanced Share Sheet --- */
+        .share-sheet { max-height: 70vh !important; padding-bottom: 25px; }
+        .share-preview-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--divider);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .share-preview-title { font-size: 13px; font-weight: 700; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .share-options-grid { display: flex; flex-direction: column; gap: 10px; }
+        .share-option-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--divider);
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .share-option-card:active { transform: scale(0.98); border-color: var(--primary-accent); }
+        .share-icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 14px;
+        }
+        .share-icon-circle span { font-size: 22px; }
+        .share-option-texts { display: flex; flex-direction: column; flex: 1; }
+        .share-option-texts b { font-size: 14px; color: var(--text-light); }
+        .share-option-texts span { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .share-option-card .chevron { color: var(--text-muted); font-size: 20px; }
     </style>
 </head>
 <body>
@@ -319,7 +826,81 @@
         <span class="material-symbols-rounded" style="font-size: 18px;">videocam</span> Videos <span id="totalVidCount" style="margin-left:4px;">0</span>
     </div>
 
-    <main id="videoFeed" style="padding: 0 10px;"></main>
+    <main id="videoFeed" class="video-grid"></main>
+
+    <!-- 🎬 FULLSCREEN VIDEO DETAIL OVERLAY 🎬 -->
+    <div class="detail-overlay" id="videoDetailOverlay">
+        <div class="detail-header">
+            <button class="detail-back-btn ripple-btn" onclick="closeVideoDetail()"><span class="material-symbols-rounded">arrow_back</span></button>
+            <div style="font-weight: 800; font-size: 16px; color: #fff; max-width: 60%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="detailHeaderTitle">Video Player</div>
+            <button class="detail-back-btn ripple-btn" onclick="openShareDialog(currentDetailVidId, currentDetailVidTitle)"><span class="material-symbols-rounded">share</span></button>
+        </div>
+        <div class="detail-hero-box" id="detailHeroBox">
+            <img id="detailHeroImg" src="" class="detail-hero-img" alt="Video Preview">
+            <div class="detail-hero-play ripple-btn" onclick="handleDetailMainPlay()">
+                <span class="material-symbols-rounded" id="detailHeroPlayIcon">play_arrow</span>
+            </div>
+        </div>
+        <div class="detail-body">
+            <div class="detail-step-badge" id="detailStepTopBadge">
+                <span class="material-symbols-rounded" style="font-size:16px;">verified</span> <span id="detailStepTopText">ধাপ ১/৩</span>
+            </div>
+            <h1 class="detail-title" id="detailTitleText">Video Title</h1>
+            
+            <div class="detail-stats-row">
+                <div class="detail-stat-pill">
+                    <b id="detailViewsCount">0</b>
+                    <span>রিয়েল ভিউ</span>
+                </div>
+                <div class="detail-stat-pill">
+                    <b id="detailStepCount">1/3</b>
+                    <span>ধাপ অগ্রগতি</span>
+                </div>
+                <div class="detail-stat-pill">
+                    <b id="detailCategoryText">VIRAL</b>
+                    <span>ক্যাটাগরি</span>
+                </div>
+            </div>
+
+            <!-- UNLOCK CARD -->
+            <div class="detail-unlock-card">
+                <div class="detail-unlock-card-title">
+                    <span>আনলক অগ্রগতি</span>
+                    <b id="detailProgressPercent">0%</b>
+                </div>
+                <div class="detail-progress-track">
+                    <div class="detail-progress-fill" id="detailProgressFill"></div>
+                </div>
+
+                <button class="detail-unlock-btn ripple-btn" id="detailUnlockBtn" onclick="handleDetailUnlockClick()">
+                    <span class="material-symbols-rounded" id="detailBtnIcon">videocam</span>
+                    <span id="detailBtnText">আনলক করতে বিজ্ঞাপন দেখুন (১/৩)</span>
+                </button>
+                <div class="countdown-timer" id="detailCountdownTimer"></div>
+                <div class="detail-helper-note" id="detailHelperNote">
+                    🔒 প্রিমিয়াম কনটেন্ট • সম্পূর্ণ বিজ্ঞাপন দেখে বিনামূল্যে ভিডিওটি আনলক করুন
+                </div>
+
+                <div class="detail-action-buttons">
+                    <button class="detail-action-btn ripple-btn" onclick="closeVideoDetail()">
+                        <span class="material-symbols-rounded">home</span> হোম
+                    </button>
+                    <button class="detail-action-btn ripple-btn" onclick="openShareDialog(currentDetailVidId, currentDetailVidTitle)">
+                        <span class="material-symbols-rounded">send</span> শেয়ার
+                    </button>
+                    <button class="detail-action-btn ripple-btn" id="detailFavBtn" onclick="toggleDetailFav()">
+                        <span class="material-symbols-rounded" id="detailFavIcon" style="color:var(--text-muted)">favorite_border</span> সেইভ
+                    </button>
+                </div>
+            </div>
+
+            <!-- MORE TO WATCH SECTION -->
+            <div class="more-watch-title">
+                <span class="material-symbols-rounded" style="color:var(--primary-accent);">local_fire_department</span> আরও পপুলার ভিডিও
+            </div>
+            <div class="video-grid" id="moreToWatchFeed" style="padding:0;"></div>
+        </div>
+    </div>
 
     <!-- Admin Support Button (Small, Perfect Circle, Floating exactly above Premium Icon) -->
     <a id="supportFloatingBtn" href="#" target="_blank" class="floating-support ripple-btn" style="display:none;">
@@ -488,18 +1069,387 @@
     </div>
 
     <!-- Overlays -->
-    <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>My Profile</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button></div><div style="text-align:center; margin-bottom: 25px; margin-top:10px;"><div class="profile-avatar" style="width:100px;height:100px;font-size:40px;margin:auto; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);" id="profAvatar">U</div><div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:15px;"><h2 id="profName" style="font-weight: 800; font-size: 20px;">User Name</h2><span id="userStatusBadge" class="badge-free">Free</span></div><p id="profUsername" style="color:var(--text-muted); font-size:14px; margin-top: 4px; margin-bottom: 15px;">@username</p><div id="premiumCount" style="color:var(--success); font-size:13px; font-weight:bold;"></div></div><div style="display:flex; justify-content:space-between; gap:15px; margin-bottom:20px;"><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--primary-accent); font-size:24px;" id="favCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Favorites</p></div><div style="flex:1; background:var(--bg-dark); padding:15px; border-radius:16px; text-align:center; border:1px solid var(--divider);"><h3 style="color:var(--success); font-size:24px;" id="unlockedCount">0</h3><p style="font-size:12px; color:var(--text-muted); font-weight:600;">Unlocked</p></div></div>
-    
-    <div class="list-item ripple-btn" onclick="copyBotLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--primary-accent)">link</span></div><span style="font-weight:700; font-size:15px;">Copy My Link</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span></div>
-    
-    <div class="list-item ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('referralOverlay');"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success)">redeem</span></div><span style="font-weight:700; font-size:15px;">My Referrals</span></div><span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span></div>
-    
-    <button class="unlock-btn ripple-btn" style="margin-top: 15px; background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');"><span class="material-symbols-rounded">workspace_premium</span> Upgrade to Premium</button></div></div>
+    <!-- 👤 PRO USER PROFILE OVERLAY 👤 -->
+    <div class="overlay" id="profileOverlay" onclick="closeOverlay(event, 'profileOverlay')">
+        <div class="bottom-sheet profile-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <h2><span class="material-symbols-rounded" style="color:var(--primary-accent);">account_circle</span> মাই প্রোফাইল</h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+
+            <!-- Profile Hero Card -->
+            <div class="profile-hero-card">
+                <div class="profile-avatar-wrapper">
+                    <div class="profile-avatar-pro" id="profAvatar">U</div>
+                    <div class="avatar-badge-icon" id="profBadgeIcon">
+                        <span class="material-symbols-rounded">verified</span>
+                    </div>
+                </div>
+                <div class="profile-info-block">
+                    <div class="profile-name-row">
+                        <h2 id="profName">User Name</h2>
+                        <span id="userStatusBadge" class="badge-free">Free Member</span>
+                    </div>
+                    <p id="profUsername" class="profile-username">@username</p>
+                    <div id="premiumCount" class="profile-premium-exp"></div>
+                </div>
+            </div>
+
+            <!-- User Stats Row (3 Cards) -->
+            <div class="profile-stats-grid">
+                <div class="profile-stat-box ripple-btn" onclick="openOverlay('favoritesOverlay'); loadFavorites();">
+                    <span class="material-symbols-rounded stat-icon" style="color:#ef4444;">favorite</span>
+                    <h3 id="favCount">0</h3>
+                    <p>পছন্দের ভিডিও</p>
+                </div>
+                <div class="profile-stat-box ripple-btn" onclick="openOverlay('historyOverlay')">
+                    <span class="material-symbols-rounded stat-icon" style="color:#10b981;">lock_open</span>
+                    <h3 id="unlockedCount">0</h3>
+                    <p>আনলকড</p>
+                </div>
+                <div class="profile-stat-box ripple-btn" onclick="openOverlay('referralOverlay')">
+                    <span class="material-symbols-rounded stat-icon" style="color:#3b82f6;">group</span>
+                    <h3 id="profRefCount">0</h3>
+                    <p>রেফারেল</p>
+                </div>
+            </div>
+
+            <!-- 👑 PRO VIP UPGRADE HERO BANNER CARD 👑 -->
+            <div class="vip-upgrade-card ripple-btn" onclick="openOverlay('premiumOverlay')">
+                <div class="vip-card-shine"></div>
+                <div class="vip-card-content">
+                    <div class="vip-crown-icon">
+                        <span class="material-symbols-rounded">workspace_premium</span>
+                    </div>
+                    <div class="vip-card-text">
+                        <div class="vip-card-title">Upgrade to Premium VIP 👑</div>
+                        <div class="vip-card-subtitle">কোনো অ্যাড ছাড়া সরাসরি আনলিমিটেড ফুল ভিডিও দেখুন!</div>
+                    </div>
+                </div>
+                <button class="vip-cta-btn">
+                    <span>আপগ্রেড</span>
+                    <span class="material-symbols-rounded">arrow_forward</span>
+                </button>
+            </div>
+
+            <!-- Profile Menu Items -->
+            <div class="profile-menu-section">
+                <div class="profile-menu-item ripple-btn" onclick="copyBotLink()">
+                    <div class="menu-left">
+                        <div class="menu-icon-box" style="background: rgba(168, 85, 247, 0.15); color: var(--primary-accent);">
+                            <span class="material-symbols-rounded">link</span>
+                        </div>
+                        <div class="menu-texts">
+                            <b>আমার রেফারেল লিংক কপি করুন</b>
+                            <span>বন্ধুদের ইনভাইট করে বোনাস পান</span>
+                        </div>
+                    </div>
+                    <span class="material-symbols-rounded" style="color:var(--text-muted)">content_copy</span>
+                </div>
+
+                <div class="profile-menu-item ripple-btn" onclick="openOverlay('referralOverlay')">
+                    <div class="menu-left">
+                        <div class="menu-icon-box" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+                            <span class="material-symbols-rounded">redeem</span>
+                        </div>
+                        <div class="menu-texts">
+                            <b>রেফারেল ও রিওয়ার্ড ড্যাশবোর্ড</b>
+                            <span>মোট রেফারেল ও লিডারবোর্ড র‍্যাঙ্ক</span>
+                        </div>
+                    </div>
+                    <span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span>
+                </div>
+
+                <div class="profile-menu-item ripple-btn" onclick="openOverlay('favoritesOverlay'); loadFavorites();">
+                    <div class="menu-left">
+                        <div class="menu-icon-box" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                            <span class="material-symbols-rounded">favorite</span>
+                        </div>
+                        <div class="menu-texts">
+                            <b>পছন্দের ভিডিও তালিকা</b>
+                            <span>আপনার সেভ করা সব ভিডিও</span>
+                        </div>
+                    </div>
+                    <span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span>
+                </div>
+
+                <div class="profile-menu-item ripple-btn" onclick="openOverlay('historyOverlay')">
+                    <div class="menu-left">
+                        <div class="menu-icon-box" style="background: rgba(245, 158, 11, 0.15); color: var(--warning);">
+                            <span class="material-symbols-rounded">history</span>
+                        </div>
+                        <div class="menu-texts">
+                            <b>ওয়াচ হিস্ট্রি</b>
+                            <span>পূর্বে দেখা ভিডিও সমূহ</span>
+                        </div>
+                    </div>
+                    <span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span>
+                </div>
+
+                <div class="profile-menu-item ripple-btn" onclick="openOverlay('channelsOverlay')">
+                    <div class="menu-left">
+                        <div class="menu-icon-box" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+                            <span class="material-symbols-rounded">campaign</span>
+                        </div>
+                        <div class="menu-texts">
+                            <b>অফিসিয়াল টেলিগ্রাম চ্যানেল</b>
+                            <span>নতুন ভিডিও ও অফারের আপডেট</span>
+                        </div>
+                    </div>
+                    <span class="material-symbols-rounded" style="color:var(--text-muted)">chevron_right</span>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div class="overlay" id="notificationsOverlay" onclick="closeOverlay(event, 'notificationsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--danger); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">campaign</span> Global Updates</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'notificationsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="notiList" style="margin-top:10px;">Loading updates...</div></div></div>
-    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color: var(--warning); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">workspace_premium</span> PRO Subscription</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box"><b style="font-size:16px;">কেন প্রিমিয়াম নেবেন?</b><br><br>প্রিমিয়াম নিলে আপনাকে কোনো বিরক্তিকর অ্যাড দেখতে হবে বিদ্যা! সরাসরি <b>"Watch Now"</b> বাটনে ক্লিক করে আনলিমিটেড ভিডিও উপভোগ করতে পারবেন। আপনার প্রোফাইলে প্রিমিয়াম ব্যাজ যুক্ত হবে।</div><button class="unlock-btn ripple-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Month', document.getElementById('btnPrice1m').innerText)"><span class="material-symbols-rounded">star</span> Buy 1 Month - <span id="btnPrice1m">Loading...</span></button><button class="unlock-btn ripple-btn" style="margin-bottom:12px; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('6 Months', document.getElementById('btnPrice6m').innerText)"><span class="material-symbols-rounded">hotel_class</span> Buy 6 Months - <span id="btnPrice6m">Loading...</span></button><button class="unlock-btn ripple-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="openPaymentMethods('1 Year', document.getElementById('btnPrice1y').innerText)"><span class="material-symbols-rounded">military_tech</span> Buy 1 Year - <span id="btnPrice1y">Loading...</span></button></div></div>
-    <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2>Complete Payment</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"><b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।</div><div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--text-muted)">Selected Plan:</span><b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b></div><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span style="color:var(--text-muted)">Amount to Send:</span><b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b></div><hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;"><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p><b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p><b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b></div><div class="input-group"><label>Select Payment Method</label><select id="payMethodInput"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Binance">Binance</option></select></div><div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br><b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span></div><div id="submitTrxBox"><div class="input-group"><label>Enter Transaction ID (TrxID) / Binance ID</label><input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;"></div><button class="btn-submit ripple-btn" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button></div></div></div>
-    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;"><div class="sheet-header"><h2>Share Options</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="list-item ripple-btn" onclick="shareOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div><div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div></div></div><div class="list-item ripple-btn" onclick="copyVideoLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div><div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div></div></div></div></div>
+    <!-- 👑 PRO VIP SUBSCRIPTION PLANS OVERLAY 👑 -->
+    <div class="overlay" id="premiumOverlay" onclick="closeOverlay(event, 'premiumOverlay')">
+        <div class="bottom-sheet premium-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <h2><span class="material-symbols-rounded" style="color: var(--warning);">workspace_premium</span> VIP সাবস্ক্রিপশন</h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'premiumOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+
+            <!-- Premium Benefits Banner -->
+            <div class="premium-benefits-box">
+                <div class="benefits-header">
+                    <span class="material-symbols-rounded" style="color:var(--warning); font-size:26px;">star</span>
+                    <b>কেন ভিআইপি মেম্বারশিপ নিবেন?</b>
+                </div>
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <span class="material-symbols-rounded check-icon">check_circle</span>
+                        <span><b>১০০% বিজ্ঞাপন মুক্ত:</b> কোনো অ্যাড না দেখে এক ক্লিকে "WATCH NOW"!</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="material-symbols-rounded check-icon">check_circle</span>
+                        <span><b>আনলিমিটেড ভিডিও:</b> যেকোনো ভিডিও যতখুশি দেখুন কোনো বাধা ছাড়া।</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="material-symbols-rounded check-icon">check_circle</span>
+                        <span><b>গোল্ডেন VIP ব্যাজ:</b> আপনার প্রোফাইলে ভিআইপি মেম্বার ব্যাজ যুক্ত হবে।</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="material-symbols-rounded check-icon">check_circle</span>
+                        <span><b>সহজ পেমেন্ট:</b> বিকাশ, নগদ, রকেট এবং বাইনান্স সাপোর্ট।</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="plans-section-title">পছন্দের প্যাকেজ বেছে নিন</div>
+
+            <!-- 3 SUBSCRIPTION PLAN CARDS -->
+            <div class="plans-container">
+                <!-- 1 Month Plan -->
+                <div class="plan-card ripple-btn" onclick="selectPlanAndPay('1 Month')">
+                    <div class="plan-card-left">
+                        <div class="plan-icon-box">
+                            <span class="material-symbols-rounded">star</span>
+                        </div>
+                        <div class="plan-details">
+                            <b class="plan-name">১ মাস প্ল্যান (Starter)</b>
+                            <span class="plan-duration">৩০ দিন ফুল ভিআইপি অ্যাক্সেস</span>
+                        </div>
+                    </div>
+                    <div class="plan-card-right">
+                        <div class="plan-price" id="planPrice1m">100 BDT</div>
+                        <span id="btnPrice1m" style="display:none;">100 BDT</span>
+                        <button class="plan-action-btn">পেমেন্ট করুন</button>
+                    </div>
+                </div>
+
+                <!-- 6 Months Plan (Popular) -->
+                <div class="plan-card popular-plan ripple-btn" onclick="selectPlanAndPay('6 Months')">
+                    <div class="popular-ribbon">🔥 সবচেয়ে জনপ্রিয়</div>
+                    <div class="plan-card-left">
+                        <div class="plan-icon-box" style="background: rgba(245, 158, 11, 0.2); color: var(--warning);">
+                            <span class="material-symbols-rounded">hotel_class</span>
+                        </div>
+                        <div class="plan-details">
+                            <b class="plan-name">৬ মাস প্ল্যান (Super VIP)</b>
+                            <span class="plan-duration">১৮০ দিন আনলিমিটেড (সাশ্রয়ী)</span>
+                        </div>
+                    </div>
+                    <div class="plan-card-right">
+                        <div class="plan-price highlight" id="planPrice6m">500 BDT</div>
+                        <span id="btnPrice6m" style="display:none;">500 BDT</span>
+                        <button class="plan-action-btn highlight">পেমেন্ট করুন</button>
+                    </div>
+                </div>
+
+                <!-- 1 Year Plan (Best Value) -->
+                <div class="plan-card ripple-btn" onclick="selectPlanAndPay('1 Year')">
+                    <div class="best-value-ribbon">👑 সেরা সাশ্রয়ী</div>
+                    <div class="plan-card-left">
+                        <div class="plan-icon-box" style="background: rgba(16, 185, 129, 0.2); color: var(--success);">
+                            <span class="material-symbols-rounded">military_tech</span>
+                        </div>
+                        <div class="plan-details">
+                            <b class="plan-name">১ বছর প্ল্যান (Ultimate)</b>
+                            <span class="plan-duration">৩৬৫ দিন অল-ইনক্লুসিভ ভিআইপি</span>
+                        </div>
+                    </div>
+                    <div class="plan-card-right">
+                        <div class="plan-price" id="planPrice1y">900 BDT</div>
+                        <span id="btnPrice1y" style="display:none;">900 BDT</span>
+                        <button class="plan-action-btn">পেমেন্ট করুন</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-partners-badge">
+                <span>পেমেন্ট মেথড:</span>
+                <b>bKash • Nagad • Rocket • Binance Pay</b>
+            </div>
+        </div>
+    </div>
+
+    <!-- 💳 COMPLETE PAYMENT OVERLAY 💳 -->
+    <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')">
+        <div class="bottom-sheet payment-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <h2><span class="material-symbols-rounded" style="color:var(--success);">payments</span> পেমেন্ট সম্পন্ন করুন</h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+
+            <!-- Payment Summary Box -->
+            <div class="payment-summary-card">
+                <div class="pay-summary-row">
+                    <span>নির্বাচিত প্ল্যান:</span>
+                    <b id="selectedPlanShow" style="color:var(--warning); font-size:16px;">1 Month</b>
+                </div>
+                <div class="pay-summary-row">
+                    <span>টাকার পরিমাণ:</span>
+                    <b id="selectedAmountShow" style="color:var(--success); font-size:18px;">100 BDT</b>
+                </div>
+            </div>
+
+            <!-- How to pay instruction box -->
+            <div class="notice-box" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
+                <b style="color:var(--success); font-size:14px; display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-rounded" style="font-size:18px;">help_outline</span> কিভাবে পেমেন্ট করবেন?
+                </b>
+                <div style="font-size:13px; line-height:1.6; margin-top:6px; color:var(--text-light);">
+                    ১. নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন অথবা বাইনান্স পে আইডিতে ডলার পাঠান।<br>
+                    ২. পেমেন্ট সফল হলে আপনার <b>Transaction ID (TrxID)</b> কপি করে নিচের বক্সে দিন এবং সাবমিট করুন।
+                </div>
+            </div>
+
+            <!-- Account Numbers with One-Tap Copy -->
+            <div class="pay-accounts-box">
+                <div class="pay-account-row">
+                    <div class="account-meta">
+                        <span class="pay-type-badge">বিকাশ / নগদ / রকেট (Personal)</span>
+                        <b id="payNumberShow" class="account-number">017XXXXXXXX</b>
+                    </div>
+                    <button class="copy-pill-btn ripple-btn" onclick="copyAccount('payNumberShow')">
+                        <span class="material-symbols-rounded">content_copy</span> কপি
+                    </button>
+                </div>
+                <hr class="pay-account-divider">
+                <div class="pay-account-row">
+                    <div class="account-meta">
+                        <span class="pay-type-badge">Binance Pay ID (USDT / Crypto)</span>
+                        <b id="binanceShow" class="account-number" style="color:var(--warning);">823456789</b>
+                    </div>
+                    <button class="copy-pill-btn ripple-btn" onclick="copyAccount('binanceShow')">
+                        <span class="material-symbols-rounded">content_copy</span> কপি
+                    </button>
+                </div>
+            </div>
+
+            <!-- Payment Method Selector Tabs -->
+            <div class="input-group">
+                <label>আপনি কোন মাধ্যমে টাকা পাঠিয়েছেন?</label>
+                <div class="pay-methods-grid">
+                    <div class="pay-method-pill active" onclick="selectPayMethod('bKash', this)">bKash</div>
+                    <div class="pay-method-pill" onclick="selectPayMethod('Nagad', this)">Nagad</div>
+                    <div class="pay-method-pill" onclick="selectPayMethod('Rocket', this)">Rocket</div>
+                    <div class="pay-method-pill" onclick="selectPayMethod('Binance', this)">Binance</div>
+                </div>
+                <input type="hidden" id="payMethodInput" value="bKash">
+            </div>
+
+            <!-- Pending status box -->
+            <div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;">
+                <span class="material-symbols-rounded" style="font-size:42px; margin-bottom:8px;">hourglass_top</span><br>
+                <b style="font-size:16px;">আপনার রিকোয়েস্ট পেন্ডিং রয়েছে!</b><br>
+                <span style="font-size:13px; color:var(--text-muted); margin-top:6px; display:block;">এডমিন ভেরিফাই করে দ্রুত আপনার প্রিমিয়াম একটিভ করে দেবেন। ধন্যবাদ!</span>
+            </div>
+
+            <!-- Trx Input & Submit -->
+            <div id="submitTrxBox">
+                <div class="input-group">
+                    <label>Transaction ID (TrxID) / Binance Order ID লিখুন</label>
+                    <input type="text" id="trxInput" placeholder="যেমন: 9G3H8K2P9Q" style="font-family:monospace; font-size:16px; letter-spacing:1px; text-transform:uppercase;">
+                </div>
+                <button class="btn-submit ripple-btn" onclick="submitTrx()" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);">
+                    <span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">verified</span> ভেরিফিকেশনের জন্য পাঠান
+                </button>
+            </div>
+
+            <button class="change-plan-btn ripple-btn" onclick="openOverlay('premiumOverlay')">
+                <span class="material-symbols-rounded">arrow_back</span> অন্য প্যাকেজ নির্বাচন করুন
+            </button>
+        </div>
+    </div>
+
+    <!-- 🚀 ENHANCED SHARE OVERLAY 🚀 -->
+    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')">
+        <div class="bottom-sheet share-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-header">
+                <h2><span class="material-symbols-rounded" style="color:var(--primary-accent);">share</span> ভিডিও শেয়ার করুন</h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="share-preview-card">
+                <span class="material-symbols-rounded" style="color:var(--primary-light); font-size:20px;">play_circle</span>
+                <span id="shareVidTitlePreview" class="share-preview-title">ভিডিও শেয়ার</span>
+            </div>
+            <div class="share-options-grid">
+                <div class="share-option-card ripple-btn" onclick="shareOnTelegram()">
+                    <div class="share-icon-circle" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+                        <span class="material-symbols-rounded">send</span>
+                    </div>
+                    <div class="share-option-texts">
+                        <b>টেলিগ্রামে শেয়ার করুন</b>
+                        <span>Telegram চ্যাট অথবা চ্যানেলে ফরোয়ার্ড করুন</span>
+                    </div>
+                    <span class="material-symbols-rounded chevron">chevron_right</span>
+                </div>
+                <div class="share-option-card ripple-btn" onclick="shareOnWhatsApp()">
+                    <div class="share-icon-circle" style="background: rgba(34, 197, 94, 0.15); color: #22c55e;">
+                        <span class="material-symbols-rounded">chat</span>
+                    </div>
+                    <div class="share-option-texts">
+                        <b>হোয়াটসঅ্যাপে শেয়ার করুন</b>
+                        <span>বন্ধুদের WhatsApp-এ পাঠান</span>
+                    </div>
+                    <span class="material-symbols-rounded chevron">chevron_right</span>
+                </div>
+                <div class="share-option-card ripple-btn" onclick="copyVideoLink()">
+                    <div class="share-icon-circle" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+                        <span class="material-symbols-rounded">link</span>
+                    </div>
+                    <div class="share-option-texts">
+                        <b>ভিডিও লিংক কপি করুন</b>
+                        <span>সরাসরি লিঙ্ক ক্লিপবোর্ডে কপি করুন</span>
+                    </div>
+                    <span class="material-symbols-rounded chevron">content_copy</span>
+                </div>
+                <div class="share-option-card ripple-btn" onclick="nativeDeviceShare()">
+                    <div class="share-icon-circle" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                        <span class="material-symbols-rounded">share</span>
+                    </div>
+                    <div class="share-option-texts">
+                        <b>অন্যান্য মাধ্যমে শেয়ার</b>
+                        <span>মোবাইলের সব শেয়ারিং অ্যাপ ব্যবহার করুন</span>
+                    </div>
+                    <span class="material-symbols-rounded chevron">open_in_new</span>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="overlay" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><h2 style="color:var(--primary-light); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">send</span> Our Channels</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="channelListContainer">Loading channels...</div></div></div>
     
     <div class="overlay" id="favoritesOverlay" onclick="closeOverlay(event, 'favoritesOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><h2 style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="color:var(--danger)">favorite</span> My Favorites (<span id="favHeaderCount">0</span>)</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'favoritesOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="favoritesList" style="margin-top: 10px;"></div></div></div>
@@ -561,7 +1511,6 @@
             <button onclick="deleteMyAccount()" class="btn-submit ripple-btn" style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); color:var(--danger);"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">person_remove</span> Delete Account</button>
         </div>
     </div>
-
 
     <!-- ADMIN DASHBOARD -->
     <div class="overlay" id="adminOverlay" onclick="closeOverlay(event, 'adminOverlay')">
@@ -724,22 +1673,48 @@
         </div>
     </div>
 
-    <!-- AD SIMULATION MODAL UI -->
-    <div class="ad-modal" id="adSimulationModal">
-        <div class="ad-card-box">
-            <div class="premium-spinner-container">
-                <div class="premium-spinner"></div>
-                <div class="premium-countdown-text" id="adTimerCount">3</div>
+    <!-- 🎯 IN-APP REWARDED VIDEO AD MODAL (EXACT VIDEO STYLE) 🎯 -->
+    <div class="video-ad-modal" id="videoAdModal">
+        <!-- Stage 1: Loading Screen -->
+        <div class="ad-loader-screen" id="adStageLoading">
+            <div class="ad-spin-icon">
+                <span class="material-symbols-rounded">movie</span>
             </div>
-            <div class="ad-status-text" id="adStatusText">Ad 1 of 2 Playing</div>
-            <div class="ad-step-text" id="adStepText">Step 1 of 3 — Please watch the full ad</div>
-            <div class="ad-state-pill" id="adStatePill">AD STARTING...</div>
-            <div class="ad-progress-bg">
-                <div class="ad-progress-fill" id="adLineProgress"></div>
+            <div class="ad-loader-title" id="adStageLoadTitle">বিজ্ঞাপন লোড হচ্ছে...</div>
+            <div class="ad-loader-sub">সম্পূর্ণ বিজ্ঞাপন দেখুন</div>
+        </div>
+
+        <!-- Stage 2: In-App Interstitial Ad Card -->
+        <div class="ad-creative-card" id="adStageCreative">
+            <div class="ad-creative-top">
+                <div class="ad-sponsor-tag">
+                    <span class="material-symbols-rounded" style="font-size:16px;">verified</span> SPONSORED
+                </div>
+                <button class="ad-close-btn ripple-btn" id="adCreativeCloseBtn" onclick="onAdCloseClick()">
+                    <span class="material-symbols-rounded" style="font-size:18px;">close</span>
+                </button>
             </div>
-            <div style="margin-top:20px; font-size:11px; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px;">
-                💡 এই বিজ্ঞাপনটি আপনার কাজে আসতে পারে
+            <div class="ad-banner-visual">
+                <img id="adBannerImg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop" class="ad-banner-bg" alt="Ad Creative">
             </div>
+            <div class="ad-info-section">
+                <div class="ad-headline" id="adCreativeHeadline">CBTFSTAKE — Play More. Get More.</div>
+                <div class="ad-subline" id="adCreativeSubline">Earn By Sports Trading Skills And Gaming Skills • Ad 18+</div>
+                
+                <div class="ad-progress-btn-container" id="adActionBtnContainer" onclick="onAdJoinClick()">
+                    <div class="ad-progress-btn-fill" id="adProgressFillBar"></div>
+                    <div class="ad-progress-btn-text" id="adActionBtnText">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 3: Countdown Wait Screen -->
+        <div class="ad-wait-screen" id="adStageWait">
+            <div class="ad-spin-icon" style="border-top-color:#f59e0b; border-left-color:#10b981;">
+                <span class="material-symbols-rounded" style="font-size:32px; color:#f59e0b;">hourglass_top</span>
+            </div>
+            <div class="ad-loader-title" id="adWaitTitle">অপেক্ষা করুন ৫ সেকেন্ড ⏳</div>
+            <div class="ad-loader-sub">পরবর্তী বিজ্ঞাপনের জন্য প্রস্তুত হচ্ছে...</div>
         </div>
     </div>
 
@@ -924,11 +1899,12 @@
         
         updateLocalStatsUI();
         function updateLocalStatsUI() {
-            document.getElementById('favCount').innerText = favorites.length;
-            document.getElementById('favHeaderCount').innerText = favorites.length;
-            document.getElementById('unlockedCount').innerText = unlockedCount;
+            if (document.getElementById('favCount')) document.getElementById('favCount').innerText = favorites.length;
+            if (document.getElementById('favHeaderCount')) document.getElementById('favHeaderCount').innerText = favorites.length;
+            if (document.getElementById('unlockedCount')) document.getElementById('unlockedCount').innerText = unlockedCount;
+            if (document.getElementById('profRefCount')) document.getElementById('profRefCount').innerText = currentUser.referralCount || 0;
             let dSaver = localStorage.getItem('dataSaver') === 'true';
-            document.getElementById('dataSaverToggle').checked = dSaver;
+            if (document.getElementById('dataSaverToggle')) document.getElementById('dataSaverToggle').checked = dSaver;
         }
 
         db.collection("users").doc(currentUser.id.toString()).onSnapshot((doc) => {
@@ -937,9 +1913,10 @@
                 let data = doc.data();
                 currentUser.referralCount = data.referralCount || 0;
                 
-                document.getElementById('refTotalCount').innerText = currentUser.referralCount;
-                document.getElementById('refActiveCount').innerText = Math.floor(currentUser.referralCount * 0.8) || currentUser.referralCount;
-                document.getElementById('refInactiveCount').innerText = currentUser.referralCount - (Math.floor(currentUser.referralCount * 0.8) || currentUser.referralCount);
+                if (document.getElementById('profRefCount')) document.getElementById('profRefCount').innerText = currentUser.referralCount;
+                if (document.getElementById('refTotalCount')) document.getElementById('refTotalCount').innerText = currentUser.referralCount;
+                if (document.getElementById('refActiveCount')) document.getElementById('refActiveCount').innerText = Math.floor(currentUser.referralCount * 0.8) || currentUser.referralCount;
+                if (document.getElementById('refInactiveCount')) document.getElementById('refInactiveCount').innerText = currentUser.referralCount - (Math.floor(currentUser.referralCount * 0.8) || currentUser.referralCount);
 
                 if (data.unlockedCount !== undefined && data.unlockedCount > unlockedCount) {
                     unlockedCount = data.unlockedCount;
@@ -1095,9 +2072,19 @@
                 if(d.adsterraUrl) window.globalAdsterraUrl = d.adsterraUrl;
                 if(d.monetagUrl) window.globalMonetagUrl = d.monetagUrl;
 
-                document.getElementById('btnPrice1m').innerText = d.price1m || "100 BDT";
-                document.getElementById('btnPrice6m').innerText = d.price6m || "500 BDT";
-                document.getElementById('btnPrice1y').innerText = d.price1y || "900 BDT";
+                let p1 = d.price1m || "100 BDT";
+                let p6 = d.price6m || "500 BDT";
+                let py = d.price1y || "900 BDT";
+                livePrices['1 Month'] = p1;
+                livePrices['6 Months'] = p6;
+                livePrices['1 Year'] = py;
+
+                if (document.getElementById('planPrice1m')) document.getElementById('planPrice1m').innerText = p1;
+                if (document.getElementById('planPrice6m')) document.getElementById('planPrice6m').innerText = p6;
+                if (document.getElementById('planPrice1y')) document.getElementById('planPrice1y').innerText = py;
+                if (document.getElementById('btnPrice1m')) document.getElementById('btnPrice1m').innerText = p1;
+                if (document.getElementById('btnPrice6m')) document.getElementById('btnPrice6m').innerText = p6;
+                if (document.getElementById('btnPrice1y')) document.getElementById('btnPrice1y').innerText = py;
 
                 let channelsHtml = "";
                 if(d.ch1Name && d.ch1Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch1Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--primary-accent);"><span class="material-symbols-rounded" style="color:var(--text-light)">campaign</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch1Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch1Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
@@ -1126,16 +2113,57 @@
             if(!base.startsWith("http")) base = "https://t.me/" + base.replace("@", "");
             base = base.split("?")[0].replace(/\/$/, ""); let param = extraParam ? extraParam : `ref_${currentUser.id}`; return `${base}?startapp=${param}`;
         }
-        function copyBotLink() { navigator.clipboard.writeText(getBotLinkWithRef()).then(() => { alert("My Link copied to clipboard!"); }); }
-        function shareAppOnTelegram() { let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef())}&text=${encodeURIComponent("Join now and watch unlimited videos!")}`; window.open(shareUrl, '_blank'); }
-        function shareOnTelegram() { let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef(`post_${currentShareVid}`))}&text=${encodeURIComponent('Check out this video: ' + currentShareTitle)}`; window.open(shareUrl, '_blank'); }
-        function copyVideoLink() { navigator.clipboard.writeText(getBotLinkWithRef(`post_${currentShareVid}`)).then(() => { alert('Video Link Copied to Clipboard!'); closeOverlay(null, 'shareOverlay'); }); }
+        function copyBotLink() {
+            navigator.clipboard.writeText(getBotLinkWithRef()).then(() => {
+                showToast("রেফারেল লিংক কপি করা হয়েছে! 📋", "link");
+            }).catch(() => {
+                prompt("রেফারেল লিংক কপি করুন:", getBotLinkWithRef());
+            });
+        }
+        function shareAppOnTelegram() {
+            let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef())}&text=${encodeURIComponent("Join now and watch unlimited videos!")}`;
+            window.open(shareUrl, '_blank');
+        }
+        function shareOnTelegram() {
+            let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef(`post_${currentShareVid}`))}&text=${encodeURIComponent('🔥 ' + currentShareTitle + '\nভিডিওটি ফ্রিতে দেখতে এখনই ওপেন করুন:')}`;
+            window.open(shareUrl, '_blank');
+        }
+        function shareOnWhatsApp() {
+            let url = getBotLinkWithRef(`post_${currentShareVid}`);
+            let shareText = `🔥 *${currentShareTitle}*\nভিডিওটি ফ্রিতে দেখতে এখনই ওপেন করুন:\n${url}`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+        }
+        function nativeDeviceShare() {
+            let url = getBotLinkWithRef(`post_${currentShareVid}`);
+            if (navigator.share) {
+                navigator.share({
+                    title: currentShareTitle,
+                    text: `🔥 ${currentShareTitle} - এখনই ফ্রিতে ভিডিওটি দেখুন!`,
+                    url: url
+                }).catch(e => console.log(e));
+            } else {
+                copyVideoLink();
+            }
+        }
+        function copyVideoLink() {
+            let url = getBotLinkWithRef(`post_${currentShareVid}`);
+            navigator.clipboard.writeText(url).then(() => {
+                showToast("ভিডিও লিংক কপি করা হয়েছে! 📋", "content_copy");
+                closeOverlay(null, 'shareOverlay');
+            }).catch(() => {
+                prompt("ভিডিও লিংক কপি করুন:", url);
+                closeOverlay(null, 'shareOverlay');
+            });
+        }
+
+        let currentDetailVidId = '';
+        let currentDetailVidTitle = '';
 
         function renderVideos() {
             const feed = document.getElementById('videoFeed');
             if (isVideosLoading) {
                 feed.innerHTML = `
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center;">
+                    <div style="grid-column: span 2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center;">
                         <div style="position: relative; width: 60px; height: 60px; margin-bottom: 20px;"><div class="premium-spinner" style="border-width: 4px;"></div></div>
                         <h3 style="color: var(--text-light); font-size: 16px; margin-bottom: 8px; font-weight: 700;">ভিডিও লোডিং হচ্ছে...</h3>
                         <p style="color: var(--text-muted); font-size: 13px;">দয়া করে একটু অপেক্ষা করুন</p>
@@ -1150,145 +2178,384 @@
             if(searchQ) filtered = filtered.filter(v => v.title.toLowerCase().includes(searchQ));
             let sortVal = document.getElementById('sortFilter').value;
             if(sortVal === 'popular') {
-                filtered.sort((a,b) => (b.likes || 0) - (a.likes || 0));
+                filtered.sort((a,b) => (b.views || 0) - (a.views || 0));
             } else {
                 filtered.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
             }
 
             if (!isVideosLoading && filtered.length === 0) {
-                feed.innerHTML = `<div style="text-align: center; padding: 50px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size: 48px; margin-bottom: 10px; opacity: 0.5;">videocam_off</span><br>কোনো ভিডিও পাওয়া যায়নি!</div>`;
+                feed.innerHTML = `<div style="grid-column: span 2; text-align: center; padding: 50px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size: 48px; margin-bottom: 10px; opacity: 0.5;">videocam_off</span><br>কোনো ভিডিও পাওয়া যায়নি!</div>`;
                 return;
             }
 
-            let isDataSaver = localStorage.getItem('dataSaver') === 'true';
-
             filtered.forEach(vid => {
-                let isFav = favorites.some(f => f.id === vid.id) ? 'favorite' : 'favorite_border';
-                let favColor = isFav === 'favorite' ? 'var(--danger)' : 'var(--text-muted)';
-                let hasLiked = (vid.likedBy || []).includes(currentUser.id);
-                let likeIcon = hasLiked ? 'thumb_up' : 'thumb_up_off_alt';
-                let likeClass = hasLiked ? 'liked' : '';
-                let targetUrl = vid.adUrl || '#';
-                
-                let thumbClass = isDataSaver ? "thumb-dynamic thumb-blur" : "thumb-dynamic";
-                
-                let uploadDateStr = "Recently Uploaded";
-                if(vid.timestamp) {
-                    let d = new Date(vid.timestamp.seconds * 1000);
-                    uploadDateStr = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-                }
-
-                let savedState = JSON.parse(localStorage.getItem('vidProgress_' + vid.id)) || { step: 0, unlockedUntil: 0 };
-                let currentStep = parseInt(savedState.step) || 0;
-                let isUnlocked = (savedState.unlockedUntil > Date.now());
-                if (savedState.unlockedUntil && !isUnlocked) { currentStep = 0; localStorage.removeItem('vidProgress_' + vid.id); }
-                if (isUnlocked) { currentStep = vid.adCount; }
-
-                let stepsHtml = `<div class="unlock-steps" id="steps-${vid.id}">`;
-                for(let i=0; i<vid.adCount; i++) {
-                    let stepClass = (i < currentStep) ? 'completed' : (i === currentStep ? 'active' : '');
-                    stepsHtml += `<div class="step ${stepClass}" id="step-circle-${vid.id}-${i}"><div class="step-circle">${i===0 ? '<span class="material-symbols-rounded" style="font-size:16px">play_arrow</span>' : i+1}</div><span class="step-label">AD ${i+1}</span></div>`;
-                    if (i < vid.adCount - 1) {
-                        let lineWidth = (i < currentStep) ? '100%' : '0%';
-                        stepsHtml += `<div class="step-line-container"><div class="step-line-fill" id="step-line-${vid.id}-${i}" style="width: ${lineWidth};"></div></div>`;
-                    }
-                }
-                stepsHtml += `</div>`;
-
-                let btnHtml = '';
-                if (currentUser.isPremium) {
-                    btnHtml = `<button class="direct-play-btn ripple-btn" onclick="watchVideoAction('${vid.id}', '${targetUrl}')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
-                } else if (isUnlocked) {
-                    btnHtml = `${stepsHtml}
-                      <button class="unlock-btn ripple-btn" id="btn-${vid.id}" data-step="${currentStep}" style="background:var(--success); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
-                          <span class="btn-text" id="btn-text-${vid.id}"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</span>
-                      </button>
-                      <div id="timer-${vid.id}" class="countdown-timer" style="display:block;"></div>`;
-                } else {
-                    let displayStep = currentStep < vid.adCount ? currentStep + 1 : vid.adCount;
-                    let btnText = currentStep === 0 
-                                ? `<span class="material-symbols-rounded">lock</span> UNLOCK <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">0/${vid.adCount}</span>` 
-                                : `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${displayStep}/${vid.adCount}</span>`;
-
-                    btnHtml = `${stepsHtml}
-                      <button class="unlock-btn ripple-btn" id="btn-${vid.id}" data-step="${currentStep}" onclick="handleUnlockStep('${vid.id}', '${targetUrl}', ${vid.adCount})">
-                          <span class="btn-text" id="btn-text-${vid.id}">${btnText}</span>
-                      </button>
-                      <div id="timer-${vid.id}" class="countdown-timer"></div>`;
-                }
-
+                let rawViews = typeof vid.views === 'number' ? vid.views : (parseInt(vid.views) || 0);
+                let isFav = favorites.some(f => f.id === vid.id);
                 feed.innerHTML += `
-                    <div class="video-card reveal" id="card-${vid.id}">
-                        <div class="thumbnail-container">
-                            <span class="badge-new">NEW</span>
-                            <img src="${vid.photo}" class="${thumbClass}" alt="Thumbnail" onerror="this.src='https://via.placeholder.com/400x250?text=Image+Load+Error';">
+                    <div class="grid-video-card ripple-btn" onclick="openVideoDetail('${vid.id}')">
+                        <div class="grid-thumb-box">
+                            <img src="${vid.photo}" class="grid-thumb-img" alt="${vid.title.replace(/"/g, '&quot;')}" onerror="this.src='https://via.placeholder.com/300x180?text=Video';">
+                            <div class="grid-center-play">
+                                <span class="material-symbols-rounded">play_arrow</span>
+                            </div>
+                            <div class="grid-card-fav-btn ${isFav ? 'active' : ''}" id="fav-icon-${vid.id}" onclick="event.stopPropagation(); toggleFav('${vid.id}', '${vid.title.replace(/'/g, "\\'")}', '${vid.photo}')">
+                                <span class="material-symbols-rounded" style="font-size: 16px; color: ${isFav ? '#ef4444' : '#fff'}; font-variation-settings: 'FILL' ${isFav ? 1 : 0};">${isFav ? 'favorite' : 'favorite_border'}</span>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <!-- Category, Views & Date Top Row -->
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                                <span class="category-tag" style="margin-bottom:0;">${vid.category}</span>
-                                <div style="display:flex; align-items:center; gap:12px; font-size:11px; color:var(--text-muted); font-weight:600; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 12px;">
-                                    <span style="display:flex; align-items:center; gap:4px;"><span class="material-symbols-rounded" style="font-size:14px; color:var(--success);">visibility</span> ${vid.views}</span>
-                                    <span style="display:flex; align-items:center; gap:4px;"><span class="material-symbols-rounded" style="font-size:14px;">schedule</span> ${uploadDateStr}</span>
-                                </div>
+                        <div class="grid-card-info">
+                            <div class="grid-card-title">${vid.title}</div>
+                            <div class="grid-card-meta">
+                                <span class="grid-cat-badge">${vid.category || 'VIRAL'}</span>
+                                <span class="grid-views-badge">
+                                    <span class="material-symbols-rounded">visibility</span> ${rawViews}
+                                </span>
                             </div>
-                            
-                            <h3 class="video-title">${vid.title}</h3>
-                            
-                            <!-- Action Row (Like, Comment, Share, Save) -->
-                            <div class="action-row">
-                                <div class="action-btn-item ${likeClass}" onclick="toggleLike('${vid.id}')" id="like-box-${vid.id}">
-                                    <span class="material-symbols-rounded" id="like-icon-${vid.id}">${likeIcon}</span> <span id="like-count-${vid.id}">${vid.likes}</span>
-                                </div>
-                                <div class="action-btn-item" onclick="openComments('${vid.id}')">
-                                    <span class="material-symbols-rounded">chat_bubble</span> <span>Comment</span>
-                                </div>
-                                <div class="action-btn-item" onclick="openShareDialog('${vid.id}', '${vid.title.replace(/'/g, "\\'")}')">
-                                    <span class="material-symbols-rounded">share</span> <span>Share</span>
-                                </div>
-                                <div class="action-btn-item" onclick="toggleFav('${vid.id}', '${vid.title.replace(/'/g, "\\'")}', '${vid.photo}')">
-                                    <span class="material-symbols-rounded" id="fav-icon-${vid.id}" style="color:${favColor}">${isFav}</span> <span>Save</span>
-                                </div>
-                            </div>
-
-                            ${btnHtml}
                         </div>
                     </div>
                 `;
             });
-
-            const cards = document.querySelectorAll('.reveal');
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-            }, { threshold: 0.1 });
-            cards.forEach(card => revealObserver.observe(card));
-
-            setTimeout(() => {
-                filtered.forEach(vid => {
-                    let s = JSON.parse(localStorage.getItem('vidProgress_' + vid.id));
-                    if (s && s.unlockedUntil > Date.now() && !currentUser.isPremium) {
-                        let btn = document.getElementById(`btn-${vid.id}`);
-                        if (btn) startUnlockTimer(vid.id, vid.adUrl, btn, vid.adCount, s.unlockedUntil);
-                    }
-                });
-            }, 100);
         }
 
-        function toggleLike(vidId) {
+        // ==========================================
+        // DEDICATED VIDEO DETAIL PAGE LOGIC
+        // ==========================================
+        function openVideoDetail(vidId) {
             let vid = allVideos.find(v => v.id === vidId);
-            if(vid) {
-                let likedBy = vid.likedBy || []; let isLiked = likedBy.includes(currentUser.id);
-                let vidRef = db.collection("videos").doc(vidId);
-                let countEl = document.getElementById(`like-count-${vidId}`); let boxEl = document.getElementById(`like-box-${vidId}`); let iconEl = document.getElementById(`like-icon-${vidId}`);
+            if (!vid) return;
 
-                if(isLiked) {
-                    vidRef.update({ likes: firebase.firestore.FieldValue.increment(-1), likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.id) });
-                    countEl.innerText = parseInt(countEl.innerText) - 1; boxEl.className = 'action-btn-item'; iconEl.innerText = 'thumb_up_off_alt';
-                } else {
-                    vidRef.update({ likes: firebase.firestore.FieldValue.increment(1), likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.id) });
-                    countEl.innerText = parseInt(countEl.innerText) + 1; boxEl.className = 'action-btn-item liked'; iconEl.innerText = 'thumb_up';
+            currentDetailVidId = vidId;
+            currentDetailVidTitle = vid.title;
+
+            // Increment Real Views in Firestore and locally
+            if (!window[`view_counted_${vidId}`]) {
+                window[`view_counted_${vidId}`] = true;
+                let currentViews = typeof vid.views === 'number' ? vid.views : (parseInt(vid.views) || 0);
+                vid.views = currentViews + 1;
+                db.collection("videos").doc(vidId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(e => console.log(e));
+                renderVideos();
+            }
+
+            document.getElementById('detailHeaderTitle').innerText = vid.title;
+            document.getElementById('detailHeroImg').src = vid.photo;
+            document.getElementById('detailTitleText').innerText = vid.title;
+            document.getElementById('detailViewsCount').innerText = vid.views || 1;
+            document.getElementById('detailCategoryText').innerText = vid.category || 'VIRAL';
+            
+            updateDetailFavIcon(vidId);
+            updateDetailUnlockUI(vid);
+            renderMoreToWatch(vidId);
+
+            document.getElementById('videoDetailOverlay').classList.add('active');
+            document.getElementById('videoDetailOverlay').scrollTop = 0;
+        }
+
+        function closeVideoDetail() {
+            document.getElementById('videoDetailOverlay').classList.remove('active');
+            closeOverlay(null, 'shareOverlay');
+        }
+
+        function updateDetailFavIcon(vidId) {
+            let isFav = favorites.some(f => f.id === vidId);
+            let icon = document.getElementById('detailFavIcon');
+            let btn = document.getElementById('detailFavBtn');
+            if (icon) {
+                icon.innerText = isFav ? 'favorite' : 'favorite_border';
+                icon.style.color = isFav ? '#ef4444' : 'var(--text-muted)';
+                icon.style.fontVariationSettings = isFav ? "'FILL' 1" : "'FILL' 0";
+                if (isFav) {
+                    icon.classList.add('pop-anim');
+                    setTimeout(() => icon.classList.remove('pop-anim'), 300);
                 }
             }
+            if (btn) {
+                if (isFav) {
+                    btn.classList.add('saved');
+                } else {
+                    btn.classList.remove('saved');
+                }
+            }
+        }
+
+        function toggleDetailFav() {
+            if (!currentDetailVidId) return;
+            let vid = allVideos.find(v => v.id === currentDetailVidId);
+            if (!vid) return;
+            toggleFav(vid.id, vid.title, vid.photo);
+        }
+
+        function updateDetailUnlockUI(vid) {
+            let totalSteps = vid.adCount || 3;
+            let savedState = JSON.parse(localStorage.getItem('vidProgress_' + vid.id)) || { step: 0, unlockedUntil: 0 };
+            let currentStep = parseInt(savedState.step) || 0;
+            let isUnlocked = (savedState.unlockedUntil > Date.now());
+
+            if (savedState.unlockedUntil && !isUnlocked) {
+                currentStep = 0;
+                localStorage.removeItem('vidProgress_' + vid.id);
+            }
+            if (isUnlocked) currentStep = totalSteps;
+
+            const btn = document.getElementById('detailUnlockBtn');
+            const btnIcon = document.getElementById('detailBtnIcon');
+            const btnText = document.getElementById('detailBtnText');
+            const progressFill = document.getElementById('detailProgressFill');
+            const progressPercent = document.getElementById('detailProgressPercent');
+            const stepTopText = document.getElementById('detailStepTopText');
+            const stepCountEl = document.getElementById('detailStepCount');
+            const heroPlayIcon = document.getElementById('detailHeroPlayIcon');
+            const timerEl = document.getElementById('detailCountdownTimer');
+
+            let pct = Math.min(100, Math.round((currentStep / totalSteps) * 100));
+            progressFill.style.width = pct + '%';
+            progressPercent.innerText = pct + '%';
+            stepCountEl.innerText = `${currentStep}/${totalSteps}`;
+            stepTopText.innerText = `ধাপ ${Math.min(totalSteps, currentStep + 1)}/${totalSteps}`;
+
+            if (currentUser.isPremium || isUnlocked) {
+                btn.className = 'detail-unlock-btn unlocked ripple-btn';
+                btnIcon.innerText = 'play_circle';
+                btnText.innerText = 'WATCH NOW (ভিডিও দেখুন)';
+                heroPlayIcon.innerText = 'play_arrow';
+                progressFill.style.width = '100%';
+                progressPercent.innerText = '100%';
+                stepCountEl.innerText = `${totalSteps}/${totalSteps}`;
+                stepTopText.innerText = `আনলক সম্পন্ন!`;
+                
+                if (isUnlocked && !currentUser.isPremium) {
+                    startDetailTimer(vid.id, savedState.unlockedUntil);
+                } else {
+                    timerEl.style.display = 'none';
+                }
+            } else {
+                btn.className = 'detail-unlock-btn ripple-btn';
+                btnIcon.innerText = 'videocam';
+                btnText.innerText = `আনলক করতে বিজ্ঞাপন দেখুন (${currentStep + 1}/${totalSteps})`;
+                heroPlayIcon.innerText = 'lock';
+                timerEl.style.display = 'none';
+            }
+        }
+
+        function startDetailTimer(vidId, expiryTime) {
+            const timerEl = document.getElementById('detailCountdownTimer');
+            timerEl.style.display = 'block';
+            if (window[`detailTimerInt_${vidId}`]) clearInterval(window[`detailTimerInt_${vidId}`]);
+
+            let tInt = setInterval(() => {
+                let timeLeft = Math.floor((expiryTime - Date.now()) / 1000);
+                if (timeLeft <= 0) {
+                    clearInterval(tInt);
+                    timerEl.style.display = 'none';
+                    localStorage.removeItem('vidProgress_' + vidId);
+                    let vid = allVideos.find(v => v.id === vidId);
+                    if (vid) updateDetailUnlockUI(vid);
+                } else {
+                    let m = Math.floor(timeLeft / 60);
+                    let s = timeLeft % 60;
+                    timerEl.innerText = `পুনরায় লক হবে: ${m}:${s < 10 ? '0' + s : s} মিনিট পর`;
+                }
+            }, 1000);
+            window[`detailTimerInt_${vidId}`] = tInt;
+        }
+
+        function renderMoreToWatch(currentVidId) {
+            const container = document.getElementById('moreToWatchFeed');
+            container.innerHTML = '';
+            let others = allVideos.filter(v => v.id !== currentVidId).slice(0, 8);
+            if (others.length === 0) others = allVideos.slice(0, 8);
+
+            others.forEach(v => {
+                let rawViews = typeof v.views === 'number' ? v.views : (parseInt(v.views) || 0);
+                let isFav = favorites.some(f => f.id === v.id);
+                container.innerHTML += `
+                    <div class="grid-video-card ripple-btn" onclick="openVideoDetail('${v.id}')">
+                        <div class="grid-thumb-box">
+                            <img src="${v.photo}" class="grid-thumb-img" alt="${v.title.replace(/"/g, '&quot;')}" onerror="this.src='https://via.placeholder.com/300x180?text=Video';">
+                            <div class="grid-center-play">
+                                <span class="material-symbols-rounded">play_arrow</span>
+                            </div>
+                            <div class="grid-card-fav-btn ${isFav ? 'active' : ''}" id="fav-icon-${v.id}" onclick="event.stopPropagation(); toggleFav('${v.id}', '${v.title.replace(/'/g, "\\'")}', '${v.photo}')">
+                                <span class="material-symbols-rounded" style="font-size: 16px; color: ${isFav ? '#ef4444' : '#fff'}; font-variation-settings: 'FILL' ${isFav ? 1 : 0};">${isFav ? 'favorite' : 'favorite_border'}</span>
+                            </div>
+                        </div>
+                        <div class="grid-card-info">
+                            <div class="grid-card-title">${v.title}</div>
+                            <div class="grid-card-meta">
+                                <span class="grid-cat-badge">${v.category || 'VIRAL'}</span>
+                                <span class="grid-views-badge">
+                                    <span class="material-symbols-rounded">visibility</span> ${rawViews}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function handleDetailMainPlay() {
+            handleDetailUnlockClick();
+        }
+
+        // ==========================================
+        // IN-APP VIDEO AD FLOW (EXACT VIDEO SYSTEM)
+        // ==========================================
+        let isAdFlowRunning = false;
+        let adStepResolve = null;
+
+        async function handleDetailUnlockClick() {
+            if (!currentDetailVidId) return;
+            let vid = allVideos.find(v => v.id === currentDetailVidId);
+            if (!vid) return;
+
+            let totalSteps = vid.adCount || 3;
+            let savedState = JSON.parse(localStorage.getItem('vidProgress_' + vid.id)) || { step: 0, unlockedUntil: 0 };
+            let currentStep = parseInt(savedState.step) || 0;
+            let isUnlocked = (savedState.unlockedUntil > Date.now());
+
+            if (currentUser.isPremium || isUnlocked) {
+                watchVideoAction(vid.id, vid.adUrl || '#');
+                return;
+            }
+
+            if (isAdFlowRunning) return;
+            isAdFlowRunning = true;
+
+            const btn = document.getElementById('detailUnlockBtn');
+            const btnText = document.getElementById('detailBtnText');
+            btn.classList.add('waiting');
+
+            let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
+
+            // Ad 1
+            await playSingleInAppAd(1, adsForThisStep);
+
+            // Ad 2 (if configured)
+            if (adsForThisStep === 2) {
+                await playAdWaitTransition(5);
+                await playSingleInAppAd(2, adsForThisStep);
+            }
+
+            // Close Ad Modal
+            document.getElementById('videoAdModal').classList.remove('active');
+
+            // Button countdown wait (5s)
+            let waitSeconds = 5;
+            btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
+
+            let waitInterval = setInterval(() => {
+                waitSeconds--;
+                if (waitSeconds > 0) {
+                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
+                } else {
+                    clearInterval(waitInterval);
+                    btn.classList.remove('waiting');
+                    isAdFlowRunning = false;
+
+                    currentStep++;
+                    if (currentStep >= totalSteps) {
+                        let expiry = Date.now() + (5 * 60 * 1000);
+                        localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
+                        unlockedCount++;
+                        localStorage.setItem('unlockedCount', unlockedCount);
+                        updateLocalStatsUI();
+                        db.collection("users").doc(currentUser.id.toString()).update({
+                            unlockedCount: unlockedCount,
+                            name: currentUser.name,
+                            photoUrl: currentUser.photoUrl
+                        }).catch(e => console.log(e));
+                    } else {
+                        localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep }));
+                    }
+
+                    updateDetailUnlockUI(vid);
+                }
+            }, 1000);
+        }
+
+        function playSingleInAppAd(adIndex, totalAdsInStep) {
+            return new Promise((resolve) => {
+                adStepResolve = resolve;
+                const modal = document.getElementById('videoAdModal');
+                const stageLoading = document.getElementById('adStageLoading');
+                const stageCreative = document.getElementById('adStageCreative');
+                const stageWait = document.getElementById('adStageWait');
+                const loadTitle = document.getElementById('adStageLoadTitle');
+                const progressFill = document.getElementById('adProgressFillBar');
+                const progressText = document.getElementById('adActionBtnText');
+                const btnContainer = document.getElementById('adActionBtnContainer');
+                const closeBtn = document.getElementById('adCreativeCloseBtn');
+
+                modal.classList.add('active');
+                stageWait.style.display = 'none';
+                stageCreative.style.display = 'none';
+                stageLoading.style.display = 'flex';
+                
+                loadTitle.innerText = adIndex === 1 ? "বিজ্ঞাপন লোড হচ্ছে..." : "চূড়ান্ত বিজ্ঞাপন লোড হচ্ছে...";
+
+                setTimeout(() => {
+                    stageLoading.style.display = 'none';
+                    stageCreative.style.display = 'flex';
+
+                    // Reset Progress Bar
+                    btnContainer.classList.remove('ad-join-btn-ready');
+                    window.adCanJoin = false;
+                    progressFill.style.width = '0%';
+                    progressText.innerText = '0%';
+                    closeBtn.style.opacity = '0.5';
+
+                    // Progressive loading: 0% -> 25% -> 50% -> 75% -> 100%
+                    setTimeout(() => { progressFill.style.width = '25%'; progressText.innerText = '25%'; }, 900);
+                    setTimeout(() => { progressFill.style.width = '50%'; progressText.innerText = '50%'; }, 2000);
+                    setTimeout(() => { progressFill.style.width = '75%'; progressText.innerText = '75%'; }, 3200);
+                    setTimeout(() => {
+                        progressFill.style.width = '100%';
+                        progressText.innerHTML = 'Join Now! 👆';
+                        btnContainer.classList.add('ad-join-btn-ready');
+                        window.adCanJoin = true;
+                        closeBtn.style.opacity = '1';
+                    }, 4500);
+                }, 1200);
+            });
+        }
+
+        function onAdJoinClick() {
+            if (window.adCanJoin) {
+                openExternalLink(window.globalMonetagUrl || window.globalAdsterraUrl);
+            }
+        }
+
+        function onAdCloseClick() {
+            if (adStepResolve) {
+                let res = adStepResolve;
+                adStepResolve = null;
+                res();
+            }
+        }
+
+        function playAdWaitTransition(seconds) {
+            return new Promise((resolve) => {
+                const stageLoading = document.getElementById('adStageLoading');
+                const stageCreative = document.getElementById('adStageCreative');
+                const stageWait = document.getElementById('adStageWait');
+                const waitTitle = document.getElementById('adWaitTitle');
+
+                stageLoading.style.display = 'none';
+                stageCreative.style.display = 'none';
+                stageWait.style.display = 'flex';
+
+                let count = seconds;
+                waitTitle.innerText = `অপেক্ষা করুন ${count} সেকেন্ড ⏳`;
+
+                let intv = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        waitTitle.innerText = `অপেক্ষা করুন ${count} সেকেন্ড ⏳`;
+                    } else {
+                        clearInterval(intv);
+                        stageWait.style.display = 'none';
+                        resolve();
+                    }
+                }, 1000);
+            });
         }
 
         function toggleSearch() { 
@@ -1299,7 +2566,13 @@
         function setCategory(cat, btn) { document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active')); btn.classList.add('active'); currentCategory = cat; renderVideos(); }
         function filterVideos() { renderVideos(); }
         function navSwitch(btn) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); btn.classList.add('active'); }
-        function openShareDialog(vidId, title) { currentShareVid = vidId; currentShareTitle = title; openOverlay('shareOverlay'); }
+        function openShareDialog(vidId, title) {
+            currentShareVid = vidId;
+            currentShareTitle = title;
+            const previewEl = document.getElementById('shareVidTitlePreview');
+            if (previewEl) previewEl.innerText = title;
+            openOverlay('shareOverlay');
+        }
 
         // ==========================================
         // DYNAMIC AD FLOW & ANTI-SKIP VALIDATION
@@ -1408,75 +2681,7 @@
         function closeWarningOverlay() { document.getElementById('adWarningOverlay').classList.remove('active'); }
 
         async function handleUnlockStep(vidId, targetUrl, totalSteps) {
-            if (currentUser.isPremium) { watchVideoAction(vidId, targetUrl); return; }
-
-            const btn = document.getElementById(`btn-${vidId}`);
-            if(btn.innerText.includes('WATCH NOW')) { watchVideoAction(vidId, targetUrl); return; }
-            if(btn.disabled) return;
-            btn.disabled = true;
-
-            let vid = allVideos.find(v => v.id === vidId);
-            let savedState = JSON.parse(localStorage.getItem('vidProgress_' + vidId)) || { step: 0 };
-            let currentStep = parseInt(savedState.step) || 0;
-            const btnText = document.getElementById(`btn-text-${vidId}`);
-
-            let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
-            let ad1Type = vid.ad1Type || 'pop';
-            let ad2Type = vid.ad2Type || 'rewarded';
-            let adTime = vid.adTime ? parseInt(vid.adTime) : 5; 
-
-            // AD 1
-            await runModalCountdown(1, adsForThisStep, currentStep);
-            document.getElementById('adSimulationModal').classList.remove('active');
-            
-            let success1 = await enforceAdWatchTime(ad1Type, adTime);
-            if(!success1) return showEarlyWarning(adTime, vidId, btn, totalSteps);
-
-            // AD 2
-            if (adsForThisStep === 2) {
-                await runModalCountdown(2, adsForThisStep, currentStep);
-                document.getElementById('adSimulationModal').classList.remove('active');
-                
-                let success2 = await enforceAdWatchTime(ad2Type, adTime);
-                if(!success2) return showEarlyWarning(adTime, vidId, btn, totalSteps);
-            }
-
-            btn.classList.add('waiting');
-            let waitTime = 5;
-            
-            if(currentStep < totalSteps - 1) {
-                let lineEl = document.getElementById(`step-line-${vidId}-${currentStep}`);
-                if(lineEl) { lineEl.style.transition = 'width 5s linear'; lineEl.style.width = '100%'; }
-            }
-
-            btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING 5s</span>`;
-            
-            const waitInt = setInterval(() => {
-                waitTime--;
-                if(waitTime > 0) {
-                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING ${waitTime}s</span>`;
-                } else {
-                    clearInterval(waitInt);
-                    btn.classList.remove('waiting');
-                    btn.disabled = false;
-                    
-                    currentStep++;
-                    if (currentStep >= totalSteps) {
-                        let expiry = Date.now() + (5 * 60 * 1000); 
-                        localStorage.setItem('vidProgress_' + vidId, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
-                        updateStepVisuals(vidId, currentStep);
-                        startUnlockTimer(vidId, targetUrl, btn, totalSteps, expiry);
-                        
-                        unlockedCount++; localStorage.setItem('unlockedCount', unlockedCount); updateLocalStatsUI();
-                        db.collection("users").doc(currentUser.id.toString()).update({ unlockedCount: unlockedCount, name: currentUser.name, photoUrl: currentUser.photoUrl }).catch(e=>console.log(e));
-                    } else {
-                        localStorage.setItem('vidProgress_' + vidId, JSON.stringify({ step: currentStep }));
-                        updateStepVisuals(vidId, currentStep);
-                        let displayStep = currentStep + 1 > totalSteps ? totalSteps : currentStep + 1;
-                        btnText.innerHTML = `TAP FOR NEXT STEP <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 12px;">${displayStep}/${totalSteps}</span>`;
-                    }
-                }
-            }, 1000);
+            openVideoDetail(vidId);
         }
 
         function startUnlockTimer(vidId, targetUrl, btn, totalSteps, expiryTime) {
@@ -1520,23 +2725,88 @@
         }
 
         // ==========================================
-        // PAYMENT SUBMISSION
+        // PAYMENT SUBMISSION & VIP PLAN MANAGEMENT
         // ==========================================
-        function openPaymentMethods(plan, price) {
-            selectedPlan = plan; selectedPrice = price;
-            document.getElementById('selectedPlanShow').innerText = plan; document.getElementById('selectedAmountShow').innerText = price;
+        let livePrices = {
+            '1 Month': '100 BDT',
+            '6 Months': '500 BDT',
+            '1 Year': '900 BDT'
+        };
+
+        function selectPlanAndPay(plan) {
+            selectedPlan = plan;
+            let price = livePrices[plan] || (plan.includes('1 Month') ? '100 BDT' : (plan.includes('6 Months') ? '500 BDT' : '900 BDT'));
+            selectedPrice = price;
+            
+            document.getElementById('selectedPlanShow').innerText = plan;
+            document.getElementById('selectedAmountShow').innerText = price;
+            
             db.collection("transactions").where("userId", "==", currentUser.id).where("status", "==", "Pending").get().then(snap => {
-                if(!snap.empty) { document.getElementById('submitTrxBox').style.display = 'none'; document.getElementById('pendingStatusBox').style.display = 'block'; } 
-                else { document.getElementById('submitTrxBox').style.display = 'block'; document.getElementById('pendingStatusBox').style.display = 'none'; }
+                if(!snap.empty) {
+                    document.getElementById('submitTrxBox').style.display = 'none';
+                    document.getElementById('pendingStatusBox').style.display = 'block';
+                } else {
+                    document.getElementById('submitTrxBox').style.display = 'block';
+                    document.getElementById('pendingStatusBox').style.display = 'none';
+                }
+            }).catch(e => {
+                console.log(e);
+                document.getElementById('submitTrxBox').style.display = 'block';
+                document.getElementById('pendingStatusBox').style.display = 'none';
             });
-            closeOverlay(null, 'premiumOverlay'); openOverlay('paymentOverlay');
+            
+            openOverlay('paymentOverlay');
+        }
+
+        function openPaymentMethods(plan, price) {
+            selectPlanAndPay(plan);
+        }
+
+        function selectPayMethod(method, el) {
+            document.querySelectorAll('.pay-method-pill').forEach(p => p.classList.remove('active'));
+            if (el) el.classList.add('active');
+            let input = document.getElementById('payMethodInput');
+            if (input) input.value = method;
+        }
+
+        function copyAccount(elementId) {
+            let el = document.getElementById(elementId);
+            if (!el) return;
+            let text = el.innerText.trim();
+            if (!text || text.includes('Loading') || text.includes('Not Set')) {
+                showToast("নাম্বারটি এখনও এডমিন কর্তৃক সেট করা হয়নি", "error");
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("কপি করা হয়েছে! 📋", "content_copy");
+            }).catch(() => {
+                prompt("কপি করুন:", text);
+            });
         }
 
         function submitTrx() {
-            let trx = document.getElementById('trxInput').value; let method = document.getElementById('payMethodInput').value;
-            if(!trx) return alert("Enter TrxID or Binance Pay ID!");
-            db.collection("transactions").add({ userId: currentUser.id, userName: currentUser.name, plan: selectedPlan, amount: selectedPrice, method: method, trxId: trx, status: "Pending", timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => {
-                document.getElementById('trxInput').value = ''; document.getElementById('submitTrxBox').style.display = 'none'; document.getElementById('pendingStatusBox').style.display = 'block'; alert("TrxID Submitted! Please wait for Admin Approval.");
+            let trx = document.getElementById('trxInput').value.trim();
+            let method = document.getElementById('payMethodInput') ? document.getElementById('payMethodInput').value : 'bKash';
+            if(!trx) {
+                showToast("দয়া করে TrxID বা Order ID লিখুন!", "warning");
+                return;
+            }
+            db.collection("transactions").add({
+                userId: currentUser.id,
+                userName: currentUser.name,
+                plan: selectedPlan || '1 Month',
+                amount: selectedPrice || '100 BDT',
+                method: method,
+                trxId: trx,
+                status: "Pending",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                document.getElementById('trxInput').value = '';
+                document.getElementById('submitTrxBox').style.display = 'none';
+                document.getElementById('pendingStatusBox').style.display = 'block';
+                showToast("পেমেন্ট রিকোয়েস্ট সফলভাবে জমা হয়েছে! 🎉", "verified");
+            }).catch(e => {
+                alert("Error: " + e.message);
             });
         }
 
@@ -1730,16 +3000,82 @@
         function rejectTrx(docId) { if(confirm("Are you sure you want to reject this transaction?")) { db.collection("transactions").doc(docId).update({ status: "Rejected" }); } }
         function removePremium(uid) { if(confirm("Remove premium status for this user?")) { db.collection("users").doc(uid.toString()).update({ isPremium: false, premiumExpiry: firebase.firestore.FieldValue.delete(), payMethod: firebase.firestore.FieldValue.delete() }); } }
 
+        function showToast(msg, icon = 'info') {
+            let t = document.getElementById('appToast');
+            if (!t) return;
+            t.innerHTML = `<span class="material-symbols-rounded" style="font-size:18px; color:var(--primary-light); vertical-align:middle;">${icon}</span> <span>${msg}</span>`;
+            t.classList.add('show');
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => { t.classList.remove('show'); }, 2200);
+        }
+
         function toggleTheme() { const isLight = document.body.parentElement.getAttribute('data-theme') === 'light'; document.body.parentElement.setAttribute('data-theme', isLight ? 'dark' : 'light'); }
-        function openOverlay(id) { document.querySelectorAll('.overlay').forEach(el => { el.classList.remove('active'); if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)'; }); const overlay = document.getElementById(id); if(!overlay) return; overlay.classList.add('active'); setTimeout(() => { if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)'; }, 10); }
-        function closeOverlay(e, id) { if (e && e.target !== e.currentTarget) return; const overlay = document.getElementById(id); if(!overlay) return; if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(100%)'; setTimeout(() => { overlay.classList.remove('active'); }, 300); }
-        function closeAllOverlays() { document.querySelectorAll('.overlay').forEach(el => { if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)'; setTimeout(() => { el.classList.remove('active'); }, 300); }); }
+        function openOverlay(id) {
+            document.querySelectorAll('.overlay').forEach(el => {
+                if (el.id !== id) {
+                    el.classList.remove('active');
+                    if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
+                }
+            });
+            const overlay = document.getElementById(id);
+            if(!overlay) return;
+            overlay.classList.add('active');
+            setTimeout(() => {
+                if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)';
+            }, 10);
+        }
+        function closeOverlay(e, id) {
+            if (e && e.target !== e.currentTarget) return;
+            const overlay = document.getElementById(id);
+            if(!overlay) return;
+            if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 250);
+        }
+        function closeAllOverlays() {
+            document.querySelectorAll('.overlay').forEach(el => {
+                if(el.querySelector('.bottom-sheet')) el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
+                setTimeout(() => { el.classList.remove('active'); }, 250);
+            });
+        }
         
         function toggleFav(vidId, title, thumb) {
-            const icon = document.getElementById(`fav-icon-${vidId}`); const index = favorites.findIndex(v => v.id === vidId);
-            if (index === -1) { favorites.push({ id: vidId, title: title, thumb: thumb }); icon.innerText = 'favorite'; icon.style.color = 'var(--danger)'; icon.classList.add('pop-anim'); setTimeout(()=>icon.classList.remove('pop-anim'), 300); } 
-            else { favorites.splice(index, 1); icon.innerText = 'favorite_border'; icon.style.color = 'var(--text-muted)'; }
-            localStorage.setItem('favVideos', JSON.stringify(favorites)); updateLocalStatsUI();
+            const index = favorites.findIndex(v => v.id === vidId);
+            const isAdding = (index === -1);
+            if (isAdding) {
+                favorites.push({ id: vidId, title: title, thumb: thumb });
+            } else {
+                favorites.splice(index, 1);
+            }
+            localStorage.setItem('favVideos', JSON.stringify(favorites));
+
+            // Update card heart icon if exists
+            const cardHeart = document.getElementById(`fav-icon-${vidId}`);
+            if (cardHeart) {
+                const iconSpan = cardHeart.querySelector('.material-symbols-rounded') || cardHeart;
+                if (iconSpan) {
+                    iconSpan.innerText = isAdding ? 'favorite' : 'favorite_border';
+                    iconSpan.style.color = isAdding ? '#ef4444' : '#fff';
+                    iconSpan.style.fontVariationSettings = isAdding ? "'FILL' 1" : "'FILL' 0";
+                }
+                if (isAdding) {
+                    cardHeart.classList.add('active', 'pop-anim');
+                    setTimeout(() => cardHeart.classList.remove('pop-anim'), 300);
+                } else {
+                    cardHeart.classList.remove('active');
+                }
+            }
+
+            // Update detail screen favorite button if this video is currently viewed
+            if (currentDetailVidId === vidId) {
+                updateDetailFavIcon(vidId);
+            }
+
+            updateLocalStatsUI();
+            if (typeof loadFavorites === 'function') loadFavorites();
+
+            showToast(isAdding ? "পছন্দের তালিকায় যুক্ত হয়েছে! ❤️" : "পছন্দের তালিকা থেকে সরানো হয়েছে", isAdding ? "favorite" : "delete");
         }
 
         function loadFavorites() {
@@ -1753,7 +3089,11 @@
             });
         }
 
-        function openFavVideo(vidId) { closeOverlay(null, 'favoritesOverlay'); let el = document.getElementById(`card-${vidId}`); if(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } else { alert("Video not available right now!"); } }
+        function openFavVideo(vidId) {
+            closeOverlay(null, 'favoritesOverlay');
+            closeOverlay(null, 'historyOverlay');
+            openVideoDetail(vidId);
+        }
 
         // --- NEW FEATURES JS (Settings, History, Comments, Ripple, Swipe) ---
         
@@ -1853,5 +3193,6 @@
 
         renderVideos();
     </script>
+    <div id="appToast" class="app-toast"></div>
 </body>
 </html>
