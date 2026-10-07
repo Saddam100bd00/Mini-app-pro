@@ -4,223 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MINI APP PRO 2.0</title>
-    <script src="https://telegram.org/js/telegram-web-app.js">
-        // Live Online Users Realtime Tracker
-        function initLiveUsersPresence() {
-            if (!currentUser || !currentUser.id) return;
-            const userPresenceRef = db.collection("users").doc(currentUser.id.toString());
-            // Update lastActive every 45 seconds
-            function pingActive() {
-                userPresenceRef.update({
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(e => console.log("Presence error:", e));
-            }
-            pingActive();
-            setInterval(pingActive, 45000);
-
-            // Listen to active users in last 2 minutes
-            setInterval(() => {
-                let twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000);
-                db.collection("users").where("lastActive", ">=", twoMinsAgo).get().then(snap => {
-                    let onlineCount = Math.max(1, snap.size);
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${onlineCount} জন`;
-                    }
-                }).catch(e => {
-                    // Fallback to realistic live count if index building
-                    let randomLive = Math.floor(Math.random() * 5) + 3;
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${randomLive} জন`;
-                    }
-                });
-            }, 10000);
-        }
-
-    </script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src='https://libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
-    
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js">
-        // Live Online Users Realtime Tracker
-        function initLiveUsersPresence() {
-            if (!currentUser || !currentUser.id) return;
-            const userPresenceRef = db.collection("users").doc(currentUser.id.toString());
-            // Update lastActive every 45 seconds
-            function pingActive() {
-                userPresenceRef.update({
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(e => console.log("Presence error:", e));
-            }
-            pingActive();
-            setInterval(pingActive, 45000);
-
-            // Listen to active users in last 2 minutes
-            setInterval(() => {
-                let twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000);
-                db.collection("users").where("lastActive", ">=", twoMinsAgo).get().then(snap => {
-                    let onlineCount = Math.max(1, snap.size);
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${onlineCount} জন`;
-                    }
-                }).catch(e => {
-                    // Fallback to realistic live count if index building
-                    let randomLive = Math.floor(Math.random() * 5) + 3;
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${randomLive} জন`;
-                    }
-                });
-            }, 10000);
-        }
-
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js">
-        // Live Online Users Realtime Tracker
-        function initLiveUsersPresence() {
-            if (!currentUser || !currentUser.id) return;
-            const userPresenceRef = db.collection("users").doc(currentUser.id.toString());
-            // Update lastActive every 45 seconds
-            function pingActive() {
-                userPresenceRef.update({
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(e => console.log("Presence error:", e));
-            }
-            pingActive();
-            setInterval(pingActive, 45000);
-
-            // Listen to active users in last 2 minutes
-            setInterval(() => {
-                let twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000);
-                db.collection("users").where("lastActive", ">=", twoMinsAgo).get().then(snap => {
-                    let onlineCount = Math.max(1, snap.size);
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${onlineCount} জন`;
-                    }
-                }).catch(e => {
-                    // Fallback to realistic live count if index building
-                    let randomLive = Math.floor(Math.random() * 5) + 3;
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${randomLive} জন`;
-                    }
-                });
-            }, 10000);
-        }
-
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js">
-        // Live Online Users Realtime Tracker
-        function initLiveUsersPresence() {
-            if (!currentUser || !currentUser.id) return;
-            const userPresenceRef = db.collection("users").doc(currentUser.id.toString());
-            // Update lastActive every 45 seconds
-            function pingActive() {
-                userPresenceRef.update({
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(e => console.log("Presence error:", e));
-            }
-            pingActive();
-            setInterval(pingActive, 45000);
-
-            // Listen to active users in last 2 minutes
-            setInterval(() => {
-                let twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000);
-                db.collection("users").where("lastActive", ">=", twoMinsAgo).get().then(snap => {
-                    let onlineCount = Math.max(1, snap.size);
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${onlineCount} জন`;
-                    }
-                }).catch(e => {
-                    // Fallback to realistic live count if index building
-                    let randomLive = Math.floor(Math.random() * 5) + 3;
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${randomLive} জন`;
-                    }
-                });
-            }, 10000);
-        }
-
-    </script>
-    
-    <!-- Canvas Confetti for Leaderboard & Premium Promo -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js">
-        // Live Online Users Realtime Tracker
-        function initLiveUsersPresence() {
-            if (!currentUser || !currentUser.id) return;
-            const userPresenceRef = db.collection("users").doc(currentUser.id.toString());
-            // Update lastActive every 45 seconds
-            function pingActive() {
-                userPresenceRef.update({
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(e => console.log("Presence error:", e));
-            }
-            pingActive();
-            setInterval(pingActive, 45000);
-
-            // Listen to active users in last 2 minutes
-            setInterval(() => {
-                let twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000);
-                db.collection("users").where("lastActive", ">=", twoMinsAgo).get().then(snap => {
-                    let onlineCount = Math.max(1, snap.size);
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${onlineCount} জন`;
-                    }
-                }).catch(e => {
-                    // Fallback to realistic live count if index building
-                    let randomLive = Math.floor(Math.random() * 5) + 3;
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${randomLive} জন`;
-                    }
-                });
-            }, 10000);
-        }
-
-    </script>
-
-    <!-- 1. Rewarded Popup Ad Code -->
-    <script src='https://libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'>
-        // Live Online Users Realtime Tracker
-        function initLiveUsersPresence() {
-            if (!currentUser || !currentUser.id) return;
-            const userPresenceRef = db.collection("users").doc(currentUser.id.toString());
-            // Update lastActive every 45 seconds
-            function pingActive() {
-                userPresenceRef.update({
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(e => console.log("Presence error:", e));
-            }
-            pingActive();
-            setInterval(pingActive, 45000);
-
-            // Listen to active users in last 2 minutes
-            setInterval(() => {
-                let twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000);
-                db.collection("users").where("lastActive", ">=", twoMinsAgo).get().then(snap => {
-                    let onlineCount = Math.max(1, snap.size);
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${onlineCount} জন`;
-                    }
-                }).catch(e => {
-                    // Fallback to realistic live count if index building
-                    let randomLive = Math.floor(Math.random() * 5) + 3;
-                    const countEl = document.getElementById('headerLiveUsersText');
-                    if (countEl) {
-                        countEl.innerText = `লাইভ: ${randomLive} জন`;
-                    }
-                });
-            }, 10000);
-        }
-
-    </script>
-    
     <style>
         /* --- CSS Variables & Theme --- */
         :root {
@@ -751,6 +541,27 @@
         .nav-item.active { color: var(--primary-light); transform: translateY(-2px); }
         .nav-item .material-symbols-rounded { font-size: 24px; margin-bottom: 2px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         .nav-item.active .material-symbols-rounded { font-variation-settings: 'FILL' 1; transform: scale(1.1); }
+
+        
+        /* --- Sidebar Drawer Fix --- */
+        #sidebarOverlay {
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+        }
+        #sidebarOverlay .bottom-sheet {
+            width: 290px !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            border-radius: 0 24px 24px 0 !important;
+            transform: translateX(-100%) !important;
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-shadow: 12px 0 45px rgba(0,0,0,0.85) !important;
+            padding: 25px 20px !important;
+        }
+        #sidebarOverlay.active .bottom-sheet {
+            transform: translateX(0) !important;
+        }
 
         /* --- Full Screen Overlay System --- */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 3500; opacity: 0; visibility: hidden; display: flex; align-items: flex-end; transition: all 0.3s ease; }
@@ -1720,15 +1531,7 @@
         </div>
     </div>
 
-    <!-- 🚫 EARLY RETURN WARNING OVERLAY 🚫 -->
-    <div class="warning-overlay" id="adWarningOverlay">
-        <div class="promo-box" style="border-color: var(--danger); box-shadow: 0 0 30px rgba(239, 68, 68, 0.4), inset 0 0 20px rgba(239, 68, 68, 0.1); animation: none;">
-            <div class="promo-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.5);"><span class="material-symbols-rounded" style="font-size:36px;">warning</span></div>
-            <h2 class="promo-title" style="color: #ff6b6b; text-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);">আপনি আগেই ফিরে এসেছেন!</h2>
-            <p class="promo-desc" id="warningWaitText">আপনাকে সম্পূর্ণ 5 সেকেন্ড ভিজিট করতে হবে। তাই আবার প্রথম থেকে "Watch Ad" বাটনে ক্লিক করুন!</p>
-            <button class="promo-btn ripple-btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);" onclick="closeWarningOverlay()">আবার চেষ্টা করুন</button>
-        </div>
-    </div>
+    
 
     <header class="header">
         <div class="header-left">
@@ -2768,29 +2571,12 @@
                 <div class="input-group"><label>1 Year Price</label><input type="text" id="p1y" placeholder="e.g. 900 BDT"></div>
             </div>
             
-            <!-- Feature Switches (5-Second Ad & Live Online Users) -->
+            <!-- Feature Controls -->
             <div style="background:var(--bg-dark); padding:16px; border-radius:14px; border:1px solid rgba(124, 58, 237, 0.35); margin-bottom:18px;">
                 <h4 style="margin-bottom:12px; color:var(--primary-light); font-size:15px; display:flex; align-items:center; gap:8px;">
                     <span class="material-symbols-rounded" style="color:var(--primary-accent);">toggle_on</span> Feature Controls
                 </h4>
                 
-                <!-- 5-Second Ad System Switch -->
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--bg-card); border-radius:12px; border:1px solid var(--divider); margin-bottom:12px;">
-                    <div style="padding-right:12px;">
-                        <b style="color:var(--text-light); font-size:14px; display:flex; align-items:center; gap:6px;">
-                            🎬 ৫ সেকেন্ড অ্যাড সিস্টেম (0-100% Modal)
-                        </b>
-                        <p style="font-size:12px; color:var(--text-muted); margin-top:3px;">
-                            <span style="color:#34d399;">ON:</span> ৫ সেকেন্ড পপআপ অ্যাড লোড হবে (০-১০০%)<br>
-                            <span style="color:#f87171;">OFF:</span> সরাসরি ডিরেক্ট অ্যাড খুলবে + টাইমার শেষ হওয়ার আগে ফিরলে আনলক হবে না এবং অ্যালার্ট দিবে।
-                        </p>
-                    </div>
-                    <label style="position:relative; display:inline-block; width:52px; height:28px; flex-shrink:0;">
-                        <input type="checkbox" id="toggle5SecAdSystem" style="opacity:0; width:0; height:0;">
-                        <span class="switch-slider" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#334155; transition:0.3s; border-radius:28px;"></span>
-                    </label>
-                </div>
-
                 <!-- Live Online Users Count Switch -->
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:var(--bg-card); border-radius:12px; border:1px solid var(--divider);">
                     <div style="padding-right:12px;">
@@ -2809,7 +2595,7 @@
                 </div>
             </div>
 
-            <!-- Dynamic Channels Management (Up to 10 Channels) -->
+            <!-- Dynamic Channels<!-- Dynamic Channels Management (Up to 10 Channels) -->
             <div style="background:var(--bg-dark); padding:16px; border-radius:14px; border:1px solid var(--primary-light); margin-bottom:18px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <h4 style="color:var(--primary-light); font-size:15px; margin:0; display:flex; align-items:center; gap:6px;">
@@ -2833,52 +2619,7 @@
             <div style="display:flex; gap:10px; margin-bottom: 20px;"><button class="btn-submit ripple-btn" id="nSubmitBtn" style="background:var(--danger);" onclick="sendOrUpdateNotification()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">campaign</span> Send to All</button><button class="btn-submit ripple-btn" id="nCancelBtn" style="display:none; background:var(--text-muted);" onclick="cancelNotiEdit()">Cancel</button></div>
             <h4 style="color:var(--text-light); margin-bottom:10px; font-size:14px;">Manage Existing Notifications</h4>
             <div id="adminNotiManageList" style="max-height: 200px; overflow-y:auto; padding-right:5px;">Loading notifications...</div>
-        </div>
-    </div>
-
-    <!-- 🎯 IN-APP REWARDED VIDEO AD MODAL (EXACT VIDEO STYLE) 🎯 -->
-    <div class="video-ad-modal" id="videoAdModal">
-        <!-- Stage 1: Loading Screen -->
-        <div class="ad-loader-screen" id="adStageLoading">
-            <div class="ad-spin-icon">
-                <span class="material-symbols-rounded">movie</span>
-            </div>
-            <div class="ad-loader-title" id="adStageLoadTitle">বিজ্ঞাপন লোড হচ্ছে...</div>
-            <div class="ad-loader-sub">সম্পূর্ণ বিজ্ঞাপন দেখুন</div>
-        </div>
-
-        <!-- Stage 2: In-App Interstitial Ad Card -->
-        <div class="ad-creative-card" id="adStageCreative">
-            <div class="ad-creative-top">
-                <div class="ad-sponsor-tag">
-                    <span class="material-symbols-rounded" style="font-size:16px;">verified</span> SPONSORED
                 </div>
-                <button class="ad-close-btn ripple-btn" id="adCreativeCloseBtn" onclick="onAdCloseClick()">
-                    <span class="material-symbols-rounded" style="font-size:18px;">close</span>
-                </button>
-            </div>
-            <div class="ad-banner-visual">
-                <img id="adBannerImg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop" class="ad-banner-bg" alt="Ad Creative">
-            </div>
-            <div class="ad-info-section">
-                <div class="ad-headline" id="adCreativeHeadline">CBTFSTAKE — Play More. Get More.</div>
-                <div class="ad-subline" id="adCreativeSubline">Earn By Sports Trading Skills And Gaming Skills • Ad 18+</div>
-                
-                <div class="ad-progress-btn-container" id="adActionBtnContainer" onclick="onAdJoinClick()">
-                    <div class="ad-progress-btn-fill" id="adProgressFillBar"></div>
-                    <div class="ad-progress-btn-text" id="adActionBtnText">0%</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Stage 3: Countdown Wait Screen -->
-        <div class="ad-wait-screen" id="adStageWait">
-            <div class="ad-spin-icon" style="border-top-color:#f59e0b; border-left-color:#10b981;">
-                <span class="material-symbols-rounded" style="font-size:32px; color:#f59e0b;">hourglass_top</span>
-            </div>
-            <div class="ad-loader-title" id="adWaitTitle">অপেক্ষা করুন ৫ সেকেন্ড ⏳</div>
-            <div class="ad-loader-sub">পরবর্তী বিজ্ঞাপনের জন্য প্রস্তুত হচ্ছে...</div>
-        </div>
     </div>
 
     <script>
@@ -2906,18 +2647,72 @@
         window.currentLBType = 'unlock';
         window.currentLBTime = 'all';
 
+        
         function openExternalLink(url) {
+            if (!url) return;
             try {
-                if (url.includes('t.me') || url.includes('telegram.me')) {
-                    tg.openTelegramLink(url);
-                } else {
-                    tg.openLink(url, { try_instant_view: false });
+                if (window.AndroidBridge && typeof window.AndroidBridge.openExternal === 'function') {
+                    window.AndroidBridge.openExternal(url);
+                    return;
                 }
-                setTimeout(() => { tg.collapse(); }, 300); 
+            } catch (err) {
+                console.warn(err);
+            }
+            try {
+                if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openTelegramLink === 'function' && (url.includes('t.me') || url.includes('telegram.me'))) {
+                    tg.openTelegramLink(url);
+                    setTimeout(() => { if (tg.collapse) tg.collapse(); }, 300);
+                    return;
+                } else if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openLink === 'function') {
+                    tg.openLink(url, { try_instant_view: false });
+                    setTimeout(() => { if (tg.collapse) tg.collapse(); }, 300);
+                    return;
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+            try {
+                window.open(url, '_blank') || (window.location.href = url);
             } catch (e) {
                 window.location.href = url;
             }
         }
+
+        function handleGlobalBackPress() {
+            const warningEl = document.getElementById('adWarningOverlay');
+            if (warningEl && warningEl.classList.contains('active')) {
+                closeWarningOverlay();
+                return true;
+            }
+            const promo = document.getElementById('premiumCongratsOverlay');
+            if (promo && promo.classList.contains('active')) {
+                closePremiumCongrats();
+                return true;
+            }
+            const notice = document.getElementById('latestNoticeOverlay');
+            if (notice && notice.classList.contains('active')) {
+                closeLatestNotice();
+                return true;
+            }
+            const detailOverlay = document.getElementById('videoDetailOverlay');
+            if (detailOverlay && detailOverlay.classList.contains('active')) {
+                closeVideoDetail();
+                return true;
+            }
+            const activeOverlays = Array.from(document.querySelectorAll('.overlay.active'));
+            if (activeOverlays.length > 0) {
+                const topOverlay = activeOverlays[activeOverlays.length - 1];
+                closeOverlay(null, topOverlay.id);
+                return true;
+            }
+            const activeNav = document.querySelector('.nav-item.active');
+            if (activeNav && activeNav.id !== 'navBtn-home') {
+                switchTab('home');
+                return true;
+            }
+            return false;
+        }
+
 
         function watchVideoAction(vidId, targetUrl) {
             openExternalLink(targetUrl);
@@ -3331,9 +3126,7 @@
                     document.getElementById('sSupportName').value = d.supportName || "";
                     document.getElementById('sSupportUrl').value = d.supportUrl || "";
                     
-                    if (document.getElementById('toggle5SecAdSystem')) {
-                        document.getElementById('toggle5SecAdSystem').checked = (d.use5SecAdSystem === true);
-                    }
+                    
                     if (document.getElementById('toggleLiveUsersShow')) {
                         document.getElementById('toggleLiveUsersShow').checked = (d.showLiveUsers !== false);
                     }
@@ -3661,30 +3454,25 @@
         }
 
         // ==========================================
-        // IN-APP VIDEO AD FLOW (EXACT VIDEO SYSTEM)
+        // CLASSIC AD FLOW & DEDICATED UNLOCK LOGIC
         // ==========================================
         let isAdFlowRunning = false;
-        let adStepResolve = null;
 
-        async function triggerRealMonetagOrFallbackAd(adNumber, totalAds, customWaitSec) {
-            // 1. In-App Video Ad modal with 0% -> 25% -> 50% -> 75% -> 100% progress animation
-            await playSingleInAppAd(adNumber, totalAds, customWaitSec);
-
-            // 2. Also invoke Monetag SDK or Monetag Direct Link
+        async function triggerMonetagSdkAd() {
             try {
-                let monetagCalled = false;
+                let sdkTriggered = false;
                 for (let k in window) {
                     if (k.startsWith('show_') && typeof window[k] === 'function') {
                         try {
                             window[k]();
-                            monetagCalled = true;
+                            sdkTriggered = true;
                             break;
                         } catch (e) {
-                            console.warn("Monetag SDK error:", e);
+                            try { window[k]('rewarded'); sdkTriggered = true; break; } catch(e2){}
                         }
                     }
                 }
-                if (!monetagCalled && window.globalMonetagUrl && window.globalMonetagUrl.startsWith('http')) {
+                if (!sdkTriggered && window.globalMonetagUrl && window.globalMonetagUrl.startsWith('http')) {
                     openExternalLink(window.globalMonetagUrl);
                 }
             } catch (err) {
@@ -3715,186 +3503,64 @@
             btn.classList.add('waiting');
 
             let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
-            // Admin set wait time (e.g. 5, 10, 15, 20 seconds)
             let adminSetWaitTime = parseInt(vid.adTime) || 5;
 
-            // Check if 5-Sec Ad System is enabled in Admin settings
-            if (window.use5SecAdSystem) {
-                // --- MODE 1: 5-SECOND IN-APP AD SYSTEM (0% -> 25% -> 50% -> 75% -> 100%) ---
-                // Ad 1: Displays In-App 0%-100% Ad modal + Monetag trigger
-                await triggerRealMonetagOrFallbackAd(1, adsForThisStep, adminSetWaitTime);
-                // Ad 2 (if step requires 2 ads)
-                if (adsForThisStep === 2) {
-                    await playAdWaitTransition(3);
-                    await triggerRealMonetagOrFallbackAd(2, adsForThisStep, adminSetWaitTime);
-                }
-                // Close Ad Modal
-                document.getElementById('videoAdModal').classList.remove('active');
-                
-                // Button countdown wait: admin configured time (vid.adTime)
-                let waitSeconds = adminSetWaitTime;
-                btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
-                let waitInterval = setInterval(() => {
-                    waitSeconds--;
-                    if (waitSeconds > 0) {
-                        btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
-                    } else {
-                        clearInterval(waitInterval);
-                        btn.classList.remove('waiting');
-                        isAdFlowRunning = false;
-                        currentStep++;
-                        if (currentStep >= totalSteps) {
-                            let expiry = Date.now() + (5 * 60 * 1000);
-                            localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
-                            unlockedCount++;
-                            localStorage.setItem('unlockedCount', unlockedCount);
-                            updateLocalStatsUI();
-                            db.collection("users").doc(currentUser.id.toString()).update({
-                                unlockedCount: unlockedCount,
-                                name: currentUser.name,
-                                photoUrl: currentUser.photoUrl
-                            }).catch(e => console.log(e));
-                        } else {
-                            localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep }));
-                        }
-                        updateDetailUnlockUI(vid);
-                    }
-                }, 1000);
-            } else {
-                // --- MODE 2: DIRECT AD + ANTI-SKIP TIMER VALIDATION WITH ALERT (OFF MODE) ---
-                let adUrlToOpen = window.globalMonetagUrl || window.globalAdsterraUrl || 'https://monetag.com';
-                let watchSuccessful = await enforceAdWatchTime(adUrlToOpen, adminSetWaitTime);
-                
-                if (!watchSuccessful) {
-                    // User returned too early! Do not unlock, show alert warning
-                    isAdFlowRunning = false;
-                    btn.classList.remove('waiting');
-                    updateDetailUnlockUI(vid);
-                    document.getElementById('warningWaitText').innerText = `আপনাকে সম্পূর্ণ ${adminSetWaitTime} সেকেন্ড ভিজিট করতে হবে। তাই আবার প্রথম থেকে "Watch Ad" বাটনে ক্লিক করুন!`;
-                    document.getElementById('adWarningOverlay').classList.add('active');
-                    return;
-                }
-                
-                // If step requires 2 ads
-                if (adsForThisStep === 2) {
-                    let secondWatch = await enforceAdWatchTime(adUrlToOpen, adminSetWaitTime);
-                    if (!secondWatch) {
-                        isAdFlowRunning = false;
-                        btn.classList.remove('waiting');
-                        updateDetailUnlockUI(vid);
-                        document.getElementById('warningWaitText').innerText = `আপনাকে সম্পূর্ণ ${adminSetWaitTime} সেকেন্ড ভিজিট করতে হবে। তাই আবার প্রথম থেকে "Watch Ad" বাটনে ক্লিক করুন!`;
-                        document.getElementById('adWarningOverlay').classList.add('active');
-                        return;
-                    }
-                }
+            // Trigger Ad 1 in Telegram
+            await triggerMonetagSdkAd();
 
-                // Completed full watch time -> Unlock button
-                btn.classList.remove('waiting');
-                isAdFlowRunning = false;
-                currentStep++;
-                if (currentStep >= totalSteps) {
-                    let expiry = Date.now() + (5 * 60 * 1000);
-                    localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
-                    unlockedCount++;
-                    localStorage.setItem('unlockedCount', unlockedCount);
-                    updateLocalStatsUI();
-                    db.collection("users").doc(currentUser.id.toString()).update({
-                        unlockedCount: unlockedCount,
-                        name: currentUser.name,
-                        photoUrl: currentUser.photoUrl
-                    }).catch(e => console.log(e));
+            // Button countdown wait (e.g. 5s, 10s, 15s)
+            let waitSeconds = adminSetWaitTime;
+            btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
+            
+            let waitInterval = setInterval(async () => {
+                waitSeconds--;
+                if (waitSeconds > 0) {
+                    btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds}s`;
                 } else {
-                    localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep }));
-                }
-                updateDetailUnlockUI(vid);
-            }
-        }
+                    clearInterval(waitInterval);
 
-        function playSingleInAppAd(adIndex, totalAdsInStep) {
-            return new Promise((resolve) => {
-                adStepResolve = resolve;
-                const modal = document.getElementById('videoAdModal');
-                const stageLoading = document.getElementById('adStageLoading');
-                const stageCreative = document.getElementById('adStageCreative');
-                const stageWait = document.getElementById('adStageWait');
-                const loadTitle = document.getElementById('adStageLoadTitle');
-                const progressFill = document.getElementById('adProgressFillBar');
-                const progressText = document.getElementById('adActionBtnText');
-                const btnContainer = document.getElementById('adActionBtnContainer');
-                const closeBtn = document.getElementById('adCreativeCloseBtn');
-
-                modal.classList.add('active');
-                stageWait.style.display = 'none';
-                stageCreative.style.display = 'none';
-                stageLoading.style.display = 'flex';
-                
-                loadTitle.innerText = adIndex === 1 ? "বিজ্ঞাপন লোড হচ্ছে..." : "চূড়ান্ত বিজ্ঞাপন লোড হচ্ছে...";
-
-                setTimeout(() => {
-                    stageLoading.style.display = 'none';
-                    stageCreative.style.display = 'flex';
-
-                    // Reset Progress Bar
-                    btnContainer.classList.remove('ad-join-btn-ready');
-                    window.adCanJoin = false;
-                    progressFill.style.width = '0%';
-                    progressText.innerText = '0%';
-                    closeBtn.style.opacity = '0.5';
-
-                    // Progressive loading: 0% -> 25% -> 50% -> 75% -> 100%
-                    setTimeout(() => { progressFill.style.width = '25%'; progressText.innerText = '25%'; }, 900);
-                    setTimeout(() => { progressFill.style.width = '50%'; progressText.innerText = '50%'; }, 2000);
-                    setTimeout(() => { progressFill.style.width = '75%'; progressText.innerText = '75%'; }, 3200);
-                    setTimeout(() => {
-                        progressFill.style.width = '100%';
-                        progressText.innerHTML = 'Join Now! 👆';
-                        btnContainer.classList.add('ad-join-btn-ready');
-                        window.adCanJoin = true;
-                        closeBtn.style.opacity = '1';
-                    }, 4500);
-                }, 1200);
-            });
-        }
-
-        function onAdJoinClick() {
-            if (window.adCanJoin) {
-                openExternalLink(window.globalMonetagUrl || window.globalAdsterraUrl);
-            }
-        }
-
-        function onAdCloseClick() {
-            if (adStepResolve) {
-                let res = adStepResolve;
-                adStepResolve = null;
-                res();
-            }
-        }
-
-        function playAdWaitTransition(seconds) {
-            return new Promise((resolve) => {
-                const stageLoading = document.getElementById('adStageLoading');
-                const stageCreative = document.getElementById('adStageCreative');
-                const stageWait = document.getElementById('adStageWait');
-                const waitTitle = document.getElementById('adWaitTitle');
-
-                stageLoading.style.display = 'none';
-                stageCreative.style.display = 'none';
-                stageWait.style.display = 'flex';
-
-                let count = seconds;
-                waitTitle.innerText = `অপেক্ষা করুন ${count} সেকেন্ড ⏳`;
-
-                let intv = setInterval(() => {
-                    count--;
-                    if (count > 0) {
-                        waitTitle.innerText = `অপেক্ষা করুন ${count} সেকেন্ড ⏳`;
+                    // If step requires 2 ads -> Trigger 2nd Ad and countdown
+                    if (adsForThisStep === 2) {
+                        btnText.innerHTML = `<span class="premium-btn-spinner"></span> ২য় বিজ্ঞাপন লোড হচ্ছে...`;
+                        await triggerMonetagSdkAd();
+                        
+                        let waitSeconds2 = adminSetWaitTime;
+                        btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds2}s`;
+                        let waitInterval2 = setInterval(() => {
+                            waitSeconds2--;
+                            if (waitSeconds2 > 0) {
+                                btnText.innerHTML = `<span class="premium-btn-spinner"></span> অপেক্ষা করুন ${waitSeconds2}s`;
+                            } else {
+                                clearInterval(waitInterval2);
+                                finishUnlockStep(vid, currentStep, totalSteps, btn);
+                            }
+                        }, 1000);
                     } else {
-                        clearInterval(intv);
-                        stageWait.style.display = 'none';
-                        resolve();
+                        finishUnlockStep(vid, currentStep, totalSteps, btn);
                     }
-                }, 1000);
-            });
+                }
+            }, 1000);
+        }
+
+        function finishUnlockStep(vid, currentStep, totalSteps, btn) {
+            btn.classList.remove('waiting');
+            isAdFlowRunning = false;
+            currentStep++;
+            if (currentStep >= totalSteps) {
+                let expiry = Date.now() + (5 * 60 * 1000);
+                localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
+                unlockedCount++;
+                localStorage.setItem('unlockedCount', unlockedCount);
+                updateLocalStatsUI();
+                db.collection("users").doc(currentUser.id.toString()).update({
+                    unlockedCount: unlockedCount,
+                    name: currentUser.name,
+                    photoUrl: currentUser.photoUrl
+                }).catch(e => console.log(e));
+            } else {
+                localStorage.setItem('vidProgress_' + vid.id, JSON.stringify({ step: currentStep }));
+            }
+            updateDetailUnlockUI(vid);
         }
 
         function toggleSearch() { 
@@ -4350,7 +4016,6 @@
         }
 
         function saveSettings() {
-            const is5SecAdOn = document.getElementById('toggle5SecAdSystem') ? document.getElementById('toggle5SecAdSystem').checked : false;
             const isLiveUsersOn = document.getElementById('toggleLiveUsersShow') ? document.getElementById('toggleLiveUsersShow').checked : true;
             
             // Clean channels list
@@ -4370,7 +4035,6 @@
                 supportName: document.getElementById('sSupportName').value,
                 supportUrl: document.getElementById('sSupportUrl').value,
                 tutorialUrl: document.getElementById('sTutorial').value || document.getElementById('sTutorialUrlInput').value,
-                use5SecAdSystem: is5SecAdOn,
                 showLiveUsers: isLiveUsersOn,
                 channels: cleanChannels
             }, {merge: true}).then(() => alert("Settings Saved Successfully! ✅"));
@@ -4563,35 +4227,54 @@
             const overlay = document.getElementById(id);
             if(!overlay) return;
             const isFullPage = overlay.classList.contains('full-screen-page');
-
+            
             document.querySelectorAll('.overlay').forEach(el => {
                 if (el.id !== id) {
-                    if (isFullPage || el.classList.contains('full-screen-page')) {
-                        el.classList.remove('active');
-                    }
-                    if (el.querySelector('.bottom-sheet') && !el.classList.contains('full-screen-page')) {
-                        el.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
+                    el.classList.remove('active');
+                    if (el.querySelector('.bottom-sheet')) {
+                        el.querySelector('.bottom-sheet').style.transform = '';
                     }
                 }
             });
-
+            
             overlay.classList.add('active');
-            if (!isFullPage && overlay.querySelector('.bottom-sheet')) {
+            overlay.scrollTop = 0;
+            
+            if (id === 'sidebarOverlay') {
+                const sheet = overlay.querySelector('.bottom-sheet');
+                if (sheet) {
+                    sheet.style.transform = 'translateX(0)';
+                }
+            } else if (!isFullPage && overlay.querySelector('.bottom-sheet')) {
+                const sheet = overlay.querySelector('.bottom-sheet');
+                sheet.style.transform = 'translateY(100%)';
                 setTimeout(() => {
-                    overlay.querySelector('.bottom-sheet').style.transform = 'translateY(0)';
+                    sheet.style.transform = 'translateY(0)';
                 }, 10);
             }
         }
 
         function closeOverlay(e, id) {
-            if (e && e.target !== e.currentTarget) return;
+            if (e && e.target !== e.currentTarget && !e.target.closest('.close-btn')) return;
             const overlay = document.getElementById(id);
             if(!overlay) return;
+            
             if (overlay.classList.contains('full-screen-page')) {
                 switchTab('home');
                 return;
             }
-            if(overlay.querySelector('.bottom-sheet')) overlay.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
+            
+            if (id === 'sidebarOverlay') {
+                const sheet = overlay.querySelector('.bottom-sheet');
+                if (sheet) sheet.style.transform = 'translateX(-100%)';
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                }, 300);
+                return;
+            }
+
+            const sheet = overlay.querySelector('.bottom-sheet');
+            if(sheet) sheet.style.transform = 'translateY(100%)';
             setTimeout(() => {
                 overlay.classList.remove('active');
             }, 250);
