@@ -1800,6 +1800,23 @@
             color: #cbd5e1;
             line-height: 1.4;
         }
+
+        /* --- Mini App Slide Down Exit Animation (Mobile Back Button Style) --- */
+        @keyframes miniAppSlideDownAnim {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        .miniapp-slide-down-exit {
+            animation: miniAppSlideDownAnim 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
+            overflow: hidden !important;
+            pointer-events: none !important;
+        }
     
         /* =======================================================
            🌟 ENHANCED LUXURY UI & LIVE ANIMATIONS 🌟
@@ -3787,22 +3804,84 @@
 
         function openExternalLink(url) {
             try {
+                if (!url) return;
                 if (url.includes('t.me') || url.includes('telegram.me')) {
-                    tg.openTelegramLink(url);
+                    if (tg && typeof tg.openTelegramLink === 'function') {
+                        tg.openTelegramLink(url);
+                    } else {
+                        window.location.href = url;
+                    }
                 } else {
-                    tg.openLink(url, { try_instant_view: false });
+                    if (tg && typeof tg.openLink === 'function') {
+                        tg.openLink(url, { try_instant_view: false });
+                    } else {
+                        window.open(url, '_blank');
+                    }
                 }
-                setTimeout(() => { tg.collapse(); }, 300); 
             } catch (e) {
-                window.location.href = url;
+                if (url) window.location.href = url;
             }
         }
 
         function watchVideoAction(vidId, targetUrl) {
-            openExternalLink(targetUrl);
-            db.collection("videos").doc(vidId).update({ watchClicks: firebase.firestore.FieldValue.increment(1) }).catch(e => console.log(e));
-            db.collection("settings").doc("app_stats").set({ totalWatches: firebase.firestore.FieldValue.increment(1) }, { merge: true }).catch(e => console.log(e));
-            saveToWatchHistory(vidId);
+            if (!targetUrl || targetUrl === '#' || targetUrl.trim() === '') {
+                if (typeof showToast === 'function') showToast("ভিডিও লিংক পাওয়া যায়নি!", "error");
+                return;
+            }
+
+            let cleanUrl = targetUrl.trim();
+            // টেলিগ্রাম বটের লিঙ্ক নিখুঁত ফরম্যাট করা
+            if (cleanUrl.startsWith('@')) {
+                cleanUrl = 'https://t.me/' + cleanUrl.slice(1);
+            } else if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://') && !cleanUrl.startsWith('tg://')) {
+                if (cleanUrl.startsWith('t.me/') || cleanUrl.startsWith('telegram.me/')) {
+                    cleanUrl = 'https://' + cleanUrl;
+                }
+            }
+
+            // মোবাইল থেকে ব্যাক বাটনে ক্লিক করলে যেভাবে মিনি অ্যাপ নিচে নেমে যায়, সেভাবে স্মুথ স্লাইড-ডাউন ইফেক্ট
+            try {
+                document.body.classList.add('miniapp-slide-down-exit');
+            } catch (e) {}
+
+            // বটের ভিডিও লিংক ওপেন করা
+            try {
+                if (cleanUrl.includes('t.me') || cleanUrl.includes('telegram.me') || cleanUrl.startsWith('tg://')) {
+                    if (tg && typeof tg.openTelegramLink === 'function') {
+                        tg.openTelegramLink(cleanUrl);
+                    } else {
+                        window.location.href = cleanUrl;
+                    }
+                } else {
+                    if (tg && typeof tg.openLink === 'function') {
+                        tg.openLink(cleanUrl, { try_instant_view: false });
+                    } else {
+                        window.open(cleanUrl, '_blank');
+                    }
+                }
+            } catch (err) {
+                window.location.href = cleanUrl;
+            }
+
+            // অ্যাপ নিচে নেমে যাবে এবং বটের চ্যাটে নিয়ে আসবে
+            setTimeout(() => {
+                try {
+                    if (tg && typeof tg.close === 'function') {
+                        tg.close();
+                    } else if (tg && typeof tg.collapse === 'function') {
+                        tg.collapse();
+                    }
+                } catch(e) {}
+            }, 280);
+
+            // ভিউ ও স্ট্যাটস আপডেট
+            try {
+                if (vidId && typeof db !== 'undefined') {
+                    db.collection("videos").doc(vidId).update({ watchClicks: firebase.firestore.FieldValue.increment(1) }).catch(e => console.log(e));
+                    db.collection("settings").doc("app_stats").set({ totalWatches: firebase.firestore.FieldValue.increment(1) }, { merge: true }).catch(e => console.log(e));
+                    saveToWatchHistory(vidId);
+                }
+            } catch (e) {}
         }
 
         // ==========================================
@@ -5137,6 +5216,7 @@ function toggleLike(vidId) {
             btn.style.background = 'var(--success)';
             btn.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.4)';
             btn.disabled = false; 
+            btn.onclick = () => watchVideoAction(vidId, targetUrl);
             
             let timerDisplay = document.getElementById(`timer-${vidId}`);
             if(timerDisplay) timerDisplay.style.display = 'block';
@@ -5278,6 +5358,7 @@ function toggleLike(vidId) {
             btn.style.background = 'var(--success)';
             btn.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.4)';
             btn.disabled = false; 
+            btn.onclick = () => watchVideoAction(vidId, targetUrl);
             
             let timerDisplay = document.getElementById(`playerTimer-${vidId}`);
             if(timerDisplay) timerDisplay.style.display = 'block';
