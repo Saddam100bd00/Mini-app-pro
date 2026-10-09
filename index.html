@@ -1944,93 +1944,95 @@
             color: #ffd700;
         }
 
-        /* --- All Video {X} + Right Side Search Engine --- */
+        /* --- All Video {X} + Right Side Search Engine (Ultra Compact & Clean) --- */
         .all-videos-and-search-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            margin: 6px 12px 14px 12px;
-            padding: 8px 12px;
-            background: rgba(24, 20, 38, 0.7);
-            border: 1px solid rgba(124, 58, 237, 0.22);
-            border-radius: 16px;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(10px);
+            gap: 8px;
+            margin: 4px 12px 10px 12px;
+            padding: 5px 10px;
+            background: rgba(22, 18, 34, 0.65);
+            border: 1px solid rgba(124, 58, 237, 0.18);
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(8px);
         }
         .all-video-count-box {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
             flex-shrink: 0;
             padding: 2px 4px;
-            border-radius: 10px;
+            border-radius: 8px;
             transition: 0.2s;
         }
         .all-video-count-box:active { transform: scale(0.96); }
         .all-vid-icon-badge {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
             background: linear-gradient(135deg, #7c3aed, #9333ea);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #ffffff;
-            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.35);
+            box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3);
         }
-        .all-vid-icon-badge .material-symbols-rounded { font-size: 17px; }
+        .all-vid-icon-badge .material-symbols-rounded { font-size: 15px; }
         .all-vid-text-wrap {
             display: flex;
             align-items: baseline;
-            gap: 5px;
+            gap: 4px;
         }
         .all-vid-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 800;
             color: #ffffff;
             letter-spacing: 0.2px;
         }
         .all-vid-bracket-badge {
-            font-size: 12.5px;
+            font-size: 11px;
             font-weight: 900;
             color: #ffd700;
             background: rgba(245, 158, 11, 0.15);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            padding: 1px 7px;
-            border-radius: 8px;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            padding: 1px 5px;
+            border-radius: 6px;
         }
         .inline-search-engine-box {
-            flex: 1;
             display: flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(14, 11, 23, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 4px 8px 4px 10px;
-            max-width: 250px;
+            gap: 3px;
+            background: rgba(14, 11, 23, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2px 5px 2px 7px;
+            max-width: 105px;
+            width: auto;
             transition: all 0.25s ease;
         }
         .inline-search-engine-box:focus-within {
             border-color: #a855f7;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.35);
+            max-width: 130px;
+            box-shadow: 0 0 6px rgba(168, 85, 247, 0.35);
         }
         .inline-search-icon {
-            font-size: 17px;
+            font-size: 13px;
             color: #94a3b8;
         }
         .inline-search-input {
+            width: 40px;
             flex: 1;
-            min-width: 40px;
             background: transparent;
             border: none;
             outline: none;
             color: #ffffff;
-            font-size: 12px;
+            font-size: 10px;
+            padding: 0;
         }
-        .inline-search-input::placeholder { color: #64748b; }
+        .inline-search-input::placeholder { color: #64748b; font-size: 9.5px; }
         .inline-search-clear-btn {
             background: none;
             border: none;
@@ -2040,17 +2042,18 @@
             display: flex;
             align-items: center;
         }
-        .inline-search-clear-btn .material-symbols-rounded { font-size: 15px; }
+        .inline-search-clear-btn .material-symbols-rounded { font-size: 12px; }
         .inline-sort-select {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
             color: #cbd5e1;
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 700;
-            padding: 3px 6px;
+            padding: 1px 3px;
             outline: none;
             cursor: pointer;
+            height: 18px;
         }
 
         /* --- Free Unlocks Available Home Banner --- */
@@ -3510,6 +3513,36 @@
                 <div class="input-group"><label>1 Year Price</label><input type="text" id="p1y" placeholder="e.g. 900 BDT"></div>
             </div>
             
+            <!-- Category Management System (Add/Edit Name/Delete Categories) -->
+            <div style="background:var(--bg-dark); padding:16px; border-radius:14px; border:1px solid var(--primary-accent); margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <div>
+                        <h4 style="color:var(--primary-accent); font-size:15px; margin:0; display:flex; align-items:center; gap:6px;">
+                            <span class="material-symbols-rounded">category</span> Category Management
+                        </h4>
+                        <span style="font-size:11px; color:var(--text-muted);">ক্যাটাগরি যোগ করুন, নাম পরিবর্তন ও ডিলিট করুন</span>
+                    </div>
+                    <button class="ripple-btn" onclick="openCategoryFormModal()" style="background:linear-gradient(135deg, #7c3aed, #9333ea); color:white; border:none; padding:6px 12px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
+                        <span class="material-symbols-rounded" style="font-size:16px;">add_circle</span> Add Category
+                    </button>
+                </div>
+                
+                <div id="adminCategoriesListContainer" style="max-height:220px; overflow-y:auto; padding-right:4px;">
+                    <!-- Categories rendered dynamically -->
+                </div>
+            </div>
+
+            <!-- Inline Category Edit/Add Form (Toggleable) -->
+            <div id="categoryFormBox" style="display:none; background:rgba(28, 24, 43, 0.95); border:1px solid var(--primary-accent); padding:14px; border-radius:14px; margin-bottom:16px;">
+                <h4 style="color:var(--warning); margin-bottom:10px; font-size:14px;" id="categoryFormTitle">Add New Category</h4>
+                <input type="hidden" id="editingCategoryId" value="">
+                <div class="input-group"><label>Category Name</label><input type="text" id="categoryInputName" placeholder="Enter category name..."></div>
+                <div style="display:flex; gap:10px; margin-top:12px;">
+                    <button class="btn-submit ripple-btn" style="flex:1; background:var(--success);" onclick="saveCategoryFromForm()"><span class="material-symbols-rounded">check</span> Save Category</button>
+                    <button class="btn-submit ripple-btn" style="flex:1; background:var(--text-muted);" onclick="closeCategoryForm()"><span class="material-symbols-rounded">close</span> Cancel</button>
+                </div>
+            </div>
+            
             <!-- Official Channels Manager (Add/Edit/Delete 8-10 Channels) -->
             <div style="background:var(--bg-dark); padding:16px; border-radius:14px; border:1px solid var(--primary-light); margin-bottom:16px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -3999,51 +4032,110 @@
         function goToPremiumFromPromo() { closePromo(); openOverlay('premiumOverlay'); }
         function closePremiumCongrats() { document.getElementById('premiumCongratsOverlay').classList.remove('active'); }
 
-        db.collection("videos").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-            isVideosLoading = false; allVideos = [];
-            snapshot.forEach((doc) => {
-                let data = doc.data(); data.id = doc.id; 
-                if(!data.photo && (data.thumbnail || data.banner || data.image)) {
-                    data.photo = data.thumbnail || data.banner || data.image;
-                }
-                if(!data.views) data.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
-                if(!data.likes) data.likes = Math.floor(Math.random() * 200 + 50);
-                allVideos.push(data);
-            });
-            document.getElementById('totalVidCount').innerText = allVideos.length;
+        let videosUnsubscribe = null;
+        function loadVideosFeed() {
+            isVideosLoading = true;
             renderVideos();
-            if(currentUser.id === ADMIN_ID) renderAdminVideoManageList();
+            if (videosUnsubscribe) {
+                try { videosUnsubscribe(); } catch(e) {}
+            }
 
-            // Auto-trigger video player & unlock screen if opened via Telegram "Watch Video" button
-            if (window.pendingDeepLinkVideoId && !window.videoAutoOpened) {
-                let targetId = window.pendingDeepLinkVideoId;
-                let matchedVid = allVideos.find(v => v.id === targetId || v.shortCode === targetId || (v.id && v.id.toLowerCase() === targetId.toLowerCase()));
-                if (matchedVid) {
-                    window.videoAutoOpened = true;
-                    setTimeout(() => {
-                        openVideoPlayer(matchedVid.id);
-                    }, 350);
-                } else if (targetId) {
-                    db.collection("videos").doc(targetId).get().then(doc => {
-                        if (doc.exists) {
-                            let vData = doc.data(); vData.id = doc.id;
-                            if (!allVideos.some(v => v.id === vData.id)) {
-                                allVideos.unshift(vData);
-                                document.getElementById('totalVidCount').innerText = allVideos.length;
-                            }
-                            window.videoAutoOpened = true;
-                            setTimeout(() => {
-                                openVideoPlayer(vData.id);
-                            }, 350);
+            // Query videos directly so Firestore never drops documents lacking timestamp field
+            videosUnsubscribe = db.collection("videos").onSnapshot((snapshot) => {
+                isVideosLoading = false; 
+                allVideos = [];
+                snapshot.forEach((doc) => {
+                    let data = doc.data() || {}; 
+                    data.id = doc.id; 
+                    data.title = data.title || data.name || data.caption || data.video_title || 'Exclusive Video';
+                    data.photo = data.photo || data.thumbnail || data.banner || data.image || data.banner_url || data.thumbnail_url || data.poster || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+                    data.category = data.category || data.cat || 'General';
+                    data.adUrl = data.adUrl || data.url || data.targetUrl || data.link || data.share_link || '#';
+                    data.adCount = parseInt(data.adCount) || 2;
+                    if(!data.views) data.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
+                    if(!data.likes) data.likes = Math.floor(Math.random() * 200 + 50);
+                    allVideos.push(data);
+                });
+
+                // Client-side sort by timestamp/date/createdAt
+                allVideos.sort((a, b) => {
+                    let getSeconds = (v) => {
+                        if (!v) return 0;
+                        if (v.timestamp && typeof v.timestamp.seconds === 'number') return v.timestamp.seconds;
+                        if (v.timestamp instanceof Date) return Math.floor(v.timestamp.getTime() / 1000);
+                        if (typeof v.timestamp === 'number') return v.timestamp > 1e11 ? Math.floor(v.timestamp / 1000) : v.timestamp;
+                        if (typeof v.timestamp === 'string') {
+                            let parsed = Date.parse(v.timestamp);
+                            if (!isNaN(parsed)) return Math.floor(parsed / 1000);
                         }
-                    }).catch(e => console.log("Deep link video fetch:", e));
-                }
-            }
+                        if (v.createdAt && typeof v.createdAt.seconds === 'number') return v.createdAt.seconds;
+                        return 0;
+                    };
+                    return getSeconds(b) - getSeconds(a);
+                });
 
-            if (!window.promoShown && !currentUser.isPremium) {
-                window.promoShown = true; setTimeout(showPremiumPromo, 1500); 
+                let totalBadge = document.getElementById('totalVidCountBadge');
+                if (totalBadge) totalBadge.innerText = `{${allVideos.length}}`;
+                let totalCountEl = document.getElementById('totalVidCount');
+                if (totalCountEl) totalCountEl.innerText = allVideos.length;
+
+                renderVideos();
+                if(currentUser && currentUser.id === ADMIN_ID) renderAdminVideoManageList();
+
+                // Auto-trigger video player & unlock screen if opened via Telegram "Watch Video" button
+                if (window.pendingDeepLinkVideoId && !window.videoAutoOpened) {
+                    let targetId = window.pendingDeepLinkVideoId;
+                    let matchedVid = allVideos.find(v => v.id === targetId || v.shortCode === targetId || (v.id && v.id.toLowerCase() === targetId.toLowerCase()));
+                    if (matchedVid) {
+                        window.videoAutoOpened = true;
+                        setTimeout(() => {
+                            openVideoPlayer(matchedVid.id);
+                        }, 350);
+                    } else if (targetId) {
+                        db.collection("videos").doc(targetId).get().then(doc => {
+                            if (doc.exists) {
+                                let vData = doc.data() || {}; vData.id = doc.id;
+                                vData.title = vData.title || vData.name || 'Exclusive Video';
+                                vData.photo = vData.photo || vData.thumbnail || vData.banner || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+                                if (!allVideos.some(v => v.id === vData.id)) {
+                                    allVideos.unshift(vData);
+                                    if (totalCountEl) totalCountEl.innerText = allVideos.length;
+                                    if (totalBadge) totalBadge.innerText = `{${allVideos.length}}`;
+                                }
+                                window.videoAutoOpened = true;
+                                setTimeout(() => {
+                                    openVideoPlayer(vData.id);
+                                }, 350);
+                            }
+                        }).catch(e => console.log("Deep link video fetch:", e));
+                    }
+                }
+
+                if (!window.promoShown && !currentUser.isPremium) {
+                    window.promoShown = true; setTimeout(showPremiumPromo, 1500); 
+                }
+            }, (error) => {
+                console.error("Firestore onSnapshot videos error:", error);
+                isVideosLoading = false;
+                renderVideos();
+            });
+        }
+
+        // Initialize listener
+        loadVideosFeed();
+
+        // Safety timeout so user is never stuck on skeleton loading if offline or slow
+        setTimeout(() => {
+            if (isVideosLoading) {
+                isVideosLoading = false;
+                renderVideos();
             }
-        });
+        }, 3500);
+
+        function refreshVideosFeed() {
+            loadVideosFeed();
+            if (typeof showToast === 'function') showToast("ভিডিও ফিড রিফ্রেশ হচ্ছে...", "sync");
+        }
 
         db.collection("notifications").orderBy("timestamp", "desc").onSnapshot(snap => {
             allNotis = []; let html = ""; let dotInd = document.getElementById('notiDotIndicator');
@@ -4112,6 +4204,20 @@
                     document.getElementById('sSupportName').value = d.supportName || ""; document.getElementById('sSupportUrl').value = d.supportUrl || "";
                     document.getElementById('ch1Name').value = d.ch1Name || ""; document.getElementById('ch1Desc').value = d.ch1Desc || ""; document.getElementById('ch1Url').value = d.ch1Url || "";
                     document.getElementById('ch2Name').value = d.ch2Name || ""; document.getElementById('ch2Desc').value = d.ch2Desc || ""; document.getElementById('ch2Url').value = d.ch2Url || "";
+                }
+
+                if (d.categories && Array.isArray(d.categories) && d.categories.length > 0) {
+                    appCategories = d.categories;
+                    localStorage.setItem('appCategories', JSON.stringify(appCategories));
+                    renderCategoryPills();
+                    renderCategorySelectOptions();
+                    renderAdminCategoriesList();
+                    updateCategoryCounts();
+                } else {
+                    renderCategoryPills();
+                    renderCategorySelectOptions();
+                    renderAdminCategoriesList();
+                    updateCategoryCounts();
                 }
 
                 if (d.channels && Array.isArray(d.channels) && d.channels.length > 0) {
@@ -4193,8 +4299,19 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         function renderVideos() {
             const feed = document.getElementById('videoFeed');
+            if (!feed) return;
             updateCategoryCounts();
             
             let rCount = (currentUser && currentUser.referralCount) ? currentUser.referralCount : 0;
@@ -4232,16 +4349,30 @@
             let filtered = currentCategory === 'All' 
                 ? allVideos 
                 : (currentCategory === 'SAVED' 
-                    ? allVideos.filter(v => favorites.some(f => f.id === v.id)) 
-                    : allVideos.filter(v => v.category === currentCategory));
+                    ? allVideos.filter(v => (favorites || []).some(f => f && f.id === v.id)) 
+                    : allVideos.filter(v => (v.category || '').toLowerCase().trim() === currentCategory.toLowerCase().trim()));
             
             let searchQ = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase().trim() : '';
-            if (searchQ) filtered = filtered.filter(v => v.title.toLowerCase().includes(searchQ));
+            if (searchQ) filtered = filtered.filter(v => (v.title || '').toLowerCase().includes(searchQ));
             let sortVal = document.getElementById('sortFilter') ? document.getElementById('sortFilter').value : 'latest';
             if (sortVal === 'popular') {
-                filtered.sort((a,b) => (b.views || 0) - (a.views || 0));
+                filtered.sort((a,b) => (parseInt(b.views) || 0) - (parseInt(a.views) || 0));
             } else {
-                filtered.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                filtered.sort((a,b) => {
+                    let getSeconds = (v) => {
+                        if (!v) return 0;
+                        if (v.timestamp && typeof v.timestamp.seconds === 'number') return v.timestamp.seconds;
+                        if (v.timestamp instanceof Date) return Math.floor(v.timestamp.getTime() / 1000);
+                        if (typeof v.timestamp === 'number') return v.timestamp > 1e11 ? Math.floor(v.timestamp / 1000) : v.timestamp;
+                        if (typeof v.timestamp === 'string') {
+                            let parsed = Date.parse(v.timestamp);
+                            if (!isNaN(parsed)) return Math.floor(parsed / 1000);
+                        }
+                        if (v.createdAt && typeof v.createdAt.seconds === 'number') return v.createdAt.seconds;
+                        return 0;
+                    };
+                    return getSeconds(b) - getSeconds(a);
+                });
             }
 
             if (!isVideosLoading && filtered.length === 0) {
@@ -4254,7 +4385,23 @@
                             <p style="font-size:12.5px; color:var(--text-muted); margin-top:6px;">ভিডিও কার্ডের হার্ট ♥️ আইকনে ক্লিক করে সহজে পছন্দের ভিডিও সেভ করে রাখুন।</p>
                         </div>`;
                 } else {
-                    feed.innerHTML = `<div style="text-align: center; padding: 50px 20px; color: var(--text-muted);"><span class="material-symbols-rounded" style="font-size: 48px; margin-bottom: 10px; opacity: 0.5;">videocam_off</span><br>কোনো ভিডিও পাওয়া যায়নি!</div>`;
+                    feed.innerHTML = `
+                        <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                            <span class="material-symbols-rounded" style="font-size: 50px; margin-bottom: 12px; opacity: 0.7; color: var(--primary-light);">videocam_off</span>
+                            <br>
+                            <b style="font-size:16px; color:var(--text-light);">কোনো ভিডিও পাওয়া যায়নি!</b>
+                            <p style="font-size:12.5px; color:var(--text-muted); margin-top:6px; max-width:320px; margin-left:auto; margin-right:auto;">
+                                আপনি যদি নতুন ভিডিও কার্ড এড করে থাকেন, ক্যাটাগরি "All" চাপুন অথবা রিফ্রেশ বাটনে ক্লিক করুন।
+                            </p>
+                            <div style="margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                                <button class="primary-btn ripple-btn" style="width:auto; padding:8px 18px; font-size:12.5px; border-radius:20px;" onclick="setCategory('All', document.querySelector('.category-pill'))">
+                                    <span class="material-symbols-rounded" style="font-size:16px; vertical-align:middle; margin-right:4px;">apps</span> All Videos (${allVideos.length})
+                                </button>
+                                <button class="secondary-btn ripple-btn" style="width:auto; padding:8px 18px; font-size:12.5px; border-radius:20px;" onclick="refreshVideosFeed()">
+                                    <span class="material-symbols-rounded" style="font-size:16px; vertical-align:middle; margin-right:4px;">refresh</span> রিফ্রেশ করুন
+                                </button>
+                            </div>
+                        </div>`;
                 }
                 return;
             }
@@ -4322,14 +4469,14 @@
                                     ${popVids.map(pv => `
                                         <div class="video-grid-card ripple-btn" onclick="openVideoPlayer('${pv.id}')" style="background:rgba(20, 16, 32, 0.9);">
                                             <div class="grid-thumb-box" style="aspect-ratio:16/9;">
-                                                <img src="${pv.photo}" class="grid-thumb-img" alt="${pv.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180?text=Video';">
+                                                <img src="${pv.photo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80'}" class="grid-thumb-img" alt="Thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180?text=Video';">
                                                 <div class="thumb-play-btn" style="width:34px; height:34px;"><span class="material-symbols-rounded" style="font-size:20px;">play_arrow</span></div>
                                             </div>
                                             <div class="grid-card-info" style="padding:6px;">
-                                                <h4 class="grid-card-title" style="font-size:11.5px; min-height:28px;">${pv.title}</h4>
+                                                <h4 class="grid-card-title" style="font-size:11.5px; min-height:28px;">${escapeHtml(pv.title || 'Video')}</h4>
                                                 <div class="grid-card-views">
                                                     <span class="material-symbols-rounded">visibility</span>
-                                                    <span>${pv.views || 0}</span>
+                                                    <span>${pv.views || '10K'}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -4339,18 +4486,21 @@
                         `;
                     }
 
-                    let isVidSaved = favorites.some(f => f.id === activeVid.id);
+                    let isVidSaved = (favorites || []).some(f => f && f.id === activeVid.id);
+                    let activeSafePhoto = activeVid.photo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+                    let activeSafeTitle = escapeHtml(activeVid.title || 'Exclusive Video');
+                    let activeSafeCat = escapeHtml(activeVid.category || 'General');
 
                     htmlOutput += `
                         <div class="active-player-wrapper" id="activePlayerBox">
                             <div class="player-hero-banner" onclick="handleUnlockStepPlayer('${activeVid.id}', '${targetUrl}', ${activeVid.adCount})">
-                                <span class="player-banner-cat">💜 ${activeVid.category}</span>
+                                <span class="player-banner-cat">💜 ${activeSafeCat}</span>
                                 <span class="player-banner-views"><span class="material-symbols-rounded" style="font-size:14px; color:var(--success);">visibility</span> ${activeVid.views || 0} ভিউ</span>
-                                <img src="${activeVid.photo}" class="${thumbClass}" alt="Thumbnail" onerror="this.src='https://via.placeholder.com/600x350?text=Video+Thumbnail';">
+                                <img src="${activeSafePhoto}" class="${thumbClass}" alt="Thumbnail" onerror="this.src='https://via.placeholder.com/600x350?text=Video+Thumbnail';">
                                 <div class="player-play-icon"><span class="material-symbols-rounded">play_arrow</span></div>
                             </div>
 
-                            <h2 class="player-title">${activeVid.title}</h2>
+                            <h2 class="player-title">${activeSafeTitle}</h2>
                             <p class="player-subtitle">প্রিমিয়াম কনটেন্ট - আনলক করতে বিজ্ঞাপন দেখুন 🔥🙈💃</p>
 
                             <!-- 3 Stats Cards -->
@@ -4364,7 +4514,7 @@
                                     <span class="player-stat-label">বিজ্ঞাপন</span>
                                 </div>
                                 <div class="player-stat-card">
-                                    <span class="player-stat-val" style="font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${activeVid.category}</span>
+                                    <span class="player-stat-val" style="font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${activeSafeCat}</span>
                                     <span class="player-stat-label">ক্যাটেগরি</span>
                                 </div>
                             </div>
@@ -4388,11 +4538,11 @@
                             <!-- Quick Action Buttons -->
                             <div class="player-actions-row">
                                 <button class="player-action-btn ripple-btn" onclick="closeVideoPlayer()"><span class="material-symbols-rounded">home</span> হোম</button>
-                                <button class="player-action-btn ripple-btn ${isVidSaved ? 'saved' : ''}" id="playerSaveBtn-${activeVid.id}" onclick="toggleSaveVideo('${activeVid.id}', '${activeVid.title.replace(/'/g, "\'")}', '${activeVid.photo}', event)">
+                                <button class="player-action-btn ripple-btn ${isVidSaved ? 'saved' : ''}" id="playerSaveBtn-${activeVid.id}" onclick="toggleSaveVideo('${activeVid.id}', '', '', event)">
                                     <span class="material-symbols-rounded" style="${isVidSaved ? 'color:#ef4444;' : ''}">${isVidSaved ? 'favorite' : 'favorite_border'}</span>
                                     <span>${isVidSaved ? 'সেভ করা ♥️' : 'সেভ করুন ♥️'}</span>
                                 </button>
-                                <button class="player-action-btn ripple-btn" onclick="openShareDialog('${activeVid.id}', '${activeVid.title.replace(/'/g, "\'")}')"><span class="material-symbols-rounded">share</span> শেয়ার</button>
+                                <button class="player-action-btn ripple-btn" onclick="openShareDialog('${activeVid.id}', '')"><span class="material-symbols-rounded">share</span> শেয়ার</button>
                             </div>
 
                             <!-- Popular Videos Under Player -->
@@ -4411,7 +4561,7 @@
             filtered.forEach(vid => {
                 let savedState = JSON.parse(localStorage.getItem('vidProgress_' + vid.id)) || { step: 0, unlockedUntil: 0 };
                 let isUnlocked = (savedState.unlockedUntil > Date.now()) || currentUser.isPremium;
-                let isSaved = favorites.some(f => f.id === vid.id);
+                let isSaved = (favorites || []).some(f => f && f.id === vid.id);
                 let thumbClass = isDataSaver ? "grid-thumb-img thumb-blur" : "grid-thumb-img";
                 let uploadDateStr = getRelativeTime(vid.timestamp);
 
@@ -4425,27 +4575,31 @@
                 }
 
                 let saveBtnHtml = `
-                    <button class="grid-save-btn ripple-btn ${isSaved ? 'saved' : ''} save-btn-${vid.id}" onclick="toggleSaveVideo('${vid.id}', '${vid.title.replace(/'/g, "\'")}', '${vid.photo}', event)" title="${isSaved ? 'রিমুভ করুন' : 'সেভ করুন'}">
+                    <button class="grid-save-btn ripple-btn ${isSaved ? 'saved' : ''} save-btn-${vid.id}" onclick="toggleSaveVideo('${vid.id}', '', '', event)" title="${isSaved ? 'রিমুভ করুন' : 'সেভ করুন'}">
                         <span class="material-symbols-rounded">${isSaved ? 'favorite' : 'favorite_border'}</span>
                     </button>
                 `;
+
+                let safePhoto = vid.photo || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+                let safeTitle = escapeHtml(vid.title || 'Exclusive Video');
+                let safeCat = escapeHtml(vid.category || 'General');
 
                 htmlOutput += `
                     <div class="video-grid-card ripple-btn" onclick="openVideoPlayer('${vid.id}')" id="card-${vid.id}">
                         <div class="grid-thumb-box">
                             ${lockBadgeHtml}
                             ${saveBtnHtml}
-                            <img src="${vid.photo}" class="${thumbClass}" alt="Thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180?text=Video';">
+                            <img src="${safePhoto}" class="${thumbClass}" alt="Thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180?text=Video';">
                             <div class="thumb-play-btn"><span class="material-symbols-rounded">play_arrow</span></div>
                         </div>
                         <div class="grid-card-info">
-                            <h4 class="grid-card-title">${vid.title}</h4>
+                            <h4 class="grid-card-title">${safeTitle}</h4>
                             <div>
                                 <div class="grid-card-meta">
-                                    <span class="grid-card-cat">${vid.category || 'General'}</span>
+                                    <span class="grid-card-cat">${safeCat}</span>
                                     <div class="grid-card-views">
                                         <span class="material-symbols-rounded">visibility</span>
-                                        <span>${vid.views || 0}</span>
+                                        <span>${vid.views || '10K'}</span>
                                     </div>
                                 </div>
                                 <div class="grid-card-time">
@@ -4495,7 +4649,12 @@ function toggleLike(vidId) {
         function setCategory(cat, btn) { document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active')); btn.classList.add('active'); currentCategory = cat; renderVideos(); }
         function filterVideos() { renderVideos(); }
         function navSwitch(btn) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); btn.classList.add('active'); }
-        function openShareDialog(vidId, title) { currentShareVid = vidId; currentShareTitle = title; openOverlay('shareOverlay'); }
+        function openShareDialog(vidId, title = '') { 
+            currentShareVid = vidId; 
+            let v = (allVideos || []).find(x => x.id === vidId);
+            currentShareTitle = title || (v ? v.title : 'Exclusive Video'); 
+            openOverlay('shareOverlay'); 
+        }
 
         // ==========================================
         // DYNAMIC AD FLOW & ANTI-SKIP VALIDATION
@@ -5367,25 +5526,26 @@ function toggleLike(vidId) {
         // ==========================================
         function updateCategoryCounts() {
             if (!allVideos) return;
-            let counts = {
-                'All': allVideos.length,
-                'SAVED': (favorites || []).length,
-                'VIRAL': allVideos.filter(v => v.category === 'VIRAL').length,
-                'EXposed': allVideos.filter(v => (v.category || '').toLowerCase().includes('exposed')).length,
-                'Hot': allVideos.filter(v => (v.category || '').toLowerCase().includes('hot')).length,
-                'PREMIUM': allVideos.filter(v => (v.category || '').toLowerCase().includes('premium')).length,
-                'EXclusive': allVideos.filter(v => (v.category || '').toLowerCase().includes('exclusive')).length
-            };
-            for (let cat in counts) {
-                let el = document.getElementById('catCount-' + cat);
-                if (el) el.innerText = counts[cat];
+            let allEl = document.getElementById('catCount-All');
+            if (allEl) allEl.innerText = allVideos.length;
+            let savedEl = document.getElementById('catCount-SAVED');
+            if (savedEl) savedEl.innerText = (favorites || []).length;
+
+            if (typeof appCategories !== 'undefined' && Array.isArray(appCategories)) {
+                appCategories.forEach(c => {
+                    let count = allVideos.filter(v => (v.category || '').toLowerCase().trim() === c.name.toLowerCase().trim()).length;
+                    let bId = 'catCount-' + (c.id || c.name.replace(/[^a-zA-Z0-9]/g, '_'));
+                    let badge = document.getElementById(bId);
+                    if (badge) badge.innerText = count;
+                });
             }
+
             let totalBadge = document.getElementById('totalVidCountBadge');
             if (totalBadge) totalBadge.innerText = `{${allVideos.length}}`;
             let totalEl = document.getElementById('totalVidCount');
             if (totalEl) totalEl.innerText = allVideos.length;
             let savedBadge = document.getElementById('savedVidCountBadge');
-            if (savedBadge) savedBadge.innerText = counts['SAVED'];
+            if (savedBadge) savedBadge.innerText = (favorites || []).length;
         }
 
         function clearSearchInput() {
@@ -5549,6 +5709,167 @@ function toggleLike(vidId) {
             if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 80 });
             renderVideos();
         }
+
+        // ==========================================
+        // 📁 DYNAMIC CATEGORIES MANAGER 📁
+        // ==========================================
+        let defaultCategories = [
+            { id: 'cat_viral', name: 'VIRAL' },
+            { id: 'cat_exposed', name: 'EXposed 🌵' },
+            { id: 'cat_hot', name: '🔥 Hot 🔥' },
+            { id: 'cat_premium', name: 'PREMIUM 🌟' },
+            { id: 'cat_exclusive', name: 'EXclusive' }
+        ];
+
+        let appCategories = JSON.parse(localStorage.getItem('appCategories')) || defaultCategories;
+
+        function renderCategoryPills() {
+            let container = document.getElementById('categoryContainer');
+            if (!container) return;
+            let html = `
+                <div class="category-pill ripple-btn ${currentCategory === 'All' ? 'active' : ''}" onclick="setCategory('All', this)"><span>All</span> <span class="cat-count-badge" id="catCount-All">0</span></div>
+                <div class="category-pill ripple-btn ${currentCategory === 'SAVED' ? 'active' : ''}" onclick="setCategory('SAVED', this)"><span class="material-symbols-rounded" style="font-size:13px; color:#f59e0b;">bookmark</span><span>Saved</span> <span class="cat-count-badge" id="catCount-SAVED">0</span></div>
+            `;
+            appCategories.forEach(c => {
+                let isActive = currentCategory.toLowerCase().trim() === c.name.toLowerCase().trim();
+                let bId = 'catCount-' + (c.id || c.name.replace(/[^a-zA-Z0-9]/g, '_'));
+                html += `
+                    <div class="category-pill ripple-btn ${isActive ? 'active' : ''}" onclick="setCategory('${c.name.replace(/'/g, "\\'")}', this)">
+                        <span>${c.name}</span> <span class="cat-count-badge" id="${bId}">0</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderCategorySelectOptions() {
+            let sel = document.getElementById('vCategory');
+            if (!sel) return;
+            let currentVal = sel.value;
+            let html = '';
+            appCategories.forEach(c => {
+                html += `<option value="${c.name}">${c.name}</option>`;
+            });
+            sel.innerHTML = html;
+            if (currentVal) sel.value = currentVal;
+        }
+
+        function renderAdminCategoriesList() {
+            let container = document.getElementById('adminCategoriesListContainer');
+            if (!container) return;
+            if (appCategories.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:10px;">কোনো ক্যাটাগরি তৈরি করা হয়নি। উপরের "Add Category" এ ক্লিক করুন।</p>';
+                return;
+            }
+            let html = '';
+            appCategories.forEach((cat, idx) => {
+                html += `
+                    <div class="admin-ch-item">
+                        <div style="display:flex; align-items:center; gap:10px; overflow:hidden;">
+                            <span class="material-symbols-rounded" style="color:#c084fc; font-size:20px;">category</span>
+                            <div style="overflow:hidden;">
+                                <b style="color:#fff; font-size:13px; display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${idx + 1}. ${cat.name}</b>
+                            </div>
+                        </div>
+                        <div class="admin-ch-actions">
+                            <button class="admin-icon-btn edit-btn" onclick="openCategoryFormModal('${cat.id}')" title="Edit Name"><span class="material-symbols-rounded" style="font-size:16px;">edit</span></button>
+                            <button class="admin-icon-btn delete-btn" onclick="deleteCategory('${cat.id}')" title="Delete"><span class="material-symbols-rounded" style="font-size:16px;">delete</span></button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function openCategoryFormModal(catId = null) {
+            let box = document.getElementById('categoryFormBox');
+            if (!box) return;
+            box.style.display = 'block';
+            let titleEl = document.getElementById('categoryFormTitle');
+            let idInp = document.getElementById('editingCategoryId');
+            let nameInp = document.getElementById('categoryInputName');
+            if (catId) {
+                let existing = appCategories.find(c => c.id === catId);
+                if (existing) {
+                    titleEl.innerText = "Edit Category Name";
+                    idInp.value = existing.id;
+                    nameInp.value = existing.name;
+                }
+            } else {
+                titleEl.innerText = "Add New Category";
+                idInp.value = "";
+                nameInp.value = "";
+            }
+            box.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeCategoryForm() {
+            let box = document.getElementById('categoryFormBox');
+            if (box) box.style.display = 'none';
+        }
+
+        function saveCategoryFromForm() {
+            let id = document.getElementById('editingCategoryId').value;
+            let name = document.getElementById('categoryInputName').value.trim();
+            if (!name) {
+                alert("Please enter a category name!");
+                return;
+            }
+            if (id) {
+                let idx = appCategories.findIndex(c => c.id === id);
+                if (idx !== -1) {
+                    let oldName = appCategories[idx].name;
+                    appCategories[idx].name = name;
+                    if (currentCategory.toLowerCase() === oldName.toLowerCase()) {
+                        currentCategory = name;
+                    }
+                }
+            } else {
+                if (appCategories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+                    alert("This category already exists!");
+                    return;
+                }
+                appCategories.push({
+                    id: 'cat_' + Date.now(),
+                    name: name
+                });
+            }
+            localStorage.setItem('appCategories', JSON.stringify(appCategories));
+            renderCategoryPills();
+            renderCategorySelectOptions();
+            renderAdminCategoriesList();
+            updateCategoryCounts();
+            closeCategoryForm();
+            db.collection("settings").doc("app_settings").set({
+                categories: appCategories
+            }, { merge: true }).then(() => {
+                alert("Category Saved Successfully!");
+            }).catch(e => console.log(e));
+        }
+
+        function deleteCategory(catId) {
+            let existing = appCategories.find(c => c.id === catId);
+            if (!existing) return;
+            if (!confirm(`Are you sure you want to delete category "${existing.name}"?`)) return;
+            appCategories = appCategories.filter(c => c.id !== catId);
+            if (currentCategory.toLowerCase() === existing.name.toLowerCase()) {
+                currentCategory = 'All';
+            }
+            localStorage.setItem('appCategories', JSON.stringify(appCategories));
+            renderCategoryPills();
+            renderCategorySelectOptions();
+            renderAdminCategoriesList();
+            updateCategoryCounts();
+            renderVideos();
+            db.collection("settings").doc("app_settings").set({
+                categories: appCategories
+            }, { merge: true }).catch(e => console.log(e));
+        }
+
+        // Initialize Category UI
+        renderCategoryPills();
+        renderCategorySelectOptions();
+        renderAdminCategoriesList();
 
         // ==========================================
         // 📢 OFFICIAL CHANNELS MANAGER (8-10 CHANNELS) 📢
