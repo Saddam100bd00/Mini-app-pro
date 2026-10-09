@@ -3822,6 +3822,20 @@
             });
         });
 
+        // Global deep link check for Telegram Mini App and Web
+        let globalStartParam = (tg.initDataUnsafe && tg.initDataUnsafe.start_param) ? tg.initDataUnsafe.start_param : '';
+        if (!globalStartParam) {
+            const uParams = new URLSearchParams(window.location.search);
+            globalStartParam = uParams.get('startapp') || uParams.get('tgWebAppStartParam') || '';
+        }
+        if (globalStartParam) {
+            if (globalStartParam.startsWith('vid_') || globalStartParam.startsWith('v_') || globalStartParam.startsWith('post_')) {
+                window.pendingDeepLinkVideoId = globalStartParam.replace(/^(vid_|v_|post_)/, '');
+            } else if (globalStartParam.startsWith('ref_')) {
+                window.pendingReferralId = globalStartParam.replace('ref_', '');
+            }
+        }
+
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             currentUser.id = tg.initDataUnsafe.user.id;
             currentUser.name = tg.initDataUnsafe.user.first_name;
@@ -3989,6 +4003,9 @@
             isVideosLoading = false; allVideos = [];
             snapshot.forEach((doc) => {
                 let data = doc.data(); data.id = doc.id; 
+                if(!data.photo && (data.thumbnail || data.banner || data.image)) {
+                    data.photo = data.thumbnail || data.banner || data.image;
+                }
                 if(!data.views) data.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
                 if(!data.likes) data.likes = Math.floor(Math.random() * 200 + 50);
                 allVideos.push(data);
@@ -3996,6 +4013,33 @@
             document.getElementById('totalVidCount').innerText = allVideos.length;
             renderVideos();
             if(currentUser.id === ADMIN_ID) renderAdminVideoManageList();
+
+            // Auto-trigger video player & unlock screen if opened via Telegram "Watch Video" button
+            if (window.pendingDeepLinkVideoId && !window.videoAutoOpened) {
+                let targetId = window.pendingDeepLinkVideoId;
+                let matchedVid = allVideos.find(v => v.id === targetId || v.shortCode === targetId || (v.id && v.id.toLowerCase() === targetId.toLowerCase()));
+                if (matchedVid) {
+                    window.videoAutoOpened = true;
+                    setTimeout(() => {
+                        openVideoPlayer(matchedVid.id);
+                    }, 350);
+                } else if (targetId) {
+                    db.collection("videos").doc(targetId).get().then(doc => {
+                        if (doc.exists) {
+                            let vData = doc.data(); vData.id = doc.id;
+                            if (!allVideos.some(v => v.id === vData.id)) {
+                                allVideos.unshift(vData);
+                                document.getElementById('totalVidCount').innerText = allVideos.length;
+                            }
+                            window.videoAutoOpened = true;
+                            setTimeout(() => {
+                                openVideoPlayer(vData.id);
+                            }, 350);
+                        }
+                    }).catch(e => console.log("Deep link video fetch:", e));
+                }
+            }
+
             if (!window.promoShown && !currentUser.isPremium) {
                 window.promoShown = true; setTimeout(showPremiumPromo, 1500); 
             }
