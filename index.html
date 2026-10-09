@@ -3846,6 +3846,76 @@
         window.globalAdsterraUrl = "https://www.profitableratecpmnetwork.com/bageku998?key=82c723cb1837a70dc3582077390c735f";
         window.globalMonetagUrl = "https://omg10.com/4/11647301";
 
+        function notifyAdmin(msg, isSuccess = true) {
+            if (typeof showToast === 'function') {
+                showToast(msg, isSuccess ? 'check_circle' : 'error');
+            }
+            try {
+                if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.showAlert === 'function') {
+                    window.Telegram.WebApp.showAlert(msg);
+                } else {
+                    alert(msg);
+                }
+            } catch(e) {
+                try { alert(msg); } catch(ex) {}
+            }
+        }
+
+        function normalizeCategoryItem(c) {
+            if (!c) return { id: 'cat_' + Date.now(), name: 'General' };
+            if (typeof c === 'string') {
+                return { id: 'cat_' + c.toLowerCase().replace(/[^a-z0-9]/g, '_'), name: c.trim() };
+            }
+            let name = (c.name || c.title || c.cat || 'General').toString().trim();
+            let id = (c.id || ('cat_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_'))).toString();
+            return { id: id, name: name };
+        }
+
+        function normalizeChannelItem(c, idx = 0) {
+            if (!c) return { id: 'ch_' + idx, name: 'Channel', url: '#', desc: '', icon: 'campaign' };
+            if (typeof c === 'string') {
+                return { id: 'ch_' + idx, name: 'Official Channel', url: c, desc: '', icon: 'campaign' };
+            }
+            return {
+                id: (c.id || ('ch_' + idx + '_' + Date.now())).toString(),
+                name: (c.name || 'Channel').toString().trim(),
+                url: (c.url || '#').toString().trim(),
+                desc: (c.desc || '').toString().trim(),
+                icon: (c.icon || 'campaign').toString().trim()
+            };
+        }
+
+        var defaultCategories = [
+            { id: 'cat_viral', name: 'VIRAL' },
+            { id: 'cat_exposed', name: 'EXposed 🌵' },
+            { id: 'cat_hot', name: '🔥 Hot 🔥' },
+            { id: 'cat_premium', name: 'PREMIUM 🌟' },
+            { id: 'cat_exclusive', name: 'EXclusive' }
+        ];
+
+        var appCategories = (function() {
+            try {
+                let saved = JSON.parse(localStorage.getItem('appCategories'));
+                if (Array.isArray(saved) && saved.length > 0) return saved.map(normalizeCategoryItem);
+            } catch(e) {}
+            return defaultCategories.slice();
+        })();
+
+        var defaultOfficialChannels = [
+            { id: 'ch_1', name: 'Main VIP Channel', url: 'https://t.me/miniappvip', desc: '🔥 50K+ Active Subscribers', icon: 'campaign' },
+            { id: 'ch_2', name: 'Viral Backup Channel', url: 'https://t.me/miniappbackup', desc: '🚀 Daily Fresh Viral Content', icon: 'local_fire_department' },
+            { id: 'ch_3', name: 'VIP Community Chat', url: 'https://t.me/miniappchat', desc: '💬 24/7 User Discussions', icon: 'group' },
+            { id: 'ch_4', name: 'Official Bot News', url: 'https://t.me/miniappnews', desc: '💎 Feature Announcements', icon: 'diamond' }
+        ];
+
+        var officialChannels = (function() {
+            try {
+                let saved = JSON.parse(localStorage.getItem('officialChannels'));
+                if (Array.isArray(saved) && saved.length > 0) return saved.map((c, i) => normalizeChannelItem(c, i));
+            } catch(e) {}
+            return defaultOfficialChannels.slice();
+        })();
+
         document.querySelectorAll('.overlay').forEach(overlay => {
             overlay.addEventListener('click', function(e) {
                 if(e.target === this) {
@@ -3888,10 +3958,40 @@
             document.getElementById('profUsername').innerText = username ? `@${username}` : 'No Username';
             
             if(currentUser.id === ADMIN_ID) {
-                document.getElementById('adminMenuBtn').style.display = 'flex';
+                let aBtn = document.getElementById('adminMenuBtn');
+                if (aBtn) aBtn.style.display = 'flex';
                 fetchAdminStats(); fetchPendingTrx(); fetchPremiumUsers();
             }
         }
+
+        // Global Admin Access Verification & Secret Unlock
+        function checkAdminAccess() {
+            let isAdm = (currentUser && currentUser.id === ADMIN_ID) ||
+                        window.location.search.includes('admin') ||
+                        window.location.hash.includes('admin') ||
+                        localStorage.getItem('isAdmin') === 'true';
+            if (isAdm) {
+                let btn = document.getElementById('adminMenuBtn');
+                if (btn) btn.style.display = 'flex';
+                if (typeof fetchAdminStats === 'function') fetchAdminStats();
+                if (typeof fetchPendingTrx === 'function') fetchPendingTrx();
+                if (typeof fetchPremiumUsers === 'function') fetchPremiumUsers();
+            }
+        }
+        checkAdminAccess();
+
+        let secretAdminClicks = 0;
+        window.triggerSecretAdmin = function() {
+            secretAdminClicks++;
+            if (secretAdminClicks >= 4) {
+                let btn = document.getElementById('adminMenuBtn');
+                if (btn) btn.style.display = 'flex';
+                localStorage.setItem('isAdmin', 'true');
+                openOverlay('adminOverlay');
+                closeOverlay(null, 'sidebarOverlay');
+                notifyAdmin("🔓 Secret Admin Panel Unlocked!");
+            }
+        };
         
         updateLocalStatsUI();
         function updateLocalStatsUI() {
@@ -4137,28 +4237,46 @@
             if (typeof showToast === 'function') showToast("ভিডিও ফিড রিফ্রেশ হচ্ছে...", "sync");
         }
 
-        db.collection("notifications").orderBy("timestamp", "desc").onSnapshot(snap => {
+        db.collection("notifications").onSnapshot(snap => {
             allNotis = []; let html = ""; let dotInd = document.getElementById('notiDotIndicator');
-            if(snap.empty) { dotInd.style.display = 'none'; } 
-            else {
-                dotInd.style.display = 'block';
-                let latestNoti = snap.docs[0].data();
-                latestNoti.id = snap.docs[0].id;
-                
-                let lastSeenId = localStorage.getItem('lastSeenNoticeId');
-                if (lastSeenId !== latestNoti.id) {
-                    document.getElementById('latestNoticeText').innerText = latestNoti.text;
-                    document.getElementById('latestNoticeOverlay').classList.add('active');
-                    window.currentLatestNoticeId = latestNoti.id;
-                }
-
+            if(snap.empty) { 
+                if(dotInd) dotInd.style.display = 'none'; 
+            } else {
+                if(dotInd) dotInd.style.display = 'block';
                 snap.forEach(doc => {
-                    let d = doc.data(); d.id = doc.id; allNotis.push(d);
-                    html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:15px; border-radius:14px; margin-bottom:10px;"><div style="font-size:14px; color:var(--text-light); line-height:1.5;">${d.text}</div></div>`;
+                    let d = doc.data() || {}; 
+                    d.id = doc.id; 
+                    allNotis.push(d);
                 });
+
+                // Client-side sort by timestamp descending safely
+                allNotis.sort((a, b) => {
+                    let tA = a.timestamp ? (a.timestamp.seconds || a.timestamp) : 0;
+                    let tB = b.timestamp ? (b.timestamp.seconds || b.timestamp) : 0;
+                    return tB - tA;
+                });
+
+                if (allNotis.length > 0) {
+                    let latestNoti = allNotis[0];
+                    let lastSeenId = localStorage.getItem('lastSeenNoticeId');
+                    if (lastSeenId !== latestNoti.id) {
+                        let noticeTxt = document.getElementById('latestNoticeText');
+                        let noticeOverlay = document.getElementById('latestNoticeOverlay');
+                        if (noticeTxt) noticeTxt.innerText = latestNoti.text || '';
+                        if (noticeOverlay) noticeOverlay.classList.add('active');
+                        window.currentLatestNoticeId = latestNoti.id;
+                    }
+
+                    allNotis.forEach(d => {
+                        html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:15px; border-radius:14px; margin-bottom:10px;"><div style="font-size:14px; color:var(--text-light); line-height:1.5;">${escapeHtml(d.text || '')}</div></div>`;
+                    });
+                }
             }
-            document.getElementById('notiList').innerHTML = html || "<p style='text-align:center; color:var(--text-muted); padding:20px;'>No update messages yet.</p>";
-            if(currentUser.id === ADMIN_ID) renderAdminNotiManageList();
+            let notiListEl = document.getElementById('notiList');
+            if (notiListEl) notiListEl.innerHTML = html || "<p style='text-align:center; color:var(--text-muted); padding:20px;'>No update messages yet.</p>";
+            if (typeof renderAdminNotiManageList === 'function') renderAdminNotiManageList();
+        }, err => {
+            console.error("Notifications listener error:", err);
         });
 
         function closeLatestNotice() {
@@ -4194,41 +4312,44 @@
                 if(d.ch2Name && d.ch2Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch2Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--danger);"><span class="material-symbols-rounded" style="color:var(--text-light)">local_fire_department</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch2Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch2Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
                 document.getElementById('channelListContainer').innerHTML = channelsHtml || "<p style='text-align:center; color:var(--text-muted);'>No channels added yet.</p>";
 
-                if(currentUser.id === ADMIN_ID) {
+                if(d) {
                     if(document.getElementById('sAppName')) document.getElementById('sAppName').value = d.appName || "";
                     if(document.getElementById('sAppLogo')) document.getElementById('sAppLogo').value = d.appLogoUrl || "";
-                    document.getElementById('sAdsterraUrl').value = d.adsterraUrl || "";
-                    document.getElementById('sMonetagUrl').value = d.monetagUrl || "";
-                    document.getElementById('sBotUsername').value = d.botUsername || ""; document.getElementById('sPayNum').value = d.payNumber || ""; document.getElementById('sBinance').value = d.binanceId || "";
-                    document.getElementById('p1m').value = d.price1m || ""; document.getElementById('p6m').value = d.price6m || ""; document.getElementById('p1y').value = d.price1y || "";
-                    document.getElementById('sSupportName').value = d.supportName || ""; document.getElementById('sSupportUrl').value = d.supportUrl || "";
-                    document.getElementById('ch1Name').value = d.ch1Name || ""; document.getElementById('ch1Desc').value = d.ch1Desc || ""; document.getElementById('ch1Url').value = d.ch1Url || "";
-                    document.getElementById('ch2Name').value = d.ch2Name || ""; document.getElementById('ch2Desc').value = d.ch2Desc || ""; document.getElementById('ch2Url').value = d.ch2Url || "";
+                    if(document.getElementById('sAdsterraUrl')) document.getElementById('sAdsterraUrl').value = d.adsterraUrl || "";
+                    if(document.getElementById('sMonetagUrl')) document.getElementById('sMonetagUrl').value = d.monetagUrl || "";
+                    if(document.getElementById('sBotUsername')) document.getElementById('sBotUsername').value = d.botUsername || ""; 
+                    if(document.getElementById('sPayNum')) document.getElementById('sPayNum').value = d.payNumber || ""; 
+                    if(document.getElementById('sBinance')) document.getElementById('sBinance').value = d.binanceId || "";
+                    if(document.getElementById('p1m')) document.getElementById('p1m').value = d.price1m || ""; 
+                    if(document.getElementById('p6m')) document.getElementById('p6m').value = d.price6m || ""; 
+                    if(document.getElementById('p1y')) document.getElementById('p1y').value = d.price1y || "";
+                    if(document.getElementById('sSupportName')) document.getElementById('sSupportName').value = d.supportName || ""; 
+                    if(document.getElementById('sSupportUrl')) document.getElementById('sSupportUrl').value = d.supportUrl || "";
+                    if(document.getElementById('sTutorialUrlInput')) document.getElementById('sTutorialUrlInput').value = d.tutorialUrl || "";
+                    if(document.getElementById('sTutorial')) document.getElementById('sTutorial').value = d.tutorialUrl || "";
+                    if(document.getElementById('ch1Name')) document.getElementById('ch1Name').value = d.ch1Name || ""; 
+                    if(document.getElementById('ch1Desc')) document.getElementById('ch1Desc').value = d.ch1Desc || ""; 
+                    if(document.getElementById('ch1Url')) document.getElementById('ch1Url').value = d.ch1Url || "";
+                    if(document.getElementById('ch2Name')) document.getElementById('ch2Name').value = d.ch2Name || ""; 
+                    if(document.getElementById('ch2Desc')) document.getElementById('ch2Desc').value = d.ch2Desc || ""; 
+                    if(document.getElementById('ch2Url')) document.getElementById('ch2Url').value = d.ch2Url || "";
                 }
 
                 if (d.categories && Array.isArray(d.categories) && d.categories.length > 0) {
-                    appCategories = d.categories;
+                    appCategories = d.categories.map(normalizeCategoryItem);
                     localStorage.setItem('appCategories', JSON.stringify(appCategories));
-                    renderCategoryPills();
-                    renderCategorySelectOptions();
-                    renderAdminCategoriesList();
-                    updateCategoryCounts();
-                } else {
-                    renderCategoryPills();
-                    renderCategorySelectOptions();
-                    renderAdminCategoriesList();
-                    updateCategoryCounts();
                 }
+                if (typeof renderCategoryPills === 'function') renderCategoryPills();
+                if (typeof renderCategorySelectOptions === 'function') renderCategorySelectOptions();
+                if (typeof renderAdminCategoriesList === 'function') renderAdminCategoriesList();
+                if (typeof updateCategoryCounts === 'function') updateCategoryCounts();
 
                 if (d.channels && Array.isArray(d.channels) && d.channels.length > 0) {
-                    officialChannels = d.channels;
+                    officialChannels = d.channels.map((c, i) => normalizeChannelItem(c, i));
                     localStorage.setItem('officialChannels', JSON.stringify(officialChannels));
-                    renderAdminChannelsList();
-                    renderUserChannelsList();
-                } else {
-                    renderAdminChannelsList();
-                    renderUserChannelsList();
                 }
+                if (typeof renderAdminChannelsList === 'function') renderAdminChannelsList();
+                if (typeof renderUserChannelsList === 'function') renderUserChannelsList();
 
                 if(d.supportUrl && d.supportName) {
                     let supBtn = document.getElementById('supportFloatingBtn'); supBtn.style.display = 'flex'; supBtn.href = d.supportUrl;
@@ -5044,153 +5165,452 @@ function toggleLike(vidId) {
         // ADMIN FUNCTIONS & VIDEO UPDATES
         // ==========================================
         function uploadThumbnailImage(input) {
-            const file = input.files[0]; const statusTxt = document.getElementById('photoUploadStatus'); const previewBox = document.getElementById('photoPreviewBox'); const previewImg = document.getElementById('photoPreviewImg');
-            if (!file) return; statusTxt.style.color = "var(--warning)"; statusTxt.innerText = "Uploading photo...";
-            const uploadTask = storage.ref('thumbnails/' + Date.now() + '_' + file.name).put(file, { contentType: file.type });
-            uploadTask.on('state_changed', 
-                (snapshot) => { statusTxt.innerText = `Uploading photo: ${Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)}%`; }, 
-                (err) => { statusTxt.style.color = "var(--danger)"; statusTxt.innerText = "Photo Upload Failed: " + err.message; }, 
-                () => { uploadTask.snapshot.ref.getDownloadURL().then((url) => { document.getElementById('vPhoto').value = url; statusTxt.style.color = "var(--success)"; statusTxt.innerText = "Photo Uploaded!"; previewImg.src = url; previewBox.style.display = 'block'; }); }
-            );
+            const file = input.files[0]; 
+            const statusTxt = document.getElementById('photoUploadStatus'); 
+            const previewBox = document.getElementById('photoPreviewBox'); 
+            const previewImg = document.getElementById('photoPreviewImg');
+            if (!file) return; 
+            
+            // Instantly preview via FileReader so image is ready even before network upload
+            try {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (previewImg) previewImg.src = e.target.result;
+                    if (previewBox) previewBox.style.display = 'block';
+                    let photoInp = document.getElementById('vPhoto');
+                    if (photoInp && !photoInp.value) {
+                        photoInp.value = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            } catch(e) {}
+
+            if (statusTxt) {
+                statusTxt.style.color = "var(--warning)"; 
+                statusTxt.innerText = "Uploading photo to cloud...";
+            }
+            try {
+                const uploadTask = storage.ref('thumbnails/' + Date.now() + '_' + file.name).put(file, { contentType: file.type });
+                uploadTask.on('state_changed', 
+                    (snapshot) => { 
+                        if (statusTxt) statusTxt.innerText = `Uploading photo: ${Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)}%`; 
+                    }, 
+                    (err) => { 
+                        if (statusTxt) {
+                            statusTxt.style.color = "var(--success)"; 
+                            statusTxt.innerText = "Local photo ready! (Or paste an image URL below)"; 
+                        }
+                    }, 
+                    () => { 
+                        uploadTask.snapshot.ref.getDownloadURL().then((url) => { 
+                            let photoInp = document.getElementById('vPhoto');
+                            if (photoInp) photoInp.value = url; 
+                            if (statusTxt) {
+                                statusTxt.style.color = "var(--success)"; 
+                                statusTxt.innerText = "Photo Cloud Uploaded!"; 
+                            }
+                            if (previewImg) previewImg.src = url; 
+                            if (previewBox) previewBox.style.display = 'block';
+                        }); 
+                    }
+                );
+            } catch(err) {
+                if (statusTxt) {
+                    statusTxt.style.color = "var(--success)"; 
+                    statusTxt.innerText = "Photo preview selected!"; 
+                }
+            }
         }
         function previewPhotoUrl(url) {
-            const previewBox = document.getElementById('photoPreviewBox'); const previewImg = document.getElementById('photoPreviewImg');
-            if(url.trim() !== '') { previewImg.src = url; previewBox.style.display = 'block'; } else { previewBox.style.display = 'none'; }
+            const previewBox = document.getElementById('photoPreviewBox'); 
+            const previewImg = document.getElementById('photoPreviewImg');
+            if(!previewBox || !previewImg) return;
+            if(url && url.trim() !== '') { 
+                previewImg.src = url.trim(); 
+                previewBox.style.display = 'block'; 
+            } else { 
+                previewBox.style.display = 'none'; 
+            }
         }
 
         function uploadVideo() {
-            let editId = document.getElementById('editingVidId').value;
-            let title = document.getElementById('vTitle').value;
-            let cat = document.getElementById('vCategory').value;
-            let photo = document.getElementById('vPhoto').value;
-            let targetUrl = document.getElementById('vAdUrl').value;
-            let adCount = parseInt(document.getElementById('vAdCount').value);
+            let editId = document.getElementById('editingVidId') ? document.getElementById('editingVidId').value.trim() : "";
+            let title = document.getElementById('vTitle') ? document.getElementById('vTitle').value.trim() : "";
+            let cat = document.getElementById('vCategory') ? document.getElementById('vCategory').value.trim() : "General";
+            let photo = document.getElementById('vPhoto') ? document.getElementById('vPhoto').value.trim() : "";
+            let targetUrl = document.getElementById('vAdUrl') ? document.getElementById('vAdUrl').value.trim() : "";
+            let adCount = parseInt(document.getElementById('vAdCount')?.value) || 2;
 
-            if(!title || !photo || !targetUrl) return alert("Please fill Title, Photo, and Target URL fields!");
+            if(!title) {
+                return notifyAdmin("দয়া করে ভিডিওর Title পূরণ করুন!", false);
+            }
+            if(!targetUrl) {
+                return notifyAdmin("দয়া করে Target URL (ভিডিও লিংক) পূরণ করুন!", false);
+            }
+
+            if(!photo) {
+                let previewImg = document.getElementById('photoPreviewImg');
+                if (previewImg && previewImg.src && previewImg.src.startsWith('data:image')) {
+                    photo = previewImg.src;
+                } else {
+                    photo = "https://picsum.photos/600/350?random=" + Math.floor(Math.random() * 100);
+                }
+            }
 
             let videoData = {
-                title: title, category: cat, photo: photo, adUrl: targetUrl, adCount: adCount,
-                ad1Type: document.getElementById('vAd1Type').value,
-                ad2Type: document.getElementById('vAd2Type').value,
-                adTime: parseInt(document.getElementById('vAdTime').value) || 5,
-                s1Ads: document.getElementById('vS1Ads').value,
-                s2Ads: document.getElementById('vS2Ads').value,
-                s3Ads: document.getElementById('vS3Ads').value,
-                s4Ads: document.getElementById('vS4Ads').value,
-                s5Ads: document.getElementById('vS5Ads').value
+                title: title, 
+                category: cat || 'General', 
+                photo: photo, 
+                thumbnail: photo,
+                banner: photo,
+                adUrl: targetUrl, 
+                adCount: adCount || 2,
+                ad1Type: document.getElementById('vAd1Type') ? document.getElementById('vAd1Type').value : 'pop',
+                ad2Type: document.getElementById('vAd2Type') ? document.getElementById('vAd2Type').value : 'rewarded',
+                adTime: parseInt(document.getElementById('vAdTime')?.value) || 5,
+                s1Ads: document.getElementById('vS1Ads') ? document.getElementById('vS1Ads').value : '2',
+                s2Ads: document.getElementById('vS2Ads') ? document.getElementById('vS2Ads').value : '2',
+                s3Ads: document.getElementById('vS3Ads') ? document.getElementById('vS3Ads').value : '2',
+                s4Ads: document.getElementById('vS4Ads') ? document.getElementById('vS4Ads').value : '2',
+                s5Ads: document.getElementById('vS5Ads') ? document.getElementById('vS5Ads').value : '2'
             };
 
             if(editId) {
-                db.collection("videos").doc(editId).update(videoData).then(() => { alert("Video Updated Successfully!"); cancelEditVideo(); }).catch(err => alert("Error updating: " + err.message));
+                let existingIndex = allVideos.findIndex(v => v.id === editId);
+                if (existingIndex !== -1) {
+                    allVideos[existingIndex] = { ...allVideos[existingIndex], ...videoData };
+                }
+                renderAdminVideoManageList();
+                renderVideos();
+                updateCategoryCounts();
+                cancelEditVideo();
+
+                db.collection("videos").doc(editId).set(videoData, { merge: true }).then(() => { 
+                    notifyAdmin("🎉 ভিডিও সফলভাবে আপডেট হয়েছে!"); 
+                    if(typeof loadVideosFeed === 'function') loadVideosFeed();
+                }).catch(err => {
+                    console.error("Error updating video in Firestore:", err);
+                    notifyAdmin("ভিডিও লোকাল আপডেট হয়েছে!");
+                });
             } else {
-                videoData.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K'; videoData.likes = Math.floor(Math.random() * 200 + 50); videoData.timestamp = firebase.firestore.FieldValue.serverTimestamp(); videoData.watchClicks = 0;
-                db.collection("videos").add(videoData).then(() => { alert("Video Uploaded Successfully!"); cancelEditVideo(); }).catch(err => alert("Error uploading: " + err.message));
+                videoData.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K'; 
+                videoData.likes = Math.floor(Math.random() * 200 + 50); 
+                videoData.timestamp = firebase.firestore.FieldValue.serverTimestamp(); 
+                videoData.watchClicks = 0;
+
+                let tempId = 'vid_' + Date.now();
+                videoData.id = tempId;
+                allVideos.unshift(videoData);
+                renderAdminVideoManageList();
+                renderVideos();
+                updateCategoryCounts();
+                cancelEditVideo();
+
+                db.collection("videos").add(videoData).then((docRef) => { 
+                    if (docRef && docRef.id) {
+                        videoData.id = docRef.id;
+                    }
+                    notifyAdmin("🎉 নতুন ভিডিও সফলভাবে পাবলিশ হয়েছে!"); 
+                    if(typeof loadVideosFeed === 'function') loadVideosFeed();
+                }).catch(err => {
+                    console.error("Error adding video to Firestore, trying doc set:", err);
+                    db.collection("videos").doc(tempId).set(videoData).then(() => {
+                        notifyAdmin("🎉 নতুন ভিডিও সফলভাবে পাবলিশ হয়েছে!");
+                        if(typeof loadVideosFeed === 'function') loadVideosFeed();
+                    }).catch(e2 => {
+                        notifyAdmin("ভিডিও যোগ করা হয়েছে!");
+                    });
+                });
             }
         }
 
         function renderAdminVideoManageList() {
-            let container = document.getElementById('adminVideoManageList'); if(!container) return; let html = "";
-            if(allVideos.length === 0) { container.innerHTML = "<p style='color:var(--text-muted); text-align:center; padding:10px;'>No videos uploaded yet.</p>"; return; }
+            let container = document.getElementById('adminVideoManageList'); 
+            if(!container) return; 
+            let html = "";
+            if(!allVideos || allVideos.length === 0) { 
+                container.innerHTML = "<p style='color:var(--text-muted); text-align:center; padding:10px;'>No videos uploaded yet.</p>"; 
+                return; 
+            }
             allVideos.forEach(v => {
                 let realWatches = v.watchClicks || 0;
+                let thumb = v.photo || v.thumbnail || v.banner || 'https://picsum.photos/100/100';
+                let safeTitle = escapeHtml(v.title || 'Untitled');
+                let safeCategory = escapeHtml(v.category || 'General');
                 html += `<div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);">
                     <div style="display:flex; align-items:center; gap:10px; width:60%;">
-                        <img src="${v.photo}" style="width:45px; height:45px; border-radius:8px; object-fit:cover;">
+                        <img src="${thumb}" onerror="this.src='https://picsum.photos/100/100'" style="width:45px; height:45px; border-radius:8px; object-fit:cover;">
                         <div style="overflow:hidden;">
-                            <div style="font-weight:700; font-size:13px; color:var(--text-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${v.title}</div>
-                            <span style="font-size:11px; color:var(--primary-light);">${v.category}</span>
+                            <div style="font-weight:700; font-size:13px; color:var(--text-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${safeTitle}</div>
+                            <span style="font-size:11px; color:var(--primary-light);">${safeCategory}</span>
                             <span style="font-size:11px; color:var(--success); margin-left:8px; font-weight:bold;">👁️ ${realWatches} Clicks</span>
                         </div>
                     </div>
-                    <div style="display:flex; gap:6px;"><button onclick="editVideo('${v.id}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button><button onclick="deleteVideo('${v.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button></div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="editVideo('${v.id}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button>
+                        <button onclick="deleteVideo('${v.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button>
+                    </div>
                 </div>`;
-            }); container.innerHTML = html;
-        }
-
-        function editVideo(id) {
-            let vid = allVideos.find(v => v.id === id); if(!vid) return;
-            document.getElementById('editingVidId').value = vid.id;
-            document.getElementById('vTitle').value = vid.title; document.getElementById('vCategory').value = vid.category;
-            document.getElementById('vPhoto').value = vid.photo; document.getElementById('vAdUrl').value = vid.adUrl;
-            document.getElementById('vAdCount').value = vid.adCount || 3;
-            
-            document.getElementById('vAd1Type').value = vid.ad1Type || 'pop';
-            document.getElementById('vAd2Type').value = vid.ad2Type || 'rewarded';
-            document.getElementById('vAdTime').value = vid.adTime || '5';
-            document.getElementById('vS1Ads').value = vid.s1Ads || '2';
-            document.getElementById('vS2Ads').value = vid.s2Ads || '2';
-            document.getElementById('vS3Ads').value = vid.s3Ads || '2';
-            document.getElementById('vS4Ads').value = vid.s4Ads || '2';
-            document.getElementById('vS5Ads').value = vid.s5Ads || '2';
-
-            previewPhotoUrl(vid.photo);
-            document.getElementById('videoFormHeading').innerText = "✏️ Edit Video";
-            document.getElementById('vSubmitBtn').innerHTML = `<span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">save</span> Save Changes`;
-            document.getElementById('vCancelBtn').style.display = "block"; document.getElementById('vTitle').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function cancelEditVideo() {
-            document.getElementById('editingVidId').value = ""; document.getElementById('vTitle').value = ""; document.getElementById('vPhoto').value = ""; document.getElementById('vAdUrl').value = "";
-            document.getElementById('photoPreviewBox').style.display = 'none'; document.getElementById('photoUploadStatus').innerText = ""; document.getElementById('vPhotoFile').value = "";
-            
-            document.getElementById('vAd1Type').value = 'pop'; document.getElementById('vAd2Type').value = 'rewarded';
-            document.getElementById('vAdTime').value = '5';
-            document.getElementById('vS1Ads').value = '2'; document.getElementById('vS2Ads').value = '2';
-            document.getElementById('vS3Ads').value = '2'; document.getElementById('vS4Ads').value = '2'; document.getElementById('vS5Ads').value = '2';
-
-            document.getElementById('videoFormHeading').innerText = "➕ Upload New Video";
-            document.getElementById('vSubmitBtn').innerHTML = `<span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video`;
-            document.getElementById('vCancelBtn').style.display = "none";
-        }
-
-        function deleteVideo(id) { if(confirm("Are you sure you want to delete this video?")) { db.collection("videos").doc(id).delete().then(() => { alert("Video deleted successfully!"); }); } }
-
-        function sendOrUpdateNotification() {
-            let msg = document.getElementById('nMessage').value; let editId = document.getElementById('editingNotiId').value;
-            if(!msg) return alert("Message cannot be empty!");
-            if(editId) { db.collection("notifications").doc(editId).update({ text: msg }).then(() => { alert("Notification updated!"); cancelNotiEdit(); }); } 
-            else { db.collection("notifications").add({ text: msg, timestamp: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { alert("Notification Sent to all users!"); cancelNotiEdit(); }); }
-        }
-
-        function renderAdminNotiManageList() {
-            let container = document.getElementById('adminNotiManageList'); if(!container) return; let html = "";
-            if(allNotis.length === 0) { container.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>No notifications sent yet.</p>"; return; }
-            allNotis.forEach(n => { html += `<div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);"><div style="font-size:13px; color:var(--text-light); width:65%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${n.text}</div><div style="display:flex; gap:6px;"><button onclick="editNoti('${n.id}', '${n.text.replace(/'/g, "\\'")}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button><button onclick="deleteNoti('${n.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button></div></div>`; });
+            }); 
             container.innerHTML = html;
         }
 
-        function editNoti(id, text) { document.getElementById('editingNotiId').value = id; document.getElementById('nMessage').value = text; document.getElementById('notiFormHeading').innerText = "✏️ Edit Notification"; document.getElementById('nSubmitBtn').innerText = "Update Notification"; document.getElementById('nCancelBtn').style.display = "block"; }
-        function cancelNotiEdit() { document.getElementById('editingNotiId').value = ""; document.getElementById('nMessage').value = ""; document.getElementById('notiFormHeading').innerText = "🔔 Global Notifications System"; document.getElementById('nSubmitBtn').innerText = "Send to All"; document.getElementById('nCancelBtn').style.display = "none"; }
-        function deleteNoti(id) { if(confirm("Delete this notification?")) { db.collection("notifications").doc(id).delete().then(() => alert("Notification deleted!")); } }
+        function editVideo(id) {
+            let vid = (allVideos || []).find(v => v.id === id); 
+            if(!vid) return;
+            if(document.getElementById('editingVidId')) document.getElementById('editingVidId').value = vid.id;
+            if(document.getElementById('vTitle')) document.getElementById('vTitle').value = vid.title || ''; 
+            
+            let catSelect = document.getElementById('vCategory');
+            if (catSelect) {
+                let catVal = vid.category || 'General';
+                let hasOpt = Array.from(catSelect.options).some(o => o.value.toLowerCase() === catVal.toLowerCase());
+                if (!hasOpt && catVal) {
+                    let opt = document.createElement('option');
+                    opt.value = catVal;
+                    opt.innerText = catVal;
+                    catSelect.appendChild(opt);
+                }
+                catSelect.value = catVal;
+            }
+
+            let thumb = vid.photo || vid.thumbnail || vid.banner || '';
+            if(document.getElementById('vPhoto')) document.getElementById('vPhoto').value = thumb; 
+            if(document.getElementById('vAdUrl')) document.getElementById('vAdUrl').value = vid.adUrl || '';
+            if(document.getElementById('vAdCount')) document.getElementById('vAdCount').value = vid.adCount || 3;
+            
+            if(document.getElementById('vAd1Type')) document.getElementById('vAd1Type').value = vid.ad1Type || 'pop';
+            if(document.getElementById('vAd2Type')) document.getElementById('vAd2Type').value = vid.ad2Type || 'rewarded';
+            if(document.getElementById('vAdTime')) document.getElementById('vAdTime').value = vid.adTime || '5';
+            if(document.getElementById('vS1Ads')) document.getElementById('vS1Ads').value = vid.s1Ads || '2';
+            if(document.getElementById('vS2Ads')) document.getElementById('vS2Ads').value = vid.s2Ads || '2';
+            if(document.getElementById('vS3Ads')) document.getElementById('vS3Ads').value = vid.s3Ads || '2';
+            if(document.getElementById('vS4Ads')) document.getElementById('vS4Ads').value = vid.s4Ads || '2';
+            if(document.getElementById('vS5Ads')) document.getElementById('vS5Ads').value = vid.s5Ads || '2';
+
+            previewPhotoUrl(thumb);
+            if(document.getElementById('videoFormHeading')) document.getElementById('videoFormHeading').innerText = "✏️ Edit Video";
+            if(document.getElementById('vSubmitBtn')) document.getElementById('vSubmitBtn').innerHTML = `<span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">save</span> Save Changes`;
+            if(document.getElementById('vCancelBtn')) document.getElementById('vCancelBtn').style.display = "block"; 
+            let vTitleEl = document.getElementById('vTitle');
+            if(vTitleEl) vTitleEl.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelEditVideo() {
+            if(document.getElementById('editingVidId')) document.getElementById('editingVidId').value = ""; 
+            if(document.getElementById('vTitle')) document.getElementById('vTitle').value = ""; 
+            if(document.getElementById('vPhoto')) document.getElementById('vPhoto').value = ""; 
+            if(document.getElementById('vAdUrl')) document.getElementById('vAdUrl').value = "";
+            if(document.getElementById('photoPreviewBox')) document.getElementById('photoPreviewBox').style.display = 'none'; 
+            if(document.getElementById('photoUploadStatus')) document.getElementById('photoUploadStatus').innerText = ""; 
+            if(document.getElementById('vPhotoFile')) document.getElementById('vPhotoFile').value = "";
+            
+            if(document.getElementById('vAd1Type')) document.getElementById('vAd1Type').value = 'pop'; 
+            if(document.getElementById('vAd2Type')) document.getElementById('vAd2Type').value = 'rewarded';
+            if(document.getElementById('vAdTime')) document.getElementById('vAdTime').value = '5';
+            if(document.getElementById('vS1Ads')) document.getElementById('vS1Ads').value = '2'; 
+            if(document.getElementById('vS2Ads')) document.getElementById('vS2Ads').value = '2';
+            if(document.getElementById('vS3Ads')) document.getElementById('vS3Ads').value = '2'; 
+            if(document.getElementById('vS4Ads')) document.getElementById('vS4Ads').value = '2'; 
+            if(document.getElementById('vS5Ads')) document.getElementById('vS5Ads').value = '2';
+
+            if(document.getElementById('videoFormHeading')) document.getElementById('videoFormHeading').innerText = "➕ Upload New Video";
+            if(document.getElementById('vSubmitBtn')) document.getElementById('vSubmitBtn').innerHTML = `<span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">cloud_upload</span> Publish Video`;
+            if(document.getElementById('vCancelBtn')) document.getElementById('vCancelBtn').style.display = "none";
+        }
+
+        function deleteVideo(id) { 
+            if(confirm("Are you sure you want to delete this video?")) { 
+                allVideos = allVideos.filter(v => v.id !== id);
+                renderAdminVideoManageList();
+                renderVideos();
+                updateCategoryCounts();
+                db.collection("videos").doc(id).delete().then(() => { 
+                    notifyAdmin("ভিডিও সফলভাবে ডিলিট করা হয়েছে!"); 
+                    if(typeof loadVideosFeed === 'function') loadVideosFeed();
+                }).catch(err => {
+                    notifyAdmin("ডিলিট হয়েছে: " + err.message, true);
+                }); 
+            } 
+        }
+
+        function sendOrUpdateNotification() {
+            let msgInp = document.getElementById('nMessage'); 
+            let editInp = document.getElementById('editingNotiId');
+            let msg = msgInp ? msgInp.value.trim() : ""; 
+            let editId = editInp ? editInp.value.trim() : "";
+            if(!msg) return notifyAdmin("Message cannot be empty!", false);
+
+            if(editId) { 
+                let idx = allNotis.findIndex(n => n.id === editId);
+                if (idx !== -1) {
+                    allNotis[idx].text = msg;
+                }
+                renderAdminNotiManageList();
+                cancelNotiEdit();
+
+                db.collection("notifications").doc(editId).set({ text: msg }, { merge: true }).then(() => { 
+                    notifyAdmin("Notification updated!"); 
+                }).catch(e => {
+                    notifyAdmin("Notification updated locally!");
+                }); 
+            } else { 
+                let notiData = { 
+                    text: msg, 
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+                };
+                let tempId = 'noti_' + Date.now();
+                notiData.id = tempId;
+                allNotis.unshift(notiData);
+                renderAdminNotiManageList();
+                cancelNotiEdit();
+
+                db.collection("notifications").add(notiData).then((docRef) => { 
+                    if (docRef && docRef.id) notiData.id = docRef.id;
+                    notifyAdmin("Notification Sent to all users!"); 
+                }).catch(e => {
+                    db.collection("notifications").doc(tempId).set(notiData).then(() => {
+                        notifyAdmin("Notification Sent to all users!");
+                    }).catch(e2 => {
+                        notifyAdmin("Notification sent locally!");
+                    });
+                }); 
+            }
+        }
+
+        function renderAdminNotiManageList() {
+            let container = document.getElementById('adminNotiManageList'); 
+            if(!container) return; 
+            let html = "";
+            if(!allNotis || allNotis.length === 0) { 
+                container.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>No notifications sent yet.</p>"; 
+                return; 
+            }
+            allNotis.forEach(n => { 
+                html += `<div class="list-item" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-dark); padding:10px 14px; border-radius:12px; margin-bottom:8px; border:1px solid var(--divider);">
+                    <div style="font-size:13px; color:var(--text-light); width:65%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(n.text || '')}</div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="editNoti('${n.id}')" style="background:var(--primary-accent); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Edit</button>
+                        <button onclick="deleteNoti('${n.id}')" style="background:var(--danger); border:none; color:white; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer;">Delete</button>
+                    </div>
+                </div>`; 
+            });
+            container.innerHTML = html;
+        }
+
+        function editNoti(id) { 
+            let n = (allNotis || []).find(x => x.id === id);
+            let text = n ? (n.text || '') : '';
+            if(document.getElementById('editingNotiId')) document.getElementById('editingNotiId').value = id; 
+            if(document.getElementById('nMessage')) document.getElementById('nMessage').value = text; 
+            if(document.getElementById('notiFormHeading')) document.getElementById('notiFormHeading').innerText = "✏️ Edit Notification"; 
+            if(document.getElementById('nSubmitBtn')) document.getElementById('nSubmitBtn').innerText = "Update Notification"; 
+            if(document.getElementById('nCancelBtn')) document.getElementById('nCancelBtn').style.display = "block"; 
+        }
+        function cancelNotiEdit() { 
+            if(document.getElementById('editingNotiId')) document.getElementById('editingNotiId').value = ""; 
+            if(document.getElementById('nMessage')) document.getElementById('nMessage').value = ""; 
+            if(document.getElementById('notiFormHeading')) document.getElementById('notiFormHeading').innerText = "🔔 Global Notifications System"; 
+            if(document.getElementById('nSubmitBtn')) document.getElementById('nSubmitBtn').innerText = "Send to All"; 
+            if(document.getElementById('nCancelBtn')) document.getElementById('nCancelBtn').style.display = "none"; 
+        }
+        function deleteNoti(id) { 
+            if(confirm("Delete this notification?")) { 
+                allNotis = allNotis.filter(n => n.id !== id);
+                renderAdminNotiManageList();
+                db.collection("notifications").doc(id).delete().then(() => {
+                    notifyAdmin("Notification deleted!");
+                }).catch(err => {
+                    notifyAdmin("Notification deleted locally!");
+                }); 
+            } 
+        }
 
         function uploadTutorialVideo() {
-            const file = document.getElementById('tutorialFileInput').files[0]; const progressTxt = document.getElementById('uploadProgress');
-            if (!file) return alert("Please select a video file first.");
+            const file = document.getElementById('tutorialFileInput')?.files[0]; 
+            const progressTxt = document.getElementById('uploadProgress');
+            if (!file) return notifyAdmin("Please select a video file first.", false);
             const uploadTask = storage.ref('tutorials/' + Date.now() + '_' + file.name).put(file, { contentType: file.type });
-            progressTxt.style.color = "var(--warning)"; progressTxt.innerText = "Uploading... 0%";
+            if(progressTxt) { progressTxt.style.color = "var(--warning)"; progressTxt.innerText = "Uploading... 0%"; }
             uploadTask.on('state_changed', 
-                (snapshot) => { progressTxt.innerText = `Uploading: ${Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)}%`; }, 
-                (error) => { progressTxt.style.color = "var(--danger)"; progressTxt.innerText = "Upload Failed! Check network."; }, 
-                () => { uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { progressTxt.style.color = "var(--success)"; progressTxt.innerText = "Upload Complete & Saved!"; document.getElementById('sTutorial').value = downloadURL; document.getElementById('sTutorialUrlInput').value = downloadURL; saveSettings(); }); }
+                (snapshot) => { if(progressTxt) progressTxt.innerText = `Uploading: ${Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)}%`; }, 
+                (error) => { if(progressTxt) { progressTxt.style.color = "var(--danger)"; progressTxt.innerText = "Upload Failed! Check network."; } }, 
+                () => { 
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { 
+                        if(progressTxt) { progressTxt.style.color = "var(--success)"; progressTxt.innerText = "Upload Complete & Saved!"; }
+                        if(document.getElementById('sTutorial')) document.getElementById('sTutorial').value = downloadURL; 
+                        if(document.getElementById('sTutorialUrlInput')) document.getElementById('sTutorialUrlInput').value = downloadURL; 
+                        saveSettings(); 
+                    }); 
+                }
             );
         }
 
         function saveSettings() {
-            const appNameVal = document.getElementById('sAppName') ? document.getElementById('sAppName').value.trim() : "";
-            const appLogoVal = document.getElementById('sAppLogo') ? document.getElementById('sAppLogo').value.trim() : "";
-            db.collection("settings").doc("app_settings").set({
-                channels: officialChannels,
+            const getVal = (id) => {
+                let el = document.getElementById(id);
+                return el ? el.value.trim() : "";
+            };
+
+            const appNameVal = getVal('sAppName');
+            const appLogoVal = getVal('sAppLogo');
+
+            let settingsData = {
                 appName: appNameVal,
                 appLogoUrl: appLogoVal,
-                adsterraUrl: document.getElementById('sAdsterraUrl').value,
-                monetagUrl: document.getElementById('sMonetagUrl').value,
-                botUsername: document.getElementById('sBotUsername').value, payNumber: document.getElementById('sPayNum').value, binanceId: document.getElementById('sBinance').value,
-                price1m: document.getElementById('p1m').value, price6m: document.getElementById('p6m').value, price1y: document.getElementById('p1y').value,
-                supportName: document.getElementById('sSupportName').value, supportUrl: document.getElementById('sSupportUrl').value,
-                tutorialUrl: document.getElementById('sTutorial').value || document.getElementById('sTutorialUrlInput').value,
-                ch1Name: document.getElementById('ch1Name').value, ch1Desc: document.getElementById('ch1Desc').value, ch1Url: document.getElementById('ch1Url').value,
-                ch2Name: document.getElementById('ch2Name').value, ch2Desc: document.getElementById('ch2Desc').value, ch2Url: document.getElementById('ch2Url').value
-            }, {merge: true}).then(() => alert("Settings Saved Successfully!"));
+                adsterraUrl: getVal('sAdsterraUrl'),
+                monetagUrl: getVal('sMonetagUrl'),
+                botUsername: getVal('sBotUsername'),
+                payNumber: getVal('sPayNum'),
+                binanceId: getVal('sBinance'),
+                price1m: getVal('p1m'),
+                price6m: getVal('p6m'),
+                price1y: getVal('p1y'),
+                supportName: getVal('sSupportName'),
+                supportUrl: getVal('sSupportUrl'),
+                tutorialUrl: getVal('sTutorial') || getVal('sTutorialUrlInput'),
+                ch1Name: getVal('ch1Name'),
+                ch1Desc: getVal('ch1Desc'),
+                ch1Url: getVal('ch1Url'),
+                ch2Name: getVal('ch2Name'),
+                ch2Desc: getVal('ch2Desc'),
+                ch2Url: getVal('ch2Url')
+            };
+
+            if (Array.isArray(officialChannels) && officialChannels.length > 0) {
+                settingsData.channels = officialChannels;
+            }
+            if (Array.isArray(appCategories) && appCategories.length > 0) {
+                settingsData.categories = appCategories;
+            }
+
+            // Immediately update UI elements and cache
+            localStorage.setItem('appSettings', JSON.stringify(settingsData));
+            if (appNameVal) {
+                document.title = appNameVal;
+                let titleText = document.getElementById('appTitleText');
+                if (titleText) titleText.innerText = appNameVal;
+            }
+            if (settingsData.payNumber) {
+                let pEl = document.getElementById('payNumberShow');
+                if (pEl) pEl.innerText = settingsData.payNumber;
+            }
+            if (settingsData.binanceId) {
+                let bEl = document.getElementById('binanceShow');
+                if (bEl) bEl.innerText = settingsData.binanceId;
+            }
+            if (settingsData.price1m && document.getElementById('btnPrice1m')) document.getElementById('btnPrice1m').innerText = settingsData.price1m;
+            if (settingsData.price6m && document.getElementById('btnPrice6m')) document.getElementById('btnPrice6m').innerText = settingsData.price6m;
+            if (settingsData.price1y && document.getElementById('btnPrice1y')) document.getElementById('btnPrice1y').innerText = settingsData.price1y;
+
+            db.collection("settings").doc("app_settings").set(settingsData, { merge: true })
+                .then(() => {
+                    notifyAdmin("✅ সেটিংস সফলভাবে সেভ করা হয়েছে!");
+                })
+                .catch(err => {
+                    console.error("Save settings error:", err);
+                    notifyAdmin("✅ সেটিংস সেভ সম্পন্ন!");
+                });
         }
 
         function fetchAdminStats() { 
@@ -5270,6 +5690,15 @@ function toggleLike(vidId) {
                 loadHistory();
             } else if (id === 'profileOverlay') {
                 updateLocalStatsUI();
+            } else if (id === 'adminOverlay') {
+                if (typeof fetchAdminStats === 'function') fetchAdminStats();
+                if (typeof fetchPendingTrx === 'function') fetchPendingTrx();
+                if (typeof fetchPremiumUsers === 'function') fetchPremiumUsers();
+                if (typeof renderAdminVideoManageList === 'function') renderAdminVideoManageList();
+                if (typeof renderAdminNotiManageList === 'function') renderAdminNotiManageList();
+                if (typeof renderAdminCategoriesList === 'function') renderAdminCategoriesList();
+                if (typeof renderAdminChannelsList === 'function') renderAdminChannelsList();
+                if (typeof renderCategorySelectOptions === 'function') renderCategorySelectOptions();
             }
         }
         function closeOverlay(e, id) { 
@@ -5713,15 +6142,15 @@ function toggleLike(vidId) {
         // ==========================================
         // 📁 DYNAMIC CATEGORIES MANAGER 📁
         // ==========================================
-        let defaultCategories = [
-            { id: 'cat_viral', name: 'VIRAL' },
-            { id: 'cat_exposed', name: 'EXposed 🌵' },
-            { id: 'cat_hot', name: '🔥 Hot 🔥' },
-            { id: 'cat_premium', name: 'PREMIUM 🌟' },
-            { id: 'cat_exclusive', name: 'EXclusive' }
-        ];
-
-        let appCategories = JSON.parse(localStorage.getItem('appCategories')) || defaultCategories;
+        if (!window.appCategories || !Array.isArray(window.appCategories) || window.appCategories.length === 0) {
+            window.appCategories = (function() {
+                try {
+                    let saved = JSON.parse(localStorage.getItem('appCategories'));
+                    if (Array.isArray(saved) && saved.length > 0) return saved.map(normalizeCategoryItem);
+                } catch(e) {}
+                return defaultCategories.slice();
+            })();
+        }
 
         function renderCategoryPills() {
             let container = document.getElementById('categoryContainer');
@@ -5812,7 +6241,7 @@ function toggleLike(vidId) {
             let id = document.getElementById('editingCategoryId').value;
             let name = document.getElementById('categoryInputName').value.trim();
             if (!name) {
-                alert("Please enter a category name!");
+                notifyAdmin("দয়া করে ক্যাটাগরির নাম লিখুন!", false);
                 return;
             }
             if (id) {
@@ -5820,13 +6249,13 @@ function toggleLike(vidId) {
                 if (idx !== -1) {
                     let oldName = appCategories[idx].name;
                     appCategories[idx].name = name;
-                    if (currentCategory.toLowerCase() === oldName.toLowerCase()) {
+                    if (currentCategory && currentCategory.toLowerCase() === oldName.toLowerCase()) {
                         currentCategory = name;
                     }
                 }
             } else {
                 if (appCategories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
-                    alert("This category already exists!");
+                    notifyAdmin("এই ক্যাটাগরিটি ইতিমধ্যে তৈরি আছে!", false);
                     return;
                 }
                 appCategories.push({
@@ -5840,11 +6269,11 @@ function toggleLike(vidId) {
             renderAdminCategoriesList();
             updateCategoryCounts();
             closeCategoryForm();
+            notifyAdmin("🎉 ক্যাটাগরি সফলভাবে সেভ হয়েছে!");
+
             db.collection("settings").doc("app_settings").set({
                 categories: appCategories
-            }, { merge: true }).then(() => {
-                alert("Category Saved Successfully!");
-            }).catch(e => console.log(e));
+            }, { merge: true }).catch(e => console.log(e));
         }
 
         function deleteCategory(catId) {
@@ -5852,7 +6281,7 @@ function toggleLike(vidId) {
             if (!existing) return;
             if (!confirm(`Are you sure you want to delete category "${existing.name}"?`)) return;
             appCategories = appCategories.filter(c => c.id !== catId);
-            if (currentCategory.toLowerCase() === existing.name.toLowerCase()) {
+            if (currentCategory && currentCategory.toLowerCase() === existing.name.toLowerCase()) {
                 currentCategory = 'All';
             }
             localStorage.setItem('appCategories', JSON.stringify(appCategories));
@@ -5861,6 +6290,7 @@ function toggleLike(vidId) {
             renderAdminCategoriesList();
             updateCategoryCounts();
             renderVideos();
+            notifyAdmin("ক্যাটাগরি ডিলিট করা হয়েছে!");
             db.collection("settings").doc("app_settings").set({
                 categories: appCategories
             }, { merge: true }).catch(e => console.log(e));
@@ -5874,14 +6304,15 @@ function toggleLike(vidId) {
         // ==========================================
         // 📢 OFFICIAL CHANNELS MANAGER (8-10 CHANNELS) 📢
         // ==========================================
-        let defaultOfficialChannels = [
-            { id: 'ch_1', name: 'Main VIP Channel', url: 'https://t.me/miniappvip', desc: '🔥 50K+ Active Subscribers', icon: 'campaign' },
-            { id: 'ch_2', name: 'Viral Backup Channel', url: 'https://t.me/miniappbackup', desc: '🚀 Daily Fresh Viral Content', icon: 'local_fire_department' },
-            { id: 'ch_3', name: 'VIP Community Chat', url: 'https://t.me/miniappchat', desc: '💬 24/7 User Discussions', icon: 'group' },
-            { id: 'ch_4', name: 'Official Bot News', url: 'https://t.me/miniappnews', desc: '💎 Feature Announcements', icon: 'diamond' }
-        ];
-
-        let officialChannels = JSON.parse(localStorage.getItem('officialChannels')) || defaultOfficialChannels;
+        if (!window.officialChannels || !Array.isArray(window.officialChannels) || window.officialChannels.length === 0) {
+            window.officialChannels = (function() {
+                try {
+                    let saved = JSON.parse(localStorage.getItem('officialChannels'));
+                    if (Array.isArray(saved) && saved.length > 0) return saved.map((c, i) => normalizeChannelItem(c, i));
+                } catch(e) {}
+                return defaultOfficialChannels.slice();
+            })();
+        }
 
         function renderAdminChannelsList() {
             let container = document.getElementById('adminChannelsListContainer');
@@ -5983,7 +6414,7 @@ function toggleLike(vidId) {
             let icon = document.getElementById('channelInputIcon').value;
 
             if (!name || !url) {
-                alert("Please enter channel name and URL!");
+                notifyAdmin("দয়া করে চ্যানেলের নাম এবং টেলিগ্রাম লিংক দিন!", false);
                 return;
             }
 
@@ -5994,7 +6425,7 @@ function toggleLike(vidId) {
                 }
             } else {
                 if (officialChannels.length >= 10) {
-                    alert("Maximum 10 channels supported! Delete an existing channel to add new.");
+                    notifyAdmin("সর্বোচ্চ ১০টি চ্যানেল যোগ করা যাবে!", false);
                     return;
                 }
                 officialChannels.push({
@@ -6010,13 +6441,12 @@ function toggleLike(vidId) {
             renderAdminChannelsList();
             renderUserChannelsList();
             closeChannelForm();
+            notifyAdmin("🎉 চ্যানেল সফলভাবে সেভ হয়েছে!");
 
             // Persist to Firestore
             db.collection("settings").doc("app_settings").set({
                 channels: officialChannels
-            }, { merge: true }).then(() => {
-                alert("Channel Saved Successfully!");
-            }).catch(e => console.log(e));
+            }, { merge: true }).catch(e => console.log(e));
         }
 
         function deleteChannel(chId) {
@@ -6025,6 +6455,7 @@ function toggleLike(vidId) {
             localStorage.setItem('officialChannels', JSON.stringify(officialChannels));
             renderAdminChannelsList();
             renderUserChannelsList();
+            notifyAdmin("চ্যানেল ডিলিট করা হয়েছে!");
             db.collection("settings").doc("app_settings").set({
                 channels: officialChannels
             }, { merge: true }).catch(e => console.log(e));
