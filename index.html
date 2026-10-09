@@ -1655,18 +1655,151 @@
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* --- Spinner & Ad UI --- */
-        .ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 9, 14, 0.96); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .ad-modal { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: radial-gradient(circle at center, rgba(24, 18, 38, 0.96), rgba(8, 6, 16, 0.98)); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            z-index: 2000; 
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            animation: fadeInModal 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         .ad-modal.active { display: flex; }
-        .ad-card-box { background: #181524; border: 1px solid rgba(168, 85, 247, 0.25); border-radius: 24px; width: 88%; max-width: 340px; padding: 35px 25px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
-        .premium-spinner-container { position: relative; width: 75px; height: 75px; margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; }
-        .premium-spinner { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; border: 4px solid rgba(255,255,255,0.05); border-top-color: #a855f7; border-left-color: #f59e0b; border-bottom-color: #10b981; animation: spinPremium 1s linear infinite; box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
+        @keyframes fadeInModal { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+        .ad-card-box { 
+            background: linear-gradient(165deg, rgba(28, 22, 45, 0.95), rgba(15, 12, 28, 0.98)); 
+            border: 1px solid rgba(168, 85, 247, 0.35); 
+            border-radius: 28px; 
+            width: 90%; 
+            max-width: 350px; 
+            padding: 30px 24px 26px 24px; 
+            text-align: center; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(124, 58, 237, 0.25); 
+            position: relative; 
+            overflow: hidden;
+        }
+        .ad-card-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #a855f7, #ec4899, #3b82f6, transparent);
+            animation: shimmerLine 2.5s linear infinite;
+        }
+        @keyframes shimmerLine { 0% { transform: translateX(0); } 100% { transform: translateX(50%); } }
+        .ad-top-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(168, 85, 247, 0.12);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #d8b4fe;
+            margin-bottom: 20px;
+            letter-spacing: 0.4px;
+        }
+        .premium-spinner-container { 
+            position: relative; 
+            width: 82px; 
+            height: 82px; 
+            margin: 0 auto 18px auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .premium-spinner { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            border: 4px solid rgba(255,255,255,0.06); 
+            border-top-color: #a855f7; 
+            border-left-color: #ec4899; 
+            border-right-color: #3b82f6;
+            border-bottom-color: #10b981; 
+            animation: spinPremium 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; 
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); 
+        }
         @keyframes spinPremium { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .premium-countdown-text { position: relative; z-index: 2; font-size: 26px; font-weight: 900; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .ad-status-text { font-size: 18px; font-weight: 800; color: white; margin-bottom: 8px; letter-spacing: 0.5px;}
-        .ad-step-text { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
-        .ad-state-pill { background: rgba(124, 58, 237, 0.15); border: 1px solid var(--primary-accent); color: var(--primary-light); padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-block; letter-spacing: 0.5px; }
-        .ad-progress-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; margin-top: 25px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
-        .ad-progress-fill { height: 100%; width: 0%; background: linear-gradient(270deg, #f59e0b, #ef4444, #a855f7, #10b981); background-size: 300% 300%; animation: popGradient 3s ease infinite; border-radius: 10px; float: right; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+        .premium-countdown-text { 
+            position: relative; 
+            z-index: 2; 
+            font-size: 32px; 
+            font-weight: 900; 
+            color: white; 
+            text-shadow: 0 0 16px rgba(168, 85, 247, 0.7); 
+            font-family: inherit;
+        }
+        .ad-status-text { 
+            font-size: 18px; 
+            font-weight: 800; 
+            color: white; 
+            margin-bottom: 6px; 
+            letter-spacing: 0.3px;
+        }
+        .ad-step-text { 
+            font-size: 13px; 
+            color: #94a3b8; 
+            margin-bottom: 18px; 
+            line-height: 1.4;
+        }
+        .ad-state-pill { 
+            background: rgba(124, 58, 237, 0.18); 
+            border: 1px solid rgba(168, 85, 247, 0.5); 
+            color: #d8b4fe; 
+            padding: 7px 18px; 
+            border-radius: 20px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            display: inline-block; 
+            letter-spacing: 0.4px; 
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+        }
+        .ad-progress-bg { 
+            width: 100%; 
+            height: 7px; 
+            background: rgba(255,255,255,0.08); 
+            border-radius: 10px; 
+            margin-top: 22px; 
+            overflow: hidden; 
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); 
+        }
+        .ad-progress-fill { 
+            height: 100%; 
+            width: 0%; 
+            background: linear-gradient(90deg, #ec4899, #a855f7, #3b82f6, #10b981); 
+            border-radius: 10px; 
+            float: left; 
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.6); 
+        }
+        .ad-modal-detail-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin-top: 20px;
+            font-size: 11.5px;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
     
         /* =======================================================
            🌟 ENHANCED LUXURY UI & LIVE ANIMATIONS 🌟
@@ -3603,18 +3736,26 @@
     <!-- AD SIMULATION MODAL UI -->
     <div class="ad-modal" id="adSimulationModal">
         <div class="ad-card-box">
+            <div class="ad-top-badge" id="adTopBadge">
+                <span class="material-symbols-rounded" style="font-size:15px; color:#a855f7;">shield_spark</span>
+                <span id="adStepBadge">ধাপ ১ / ৩ • বিজ্ঞাপন ১/২</span>
+            </div>
             <div class="premium-spinner-container">
                 <div class="premium-spinner"></div>
                 <div class="premium-countdown-text" id="adTimerCount">3</div>
             </div>
-            <div class="ad-status-text" id="adStatusText">Ad 1 of 2 Playing</div>
-            <div class="ad-step-text" id="adStepText">Step 1 of 3 — Please watch the full ad</div>
-            <div class="ad-state-pill" id="adStatePill">AD STARTING...</div>
+            <div class="ad-status-text" id="adStatusText">১ম বিজ্ঞাপন লোডিং হচ্ছে...</div>
+            <div class="ad-step-text" id="adStepText">Step 1 — বিজ্ঞাপন লোড হতে ৩ সেকেন্ড সময় নিচ্ছে</div>
+            <div class="ad-state-pill" id="adStatePill">
+                <span class="material-symbols-rounded" style="font-size:13px; vertical-align:middle; margin-right:4px;">hourglass_top</span>
+                <span id="adPillText">৩ সেকেন্ড অপেক্ষা করুন...</span>
+            </div>
             <div class="ad-progress-bg">
                 <div class="ad-progress-fill" id="adLineProgress"></div>
             </div>
-            <div style="margin-top:20px; font-size:11px; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px;">
-                💡 এই বিজ্ঞাপনটি আপনার কাজে আসতে পারে
+            <div class="ad-modal-detail-card">
+                <span class="material-symbols-rounded" style="color:#a855f7; font-size:18px;">auto_awesome</span>
+                <span>বিজ্ঞাপন দেখা শেষে ব্যাক করলে স্বয়ংক্রিয়ভাবে পরবর্তী ধাপে নিয়ে যাওয়া হবে।</span>
             </div>
         </div>
     </div>
@@ -4782,28 +4923,61 @@ function toggleLike(vidId) {
         // ==========================================
         const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-        function runModalCountdown(adNum, totalAds, currentStepIndex) {
+        function runModalCountdown(adNum, totalAds, currentStepIndex, totalSteps) {
             return new Promise((resolve) => {
                 const adModal = document.getElementById('adSimulationModal');
-                document.getElementById('adStatusText').innerText = `Ad ${adNum} of ${totalAds} Playing`;
-                document.getElementById('adStepText').innerText = `Step ${currentStepIndex + 1} — Please watch the full ad`;
+                const stNum = currentStepIndex + 1;
+                const totSt = totalSteps || 3;
+                
+                const stepBadge = document.getElementById('adStepBadge');
+                if (stepBadge) stepBadge.innerText = `ধাপ ${stNum} / ${totSt} • বিজ্ঞাপন ${adNum}/${totalAds}`;
+
+                const statusText = document.getElementById('adStatusText');
+                if (statusText) {
+                    statusText.innerText = adNum === 1 
+                        ? `📢 ১ম বিজ্ঞাপন লোডিং হচ্ছে...` 
+                        : `📢 ২য় বিজ্ঞাপন লোডিং হচ্ছে...`;
+                }
+
+                const stepText = document.getElementById('adStepText');
+                if (stepText) {
+                    stepText.innerText = `Step ${stNum} of ${totSt} — বিজ্ঞাপনটি সম্পূর্ণ দেখে ব্যাক করুন`;
+                }
                 
                 const pillText = document.getElementById('adStatePill');
-                pillText.innerText = adNum === 1 ? "AD STARTING..." : "VERIFYING NOW...";
-                pillText.style.borderColor = adNum === 1 ? "var(--primary-accent)" : "var(--warning)";
-                pillText.style.color = adNum === 1 ? "var(--primary-light)" : "var(--warning)";
+                if (pillText) {
+                    pillText.innerHTML = `<span class="material-symbols-rounded" style="font-size:13px; vertical-align:middle; margin-right:4px;">hourglass_top</span> <span id="adPillText">${adNum === 1 ? "১ম বিজ্ঞাপন শুরু হচ্ছে (৩ সেকেন্ড)..." : "২য় বিজ্ঞাপন শুরু হচ্ছে (৩ সেকেন্ড)..."}</span>`;
+                    pillText.style.borderColor = adNum === 1 ? "var(--primary-accent)" : "#f59e0b";
+                    pillText.style.color = adNum === 1 ? "var(--primary-light)" : "#fbbf24";
+                }
 
-                let countdown = 3; document.getElementById('adTimerCount').innerText = countdown;
+                let countdown = 3; 
+                const timerCount = document.getElementById('adTimerCount');
+                if (timerCount) timerCount.innerText = countdown;
+
                 let progFill = document.getElementById('adLineProgress');
-                progFill.style.transition = 'none'; progFill.style.width = '0%';
+                if (progFill) {
+                    progFill.style.transition = 'none'; 
+                    progFill.style.width = '0%';
+                }
                 
                 adModal.classList.add('active');
                 setTimeout(() => {
-                    progFill.style.transition = 'width 3s linear'; progFill.style.width = '100%';
+                    if (progFill) {
+                        progFill.style.transition = 'width 3s linear'; 
+                        progFill.style.width = '100%';
+                    }
                     const intv = setInterval(() => {
                         countdown--;
-                        if (countdown > 0) { document.getElementById('adTimerCount').innerText = countdown; } 
-                        else { document.getElementById('adTimerCount').innerText = "✓"; clearInterval(intv); setTimeout(resolve, 300); }
+                        if (countdown > 0) { 
+                            if (timerCount) timerCount.innerText = countdown; 
+                        } else { 
+                            if (timerCount) timerCount.innerText = "✓"; 
+                            clearInterval(intv); 
+                            setTimeout(() => {
+                                resolve();
+                            }, 250); 
+                        }
                     }, 1000);
                 }, 50);
             });
@@ -4901,31 +5075,32 @@ function toggleLike(vidId) {
             let ad2Type = vid.ad2Type || 'rewarded';
             let adTime = vid.adTime ? parseInt(vid.adTime) : 5; 
 
-            // AD 1
-            await runModalCountdown(1, adsForThisStep, currentStep);
+            // AD 1 (৩ সেকেন্ড লোডিং হবে তারপর প্রথম অ্যাড আসবে)
+            await runModalCountdown(1, adsForThisStep, currentStep, totalSteps);
             document.getElementById('adSimulationModal').classList.remove('active');
             
             let success1 = await enforceAdWatchTime(ad1Type, adTime);
             if(!success1) return showEarlyWarning(adTime, vidId, btn, totalSteps);
 
-            // AD 2
-            if (adsForThisStep === 2) {
-                await runModalCountdown(2, adsForThisStep, currentStep);
+            // AD 2 (প্রথম অ্যাড দেখা শেষে ব্যাক করলে ২ নাম্বার অ্যাড লোডিং হবে ৩ সেকেন্ড, ৩ সেকেন্ড পর ২ নাম্বার অ্যাড আসবে)
+            if (adsForThisStep >= 2) {
+                await runModalCountdown(2, adsForThisStep, currentStep, totalSteps);
                 document.getElementById('adSimulationModal').classList.remove('active');
                 
                 let success2 = await enforceAdWatchTime(ad2Type, adTime);
                 if(!success2) return showEarlyWarning(adTime, vidId, btn, totalSteps);
             }
 
+            // নির্দিষ্ট টাইম পর ব্যাক করলে বাটন ৩ সেকেন্ড স্পিনিং লোডিং নিয়ে প্রথম/বর্তমান স্টেপ আনলক হবে
             btn.classList.add('waiting');
-            let waitTime = 5;
+            let waitTime = 3;
             
             if(currentStep < totalSteps - 1) {
                 let lineEl = document.getElementById(`step-line-${vidId}-${currentStep}`);
-                if(lineEl) { lineEl.style.transition = 'width 5s linear'; lineEl.style.width = '100%'; }
+                if(lineEl) { lineEl.style.transition = 'width 3s linear'; lineEl.style.width = '100%'; }
             }
 
-            btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING 5s</span>`;
+            btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING 3s</span>`;
             
             const waitInt = setInterval(() => {
                 waitTime--;
@@ -5019,26 +5194,27 @@ function toggleLike(vidId) {
             let ad2Type = vid.ad2Type || 'rewarded';
             let adTime = vid.adTime ? parseInt(vid.adTime) : 5; 
 
-            // AD 1
-            await runModalCountdown(1, adsForThisStep, currentStep);
+            // AD 1 (৩ সেকেন্ড লোডিং হবে তারপর প্রথম অ্যাড আসবে)
+            await runModalCountdown(1, adsForThisStep, currentStep, totalSteps);
             document.getElementById('adSimulationModal').classList.remove('active');
             
             let success1 = await enforceAdWatchTime(ad1Type, adTime);
             if(!success1) return showEarlyWarningPlayer(adTime, vidId, btn, totalSteps);
 
-            // AD 2
-            if (adsForThisStep === 2) {
-                await runModalCountdown(2, adsForThisStep, currentStep);
+            // AD 2 (প্রথম অ্যাড দেখা শেষে ব্যাক করলে ২ নাম্বার অ্যাড লোডিং হবে ৩ সেকেন্ড, ৩ সেকেন্ড পর ২ নাম্বার অ্যাড আসবে)
+            if (adsForThisStep >= 2) {
+                await runModalCountdown(2, adsForThisStep, currentStep, totalSteps);
                 document.getElementById('adSimulationModal').classList.remove('active');
                 
                 let success2 = await enforceAdWatchTime(ad2Type, adTime);
                 if(!success2) return showEarlyWarningPlayer(adTime, vidId, btn, totalSteps);
             }
 
+            // নির্দিষ্ট টাইম পর ব্যাক করলে বাটন ৩ সেকেন্ড স্পিনিং লোডিং নিয়ে প্রথম/বর্তমান স্টেপ আনলক হবে
             btn.classList.add('waiting');
-            let waitTime = 5;
+            let waitTime = 3;
 
-            if(btnText) btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING 5s</span>`;
+            if(btnText) btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING 3s</span>`;
             
             const waitInt = setInterval(() => {
                 waitTime--;
