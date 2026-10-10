@@ -51,9 +51,9 @@
             background: #ffffff !important;
         }
         [data-theme="light"] .header-center-pill {
-            background: linear-gradient(135deg, #7c3aed, #9333ea) !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35) !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
         }
         [data-theme="light"] .live-status-pill {
             background: rgba(16, 185, 129, 0.12) !important;
@@ -185,22 +185,18 @@
         .header-btn .material-symbols-rounded { font-size: 20px; }
         .header-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .header-center-pill {
-            background: linear-gradient(135deg, #7c3aed, #9333ea);
-            color: #ffffff;
-            border-radius: 20px;
-            padding: 5px 16px;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 2px 6px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-weight: 800;
-            font-size: 15px;
-            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            gap: 8px;
             cursor: pointer;
             text-decoration: none;
             transition: 0.2s;
         }
-        .header-center-pill:active { transform: scale(0.95); }
+        .header-center-pill:active { transform: scale(0.96); }
         .live-status-pill {
             display: flex;
             align-items: center;
@@ -359,35 +355,49 @@
             transform: scale(1.05);
         }
 
-        /* Center Play Button on Banner */
+        /* Center Play Button on Banner - Clean White, Banner Fully Visible */
         .thumb-play-btn {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border: 1.8px solid rgba(255, 255, 255, 0.9);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 0 10px rgba(255, 255, 255, 0.2);
             pointer-events: none;
             z-index: 2;
-            transition: 0.2s ease;
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
         }
         .thumb-play-btn .material-symbols-rounded {
             color: #ffffff;
-            font-size: 22px;
+            font-size: 24px;
             margin-left: 2px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+        }
+        .video-grid-card:hover .thumb-play-btn {
+            transform: translate(-50%, -50%) scale(1.12);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
         }
         .video-grid-card:active .thumb-play-btn {
-            transform: translate(-50%, -50%) scale(1.1);
-            background: var(--primary-accent);
+            transform: translate(-50%, -50%) scale(1.24);
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ffffff;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.95), 0 0 45px rgba(255, 255, 255, 0.6);
+            animation: whitePlayPop 0.3s ease;
+        }
+        @keyframes whitePlayPop {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+            100% { transform: translate(-50%, -50%) scale(1.24); }
         }
 
         /* Lock / Status Badge on Top Left */
@@ -1886,35 +1896,16 @@
         }
         .header-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .header-center-pill {
-            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #9333ea 100%);
-            background-size: 200% 200%;
-            animation: logoShimmer 4s ease infinite;
-            color: #ffffff;
-            border-radius: 20px;
-            padding: 5px 16px;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 2px 6px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-weight: 800;
-            font-size: 14.5px;
-            box-shadow: 0 4px 18px rgba(124, 58, 237, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            gap: 8px;
             cursor: pointer;
             text-decoration: none;
             transition: all 0.25s ease;
-        }
-        @keyframes logoShimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .header-center-pill .header-play-icon {
-            font-size: 19px;
-            animation: playIconPulse 2s ease-in-out infinite;
-        }
-        @keyframes playIconPulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px #fff); }
-            50% { transform: scale(1.18); filter: drop-shadow(0 0 8px #ffd700); }
         }
         .live-status-pill {
             display: flex;
@@ -1987,34 +1978,62 @@
             height: 60px;
         }
         .header-logo-circle {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, #ff007a, #7928ca, #3b82f6);
+            background-size: 200% 200%;
+            border: 2px solid rgba(255, 255, 255, 0.9);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             color: #ffffff;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 16px rgba(236, 72, 153, 0.8), 0 0 28px rgba(124, 58, 237, 0.55), inset 0 0 8px rgba(255, 255, 255, 0.6);
             overflow: hidden;
             flex-shrink: 0;
+            animation: logoGlamourAura 3s ease infinite;
             transition: transform 0.25s ease;
         }
+        @keyframes logoGlamourAura {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                box-shadow: 0 0 16px rgba(236, 72, 153, 0.8), 0 0 28px rgba(124, 58, 237, 0.55), inset 0 0 8px rgba(255, 255, 255, 0.6);
+                border-color: rgba(255, 255, 255, 0.9);
+            }
+            50% {
+                transform: scale(1.08) rotate(8deg);
+                box-shadow: 0 0 24px rgba(255, 0, 128, 1), 0 0 40px rgba(147, 51, 234, 0.85), inset 0 0 12px rgba(255, 255, 255, 0.85);
+                border-color: #ffd700;
+            }
+        }
         .header-center-pill:hover .header-logo-circle {
-            transform: rotate(15deg) scale(1.08);
+            transform: scale(1.12) rotate(12deg);
         }
         .header-center-pill {
-            padding: 4px 12px 4px 6px !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 2px 6px !important;
             border-radius: 25px !important;
             gap: 8px !important;
-            max-height: 36px;
+            max-height: 38px;
         }
         .header-title-text {
-            font-size: 13.5px !important;
-            font-weight: 800 !important;
-            letter-spacing: 0.4px !important;
+            font-size: 15px !important;
+            font-weight: 900 !important;
+            letter-spacing: 0.8px !important;
             text-transform: uppercase;
+            background: linear-gradient(90deg, #ff007a 0%, #a855f7 25%, #00f2fe 50%, #f59e0b 75%, #ff007a 100%) !important;
+            background-size: 250% auto !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            animation: appTitleFlow 3s linear infinite !important;
+            filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.45));
+            display: inline-block;
+        }
+        @keyframes appTitleFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 250% center; }
         }
         .all-videos-and-search-bar {
             margin: 4px 12px 10px 12px !important;
@@ -2278,30 +2297,37 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: rgba(124, 58, 237, 0.85);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 2px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.16) !important;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 2px solid rgba(255, 255, 255, 0.9) !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65), 0 0 15px rgba(124, 58, 237, 0.5);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.25) !important;
             z-index: 3;
-            transition: all 0.25s ease;
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease !important;
             pointer-events: none;
         }
         .thumb-play-btn .material-symbols-rounded {
-            color: #ffffff;
-            font-size: 26px;
+            color: #ffffff !important;
+            font-size: 26px !important;
             margin-left: 2px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6)) !important;
         }
-        .video-grid-card:hover .thumb-play-btn,
-        .video-grid-card:active .thumb-play-btn {
+        .video-grid-card:hover .thumb-play-btn {
             transform: translate(-50%, -50%) scale(1.12);
-            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            background: rgba(255, 255, 255, 0.28) !important;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7) !important;
+        }
+        .video-grid-card:active .thumb-play-btn {
+            transform: translate(-50%, -50%) scale(1.24) !important;
+            background: rgba(255, 255, 255, 0.45) !important;
+            border-color: #ffffff !important;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.95), 0 0 45px rgba(255, 255, 255, 0.65) !important;
         }
 
         .grid-card-views {
@@ -2552,23 +2578,211 @@
             align-items: center;
             justify-content: space-between;
             padding: 8px 10px;
-            border-radius: 10px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.03);
-            margin-bottom: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
         }
+
+        /* 🥇 TOP 1 CHAMPION - Maximum Golden Sparkle & Glitter */
         .ref-lb-item.top-1 {
-            background: rgba(255, 215, 0, 0.1);
-            border-color: rgba(255, 215, 0, 0.35);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.18), rgba(245, 158, 11, 0.08)) !important;
+            border: 2px solid #ffd700 !important;
+            box-shadow: 0 0 22px rgba(255, 215, 0, 0.7), inset 0 0 15px rgba(255, 215, 0, 0.25) !important;
+            animation: top1CardSparkle 2.2s ease-in-out infinite !important;
+            overflow: hidden;
         }
+        @keyframes top1CardSparkle {
+            0%, 100% {
+                border-color: #ffd700;
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 35px rgba(245, 158, 11, 0.4), inset 0 0 12px rgba(255, 215, 0, 0.2);
+            }
+            50% {
+                border-color: #fffb00;
+                box-shadow: 0 0 32px rgba(255, 251, 0, 0.95), 0 0 50px rgba(255, 215, 0, 0.6), inset 0 0 22px rgba(255, 215, 0, 0.35);
+            }
+        }
+        .ref-lb-item.top-1::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(60deg, transparent 40%, rgba(255, 255, 255, 0.25) 50%, transparent 60%);
+            animation: cardLightSweep 3s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes cardLightSweep {
+            0% { transform: translateX(-100%) rotate(25deg); }
+            100% { transform: translateX(100%) rotate(25deg); }
+        }
+        .ref-avatar-top-1 {
+            border: 2.2px solid #ffd700 !important;
+            box-shadow: 0 0 16px rgba(255, 215, 0, 0.95), 0 0 28px rgba(245, 158, 11, 0.6) !important;
+            animation: avatarGoldPulse 2s infinite alternate !important;
+        }
+        @keyframes avatarGoldPulse {
+            0% { transform: scale(1); box-shadow: 0 0 12px rgba(255, 215, 0, 0.8); }
+            100% { transform: scale(1.08); box-shadow: 0 0 24px rgba(255, 235, 59, 1), 0 0 35px rgba(255, 193, 7, 0.85); }
+        }
+        .ref-name-top-1 {
+            background: linear-gradient(90deg, #ffd700, #ffffff, #f59e0b, #ffffff, #ffd700) !important;
+            background-size: 200% auto !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            animation: textSparkleFlow 2s linear infinite !important;
+            font-weight: 850 !important;
+            font-size: 13px !important;
+            filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.7));
+        }
+        .ref-badge-top-1 {
+            background: linear-gradient(135deg, #ffd700, #f59e0b) !important;
+            color: #000000 !important;
+            font-weight: 900 !important;
+            box-shadow: 0 0 16px rgba(255, 215, 0, 0.85) !important;
+            animation: badgeGoldGlint 1.8s infinite ease-in-out !important;
+        }
+        @keyframes badgeGoldGlint {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.06); filter: brightness(1.35) drop-shadow(0 0 10px #ffd700); }
+        }
+
+        /* 🥈 TOP 2 - Silver Platinum Brilliant Shimmer */
         .ref-lb-item.top-2 {
-            background: rgba(192, 192, 192, 0.08);
-            border-color: rgba(192, 192, 192, 0.25);
+            background: linear-gradient(135deg, rgba(226, 232, 240, 0.14), rgba(148, 163, 184, 0.08)) !important;
+            border: 2px solid #cbd5e1 !important;
+            box-shadow: 0 0 18px rgba(203, 213, 225, 0.65), inset 0 0 12px rgba(226, 232, 240, 0.2) !important;
+            animation: top2CardSparkle 2.6s ease-in-out infinite !important;
+            overflow: hidden;
         }
+        @keyframes top2CardSparkle {
+            0%, 100% {
+                border-color: #cbd5e1;
+                box-shadow: 0 0 16px rgba(203, 213, 225, 0.65), inset 0 0 10px rgba(203, 213, 225, 0.2);
+            }
+            50% {
+                border-color: #ffffff;
+                box-shadow: 0 0 28px rgba(255, 255, 255, 0.95), inset 0 0 20px rgba(255, 255, 255, 0.35);
+            }
+        }
+        .ref-avatar-top-2 {
+            border: 2px solid #e2e8f0 !important;
+            box-shadow: 0 0 14px rgba(226, 232, 240, 0.85) !important;
+            animation: avatarSilverPulse 2.2s infinite alternate !important;
+        }
+        @keyframes avatarSilverPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.06); box-shadow: 0 0 22px rgba(255, 255, 255, 0.95); }
+        }
+        .ref-name-top-2 {
+            background: linear-gradient(90deg, #e2e8f0, #ffffff, #94a3b8, #ffffff, #e2e8f0) !important;
+            background-size: 200% auto !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            animation: textSparkleFlow 2.4s linear infinite !important;
+            font-weight: 850 !important;
+            font-size: 13px !important;
+            filter: drop-shadow(0 0 5px rgba(226, 232, 240, 0.7));
+        }
+        .ref-badge-top-2 {
+            background: linear-gradient(135deg, #e2e8f0, #94a3b8) !important;
+            color: #0f172a !important;
+            font-weight: 900 !important;
+            box-shadow: 0 0 14px rgba(226, 232, 240, 0.8) !important;
+            animation: badgeGoldGlint 2s infinite ease-in-out !important;
+        }
+
+        /* 🥉 TOP 3 - Bronze Amber Fiery Shimmer */
         .ref-lb-item.top-3 {
-            background: rgba(205, 127, 50, 0.08);
-            border-color: rgba(205, 127, 50, 0.25);
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.14), rgba(217, 119, 6, 0.08)) !important;
+            border: 2px solid #f97316 !important;
+            box-shadow: 0 0 16px rgba(249, 115, 22, 0.6), inset 0 0 10px rgba(249, 115, 22, 0.2) !important;
+            animation: top3CardSparkle 2.6s ease-in-out infinite !important;
+            overflow: hidden;
         }
+        @keyframes top3CardSparkle {
+            0%, 100% {
+                border-color: #f97316;
+                box-shadow: 0 0 15px rgba(249, 115, 22, 0.6), inset 0 0 10px rgba(249, 115, 22, 0.18);
+            }
+            50% {
+                border-color: #fb923c;
+                box-shadow: 0 0 25px rgba(251, 146, 60, 0.9), inset 0 0 18px rgba(251, 146, 60, 0.35);
+            }
+        }
+        .ref-avatar-top-3 {
+            border: 2px solid #f97316 !important;
+            box-shadow: 0 0 14px rgba(249, 115, 22, 0.8) !important;
+            animation: avatarBronzePulse 2.2s infinite alternate !important;
+        }
+        @keyframes avatarBronzePulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.06); box-shadow: 0 0 20px rgba(251, 146, 60, 0.95); }
+        }
+        .ref-name-top-3 {
+            background: linear-gradient(90deg, #fdba74, #ffffff, #ea580c, #ffffff, #fdba74) !important;
+            background-size: 200% auto !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            animation: textSparkleFlow 2.4s linear infinite !important;
+            font-weight: 850 !important;
+            font-size: 13px !important;
+            filter: drop-shadow(0 0 5px rgba(249, 115, 22, 0.6));
+        }
+        .ref-badge-top-3 {
+            background: linear-gradient(135deg, #f97316, #ea580c) !important;
+            color: #ffffff !important;
+            font-weight: 900 !important;
+            box-shadow: 0 0 14px rgba(249, 115, 22, 0.75) !important;
+            animation: badgeGoldGlint 2.2s infinite ease-in-out !important;
+        }
+
+        /* 🌟 TOP 4 TO 10 - Vibrant Neon Glowing Border & Sparkling Name */
+        .ref-lb-item.top-4-10 {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.09), rgba(6, 182, 212, 0.07)) !important;
+            border: 1.6px solid #a855f7 !important;
+            box-shadow: 0 0 14px rgba(168, 85, 247, 0.45), inset 0 0 8px rgba(168, 85, 247, 0.12) !important;
+            animation: top10CardNeon 3s ease-in-out infinite !important;
+        }
+        @keyframes top10CardNeon {
+            0%, 100% {
+                border-color: #a855f7;
+                box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+            }
+            50% {
+                border-color: #06b6d4;
+                box-shadow: 0 0 20px rgba(6, 182, 212, 0.7), inset 0 0 12px rgba(6, 182, 212, 0.2);
+            }
+        }
+        .ref-avatar-top-10 {
+            border: 1.8px solid #a855f7 !important;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.65) !important;
+        }
+        .ref-name-top-10 {
+            background: linear-gradient(90deg, #c084fc, #67e8f9, #ffffff, #c084fc) !important;
+            background-size: 200% auto !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            animation: textSparkleFlow 3s linear infinite !important;
+            font-weight: 800 !important;
+            font-size: 12.5px !important;
+        }
+        .ref-badge-top-10 {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(6, 182, 212, 0.3)) !important;
+            border: 1px solid rgba(168, 85, 247, 0.6) !important;
+            color: #f3e8ff !important;
+            font-weight: 800 !important;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.45) !important;
+        }
+
+        @keyframes textSparkleFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
         .ref-lb-user-info {
             display: flex;
             align-items: center;
@@ -2717,9 +2931,9 @@
                 </div>
                 <span id="appTitleText" class="header-title-text">VIRAL HUB 2.0</span>
             </div>
-            <div class="live-status-pill">
+            <div class="live-status-pill" id="headerLiveStatusPill" title="Live Active Users">
                 <span class="live-dot"></span>
-                <span id="headerLiveStatus">Active Users</span>
+                <span id="headerLiveStatus"><b id="liveActiveUserCount">1,482</b> Active Users</span>
             </div>
         </div>
         <div class="header-right">
@@ -3153,32 +3367,35 @@
                     <div class="ref-lb-item top-1">
                         <div class="ref-lb-user-info">
                             <span class="ref-lb-rank" style="color:#ffd700;">🥇</span>
+                            <div class="ref-avatar-top-1" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#eab308,#ffd700);color:#000;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;">T</div>
                             <div>
-                                <div class="ref-lb-user-name">@tanvir_vip</div>
+                                <div class="ref-lb-user-name ref-name-top-1">@tanvir_vip</div>
                                 <div style="font-size:10px; color:#cbd5e1;">142 Invites</div>
                             </div>
                         </div>
-                        <span class="ref-lb-prize-badge" style="background:rgba(255,215,0,0.2); color:#ffd700;">👑 Lifetime VIP</span>
+                        <span class="ref-lb-prize-badge ref-badge-top-1">👑 Lifetime VIP</span>
                     </div>
                     <div class="ref-lb-item top-2">
                         <div class="ref-lb-user-info">
                             <span class="ref-lb-rank" style="color:#c0c0c0;">🥈</span>
+                            <div class="ref-avatar-top-2" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#94a3b8,#e2e8f0);color:#0f172a;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;">S</div>
                             <div>
-                                <div class="ref-lb-user-name">@sakib_pro</div>
+                                <div class="ref-lb-user-name ref-name-top-2">@sakib_pro</div>
                                 <div style="font-size:10px; color:#cbd5e1;">98 Invites</div>
                             </div>
                         </div>
-                        <span class="ref-lb-prize-badge" style="background:rgba(192,192,192,0.2); color:#e2e8f0;">⭐ 30 Days VIP</span>
+                        <span class="ref-lb-prize-badge ref-badge-top-2">⭐ 30 Days VIP</span>
                     </div>
                     <div class="ref-lb-item top-3">
                         <div class="ref-lb-user-info">
                             <span class="ref-lb-rank" style="color:#cd7f32;">🥉</span>
+                            <div class="ref-avatar-top-3" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ea580c,#f97316);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;">F</div>
                             <div>
-                                <div class="ref-lb-user-name">@fahim_boss</div>
+                                <div class="ref-lb-user-name ref-name-top-3">@fahim_boss</div>
                                 <div style="font-size:10px; color:#cbd5e1;">76 Invites</div>
                             </div>
                         </div>
-                        <span class="ref-lb-prize-badge" style="background:rgba(205,127,50,0.2); color:#fdba74;">🔥 15 Days VIP</span>
+                        <span class="ref-lb-prize-badge ref-badge-top-3">🔥 15 Days VIP</span>
                     </div>
                 </div>
                 <div class="ref-lb-my-rank" id="refPageMyRankBox">
@@ -4003,15 +4220,22 @@
                         if (isMe) { foundMe = true; myRankNum = rank; }
 
                         let rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
-                        let cardClass = rank === 1 ? 'top-1' : rank === 2 ? 'top-2' : rank === 3 ? 'top-3' : '';
+                        let cardClass = rank === 1 ? 'top-1' : rank === 2 ? 'top-2' : rank === 3 ? 'top-3' : (rank <= 10 ? 'top-4-10' : '');
+                        let avatarClass = rank === 1 ? 'ref-avatar-top-1' : rank === 2 ? 'ref-avatar-top-2' : rank === 3 ? 'ref-avatar-top-3' : (rank <= 10 ? 'ref-avatar-top-10' : '');
+                        let nameClass = rank === 1 ? 'ref-name-top-1' : rank === 2 ? 'ref-name-top-2' : rank === 3 ? 'ref-name-top-3' : (rank <= 10 ? 'ref-name-top-10' : '');
+                        let badgeClass = rank === 1 ? 'ref-badge-top-1' : rank === 2 ? 'ref-badge-top-2' : rank === 3 ? 'ref-badge-top-3' : (rank <= 10 ? 'ref-badge-top-10' : '');
+
                         let prizeBadge = "";
-                        if (rank === 1) prizeBadge = '<span class="ref-lb-prize-badge" style="background:rgba(255,215,0,0.2); color:#ffd700;">👑 Lifetime VIP</span>';
-                        else if (rank === 2) prizeBadge = '<span class="ref-lb-prize-badge" style="background:rgba(192,192,192,0.2); color:#e2e8f0;">⭐ 30 Days VIP</span>';
-                        else if (rank === 3) prizeBadge = '<span class="ref-lb-prize-badge" style="background:rgba(205,127,50,0.2); color:#fdba74;">🔥 15 Days VIP</span>';
+                        if (rank === 1) prizeBadge = `<span class="ref-lb-prize-badge ${badgeClass}">👑 Lifetime VIP</span>`;
+                        else if (rank === 2) prizeBadge = `<span class="ref-lb-prize-badge ${badgeClass}">⭐ 30 Days VIP</span>`;
+                        else if (rank === 3) prizeBadge = `<span class="ref-lb-prize-badge ${badgeClass}">🔥 15 Days VIP</span>`;
+                        else if (rank <= 10) prizeBadge = `<span class="ref-lb-prize-badge ${badgeClass}">✨ ${rCount} Invites</span>`;
                         else prizeBadge = `<span class="ref-lb-prize-badge">${rCount} Invites</span>`;
 
                         let initial = uName.charAt(0).toUpperCase();
-                        let avatarHtml = u.photoUrl ? `<img src="${u.photoUrl}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">` : `<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:11px;">${initial}</div>`;
+                        let avatarHtml = u.photoUrl ? 
+                            `<img src="${u.photoUrl}" class="${avatarClass}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">` : 
+                            `<div class="${avatarClass}" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;">${initial}</div>`;
 
                         html += `
                         <div class="ref-lb-item ${cardClass} ${isMe ? 'my-item' : ''}" style="${isMe ? 'border-color:#10b981; background:rgba(16,185,129,0.1);' : ''}">
@@ -4019,7 +4243,7 @@
                                 <span class="ref-lb-rank">${rankIcon}</span>
                                 ${avatarHtml}
                                 <div>
-                                    <div class="ref-lb-user-name">${uName} ${isMe ? '<span style="color:#10b981; font-size:10px;">(You)</span>' : ''}</div>
+                                    <div class="ref-lb-user-name ${nameClass}">${uName} ${isMe ? '<span style="color:#10b981; font-size:10px;">(You)</span>' : ''}</div>
                                     <div style="font-size:10px; color:#cbd5e1;">${rCount} Invites</div>
                                 </div>
                             </div>
@@ -4145,18 +4369,41 @@
             });
         });
 
-        // Global deep link check for Telegram Mini App and Web
-        let globalStartParam = (tg.initDataUnsafe && tg.initDataUnsafe.start_param) ? tg.initDataUnsafe.start_param : '';
-        if (!globalStartParam) {
-            const uParams = new URLSearchParams(window.location.search);
-            globalStartParam = uParams.get('startapp') || uParams.get('tgWebAppStartParam') || '';
+        // Global deep link check for Telegram Mini App, URL Search, and URL Hash
+        function extractStartupParam() {
+            let p = '';
+            try {
+                if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+                    p = tg.initDataUnsafe.start_param;
+                }
+                if (!p && window.location.search) {
+                    const u = new URLSearchParams(window.location.search);
+                    p = u.get('startapp') || u.get('tgWebAppStartParam') || u.get('start') || u.get('ref') || u.get('r') || '';
+                }
+                if (!p && window.location.hash) {
+                    const h = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+                    p = h.get('tgWebAppStartParam') || h.get('startapp') || h.get('start') || h.get('ref') || '';
+                }
+            } catch(e) {}
+            return (p || '').toString().trim();
         }
+
+        let globalStartParam = extractStartupParam();
         if (globalStartParam) {
             if (globalStartParam.startsWith('vid_') || globalStartParam.startsWith('v_') || globalStartParam.startsWith('post_')) {
                 window.pendingDeepLinkVideoId = globalStartParam.replace(/^(vid_|v_|post_)/, '');
             } else if (globalStartParam.startsWith('ref_')) {
                 window.pendingReferralId = globalStartParam.replace('ref_', '');
+            } else if (globalStartParam.startsWith('ref-')) {
+                window.pendingReferralId = globalStartParam.replace('ref-', '');
+            } else if (globalStartParam.startsWith('ref')) {
+                window.pendingReferralId = globalStartParam.replace('ref', '');
+            } else if (/^\d+$/.test(globalStartParam)) {
+                window.pendingReferralId = globalStartParam;
             }
+        }
+        if (window.pendingReferralId) {
+            localStorage.setItem('pending_incoming_ref', window.pendingReferralId);
         }
 
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
@@ -4230,16 +4477,83 @@
             if(document.getElementById('profTgId')) document.getElementById('profTgId').innerText = "ID: " + currentUser.id;
         }
 
+        function handleReferralAttribution(userDocData) {
+            let targetRef = localStorage.getItem('pending_incoming_ref') || window.pendingReferralId || '';
+            let currentUserIdStr = (currentUser && currentUser.id) ? currentUser.id.toString() : '';
+            if (!currentUserIdStr) return;
+
+            let alreadyCredited = localStorage.getItem('referral_credited_done') === 'true';
+            if (userDocData && userDocData.referredBy) {
+                alreadyCredited = true;
+            }
+
+            if (targetRef && targetRef !== currentUserIdStr && !alreadyCredited) {
+                console.log("Crediting referrer:", targetRef);
+                db.collection("users").doc(targetRef).set({
+                    referralCount: firebase.firestore.FieldValue.increment(1),
+                    lastReferralAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true }).then(() => {
+                    console.log("Successfully credited referrer:", targetRef);
+                    localStorage.setItem('referral_credited_done', 'true');
+                    localStorage.removeItem('pending_incoming_ref');
+                }).catch(err => {
+                    console.error("Error crediting referrer:", err);
+                });
+
+                db.collection("users").doc(currentUserIdStr).set({
+                    referredBy: targetRef
+                }, { merge: true }).catch(e => console.log(e));
+            }
+        }
+
+        // ==========================================
+        // 🟢 LIVE ACTIVE USERS COUNTER MANAGER
+        // ==========================================
+        (function initLiveActiveUsers() {
+            let baseUsers = 1480 + Math.floor(Math.random() * 240);
+            let userCountEl = document.getElementById('liveActiveUserCount');
+            function updateDisplay() {
+                if (!userCountEl) userCountEl = document.getElementById('liveActiveUserCount');
+                if (userCountEl) {
+                    userCountEl.innerText = baseUsers.toLocaleString();
+                }
+            }
+            updateDisplay();
+
+            if (typeof db !== 'undefined' && db && db.collection) {
+                db.collection("settings").doc("app_stats").onSnapshot(doc => {
+                    if (doc.exists) {
+                        let d = doc.data();
+                        if (d.activeUsers && parseInt(d.activeUsers) > 0) {
+                            baseUsers = parseInt(d.activeUsers);
+                            updateDisplay();
+                        }
+                    }
+                }, () => {});
+            }
+
+            setInterval(() => {
+                let change = Math.floor(Math.random() * 9) - 4; // -4 to +4
+                baseUsers += change;
+                if (baseUsers < 1250) baseUsers = 1250 + Math.floor(Math.random() * 60);
+                if (baseUsers > 3500) baseUsers = 3500 - Math.floor(Math.random() * 60);
+                updateDisplay();
+            }, 4000);
+        })();
+
         db.collection("users").doc(currentUser.id.toString()).onSnapshot((doc) => {
             const badgeEl = document.getElementById('userStatusBadge');
             const crownBadgeEl = document.getElementById('profVipCrownBadge');
             if(doc.exists) {
                 let data = doc.data();
-                let rCount = data.referralCount || 0;
+                handleReferralAttribution(data);
+
+                let rCount = parseInt(data.referralCount) || 0;
                 currentUser.referralCount = rCount;
                 
                 document.getElementById('refTotalCount').innerText = rCount;
                 if(document.getElementById('profRefCount')) document.getElementById('profRefCount').innerText = rCount;
+                if(document.getElementById('profMenuRefCount')) document.getElementById('profMenuRefCount').innerText = rCount + ' Ref';
                 document.getElementById('refActiveCount').innerText = Math.floor(rCount * 0.8) || rCount;
                 document.getElementById('refInactiveCount').innerText = rCount - (Math.floor(rCount * 0.8) || rCount);
 
@@ -4253,6 +4567,8 @@
                 if(document.getElementById('refTierProg')) document.getElementById('refTierProg').style.width = tierPct + "%";
                 let refInpEl = document.getElementById('userRefLinkInput');
                 if(refInpEl) refInpEl.value = getBotLinkWithRef();
+
+                updateReferralMilestones(rCount);
 
                 if (data.unlockedCount !== undefined && data.unlockedCount > unlockedCount) {
                     unlockedCount = data.unlockedCount;
@@ -4309,29 +4625,18 @@
                 }
                 renderVideos(); 
             } else {
-                // --- NEW REFERRAL SYSTEM FIX ---
-                let startParam = (tg.initDataUnsafe && tg.initDataUnsafe.start_param) ? tg.initDataUnsafe.start_param : '';
-                let referrerId = '';
-                
-                if (startParam.startsWith('ref_')) {
-                    referrerId = startParam.replace('ref_', '');
-                    // Update referrer's count in database
-                    if (referrerId && referrerId !== currentUser.id.toString()) {
-                        db.collection("users").doc(referrerId).update({
-                            referralCount: firebase.firestore.FieldValue.increment(1)
-                        }).catch(e => console.log("Referral tracking error:", e));
-                    }
-                }
+                handleReferralAttribution(null);
+                let initialReferrer = localStorage.getItem('pending_incoming_ref') || window.pendingReferralId || '';
 
                 db.collection("users").doc(currentUser.id.toString()).set({ 
                     name: currentUser.name, 
-                    photoUrl: currentUser.photoUrl, 
+                    photoUrl: currentUser.photoUrl || '', 
                     isPremium: false, 
                     unlockedCount: unlockedCount, 
                     referralCount: 0, 
-                    referredBy: referrerId,
+                    referredBy: initialReferrer,
                     joinedAt: firebase.firestore.FieldValue.serverTimestamp() 
-                });
+                }, { merge: true });
             }
         });
 
@@ -4578,17 +4883,30 @@
         });
 
         function getBotLinkWithRef(extraParam = "") {
-            let base = botBaseUrl.trim();
+            let base = (botBaseUrl || "").trim();
+            let param = extraParam ? extraParam : `ref_${currentUser.id}`;
+            if (!base || base.includes("yourbot")) {
+                if (window.location && window.location.origin) {
+                    return `${window.location.origin}${window.location.pathname}?startapp=${param}`;
+                }
+            }
             if(!base.startsWith("http")) base = "https://t.me/" + base.replace("@", "");
-            base = base.split("?")[0].replace(/\/$/, ""); let param = extraParam ? extraParam : `ref_${currentUser.id}`; return `${base}?startapp=${param}`;
+            base = base.split("?")[0].replace(/\/$/, "");
+            return `${base}?startapp=${param}`;
         }
         function copyBotLink() { 
             let link = getBotLinkWithRef();
             let inp = document.getElementById('userRefLinkInput');
             if (inp) inp.value = link;
-            navigator.clipboard.writeText(link).then(() => { 
-                alert("My Link copied to clipboard!"); 
-            }); 
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(link).then(() => { 
+                    alert("✅ আপনার রেফারেল লিংক কপি করা হয়েছে!\nবন্ধুদের ইনভাইট করে ফ্রি প্যাকেজ ও ভিআইপি রিওয়ার্ড আনলক করুন।"); 
+                }).catch(() => {
+                    if (inp) { inp.select(); document.execCommand('copy'); alert("✅ রেফারেল লিংক কপি করা হয়েছে!"); }
+                });
+            } else if (inp) {
+                inp.select(); document.execCommand('copy'); alert("✅ রেফারেল লিংক কপি করা হয়েছে!");
+            }
         }
         function shareAppOnTelegram() { let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef())}&text=${encodeURIComponent("Join now and watch unlimited videos!")}`; window.open(shareUrl, '_blank'); }
         function shareOnTelegram() { let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef(`post_${currentShareVid}`))}&text=${encodeURIComponent('Check out this video: ' + currentShareTitle)}`; window.open(shareUrl, '_blank'); }
@@ -4622,14 +4940,32 @@
             return `${diffMonths}mo ago`;
         }
 
+        let userViewedVideosMap = (function() {
+            try {
+                return JSON.parse(localStorage.getItem('user_viewed_videos_map') || '{}');
+            } catch(e) { return {}; }
+        })();
+
         function openVideoPlayer(vidId) {
             activeVideoId = vidId;
-            // Real-time increment view on firestore
-            db.collection("videos").doc(vidId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(e => console.log(e));
-            let vid = allVideos.find(v => v.id === vidId);
-            if (vid) {
-                vid.views = (parseInt(vid.views) || 0) + 1;
+            
+            // Count view ONLY ONCE per user for this video
+            if (!userViewedVideosMap[vidId]) {
+                userViewedVideosMap[vidId] = Date.now();
+                try {
+                    localStorage.setItem('user_viewed_videos_map', JSON.stringify(userViewedVideosMap));
+                } catch(e) {}
+                
+                // Real-time increment view on firestore (counted once per user)
+                if (typeof db !== 'undefined' && db && db.collection) {
+                    db.collection("videos").doc(vidId).update({ views: firebase.firestore.FieldValue.increment(1) }).catch(e => console.log(e));
+                }
+                let vid = allVideos.find(v => v.id === vidId);
+                if (vid) {
+                    vid.views = (parseInt(vid.views) || 0) + 1;
+                }
             }
+            
             renderVideos();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
