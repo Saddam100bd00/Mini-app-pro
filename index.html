@@ -17,7 +17,10 @@
     <!-- 1. Rewarded Popup Ad Code -->
     <script src='//libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
     
-    <!-- 2. Adsterra Social Bar (In-Page Push - Injected dynamically into body) -->
+    <!-- 2. Adsgram.ai JS SDK -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    
+    <!-- 3. Adsterra Social Bar (In-Page Push - Injected dynamically into body) -->
     
     <style>
         /* --- CSS Variables & Theme --- */
@@ -3926,6 +3929,7 @@
                 <div class="input-group">
                     <label>Ad Type 1</label>
                     <select id="vAd1Type">
+                        <option value="adsgram" selected>Adsgram.ai Rewarded Ad</option>
                         <option value="pop">Rewarded Popup</option>
                         <option value="rewarded">Rewarded Interstitial</option>
                         <option value="inapp">In-app Interstitial</option>
@@ -3935,6 +3939,7 @@
                 <div class="input-group">
                     <label>Ad Type 2</label>
                     <select id="vAd2Type">
+                        <option value="adsgram" selected>Adsgram.ai Rewarded Ad</option>
                         <option value="rewarded">Rewarded Interstitial</option>
                         <option value="pop">Rewarded Popup</option>
                         <option value="inapp">In-app Interstitial</option>
@@ -4141,6 +4146,31 @@
                 <div class="input-group" style="margin-top:5px;">
                     <label>Smartlink URL</label>
                     <input type="text" id="sAdsterraSmartlink" placeholder="https://www.profitableratecpmnetwork.com/..." value="https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6">
+                </div>
+            </div>
+
+            <!-- ADSGRAM.AI ADS SETTINGS -->
+            <div style="background:var(--bg-dark); padding:16px; border-radius:14px; border:1px solid #7c3aed; margin-bottom:16px;">
+                <h4 style="color:#a78bfa; font-size:15px; margin:0 0 12px 0; display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-rounded">ads_click</span> Adsgram.ai Ad Setup (ভিডিও কার্ড আনলক বাটনের অ্যাড)
+                </h4>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--divider);">
+                    <div>
+                        <b style="font-size:13px; color:var(--text-light);">Adsgram.ai Ads Enable</b><br>
+                        <span style="font-size:11px; color:var(--text-muted);">আনলক বাটনে Adsgram.ai অ্যাড চালু রাখুন</span>
+                    </div>
+                    <label class="switch-ui"><input type="checkbox" id="adsgramToggle" checked><span class="slider-ui"></span></label>
+                </div>
+
+                <div class="input-group" style="margin-top:10px;">
+                    <label>1st Unlock Ad Block ID (প্রথম অ্যাডের ব্লক আইডি)</label>
+                    <input type="text" id="sAdsgram1stBlockId" placeholder="e.g. pad-1234 or 1234">
+                </div>
+
+                <div class="input-group">
+                    <label>2nd Unlock Ad Block ID (দ্বিতীয় অ্যাডের ব্লক আইডি)</label>
+                    <input type="text" id="sAdsgram2ndBlockId" placeholder="e.g. pad-5678 or 5678">
                 </div>
             </div>
 
@@ -4630,6 +4660,11 @@
                 smartlink: true,
                 smartlinkUrl: "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6"
             },
+            adsgramConfig: {
+                enabled: true,
+                blockId1: "",
+                blockId2: ""
+            },
             appTimingConfig: {
                 ad1Countdown: 3,
                 ad2Countdown: 3,
@@ -4724,6 +4759,19 @@
             };
         })();
 
+        // Adsgram.ai Configuration (Admin Configurable)
+        window.adsgramConfig = (function() {
+            try {
+                let saved = JSON.parse(localStorage.getItem('adsgramConfig'));
+                if (saved && typeof saved === 'object') return saved;
+            } catch(e) {}
+            return {
+                enabled: true,
+                blockId1: "",
+                blockId2: ""
+            };
+        })();
+
         // Ad & Unlock Timings Configuration (Admin Configurable)
         window.appTimingConfig = (function() {
             try {
@@ -4815,6 +4863,17 @@
                 if (document.getElementById('adToggleSmartlink')) document.getElementById('adToggleSmartlink').checked = (a.smartlink !== false);
                 setInpVal('sAdsterraSmartlink', a.smartlinkUrl || "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6");
                 if (typeof applyAdsterraBannersUI === 'function') applyAdsterraBannersUI();
+            }
+
+            if (d.adsgramConfig && typeof d.adsgramConfig === 'object') {
+                window.adsgramConfig = Object.assign(window.adsgramConfig || {}, d.adsgramConfig);
+                try { localStorage.setItem('adsgramConfig', JSON.stringify(window.adsgramConfig)); } catch(e) {}
+            }
+            if (window.adsgramConfig) {
+                let ag = window.adsgramConfig;
+                if (document.getElementById('adsgramToggle')) document.getElementById('adsgramToggle').checked = (ag.enabled !== false);
+                setInpVal('sAdsgram1stBlockId', ag.blockId1 || "");
+                setInpVal('sAdsgram2ndBlockId', ag.blockId2 || "");
             }
 
             if (d.appTimingConfig && typeof d.appTimingConfig === 'object') {
@@ -6266,11 +6325,29 @@ function toggleLike(vidId) {
             });
         }
 
-        function enforceAdWatchTime(adType, waitSeconds) {
-            return new Promise((resolve) => {
+        function enforceAdWatchTime(adType, waitSeconds, adNumber = 1) {
+            return new Promise(async (resolve) => {
                 let requiredTime = waitSeconds * 1000;
                 let startTime = Date.now();
                 let failed = false;
+
+                // Adsgram.ai Integration Check
+                if (window.adsgramConfig && window.adsgramConfig.enabled !== false) {
+                    let blockId = (adNumber === 1) ? (window.adsgramConfig.blockId1 || "") : (window.adsgramConfig.blockId2 || "");
+                    if (adType === 'adsgram' || (blockId && blockId.trim() !== "")) {
+                        let finalBlockId = (blockId && blockId.trim() !== "") ? blockId.trim() : ((window.adsgramConfig.blockId1 || window.adsgramConfig.blockId2 || "").trim());
+                        if (finalBlockId && window.Adsgram) {
+                            try {
+                                const AdController = window.Adsgram.init({ blockId: finalBlockId });
+                                await AdController.show();
+                                resolve(true);
+                                return;
+                            } catch (e) {
+                                console.warn("Adsgram ad closed/error:", e);
+                            }
+                        }
+                    }
+                }
 
                 if(adType === 'adsterra_link') { openExternalLink(window.globalAdsterraUrl); }
                 else if(adType === 'monetag_link') { openExternalLink(window.globalMonetagUrl); }
@@ -6354,15 +6431,15 @@ function toggleLike(vidId) {
             const btnText = document.getElementById(`btn-text-${vidId}`);
 
             let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
-            let ad1Type = vid.ad1Type || 'pop';
-            let ad2Type = vid.ad2Type || 'rewarded';
+            let ad1Type = vid.ad1Type || 'adsgram';
+            let ad2Type = vid.ad2Type || 'adsgram';
             let adTime = vid.adTime ? parseInt(vid.adTime) : 5; 
 
             // AD 1 (৩ সেকেন্ড লোডিং হবে তারপর প্রথম অ্যাড আসবে)
             await runModalCountdown(1, adsForThisStep, currentStep, totalSteps);
             document.getElementById('adSimulationModal').classList.remove('active');
             
-            let success1 = await enforceAdWatchTime(ad1Type, adTime);
+            let success1 = await enforceAdWatchTime(ad1Type, adTime, 1);
             if(!success1) return showEarlyWarning(adTime, vidId, btn, totalSteps);
 
             // AD 2 (প্রথম অ্যাড দেখা শেষে ব্যাক করলে ২ নাম্বার অ্যাড লোডিং হবে ৩ সেকেন্ড, ৩ সেকেন্ড পর ২ নাম্বার অ্যাড আসবে)
@@ -6370,7 +6447,7 @@ function toggleLike(vidId) {
                 await runModalCountdown(2, adsForThisStep, currentStep, totalSteps);
                 document.getElementById('adSimulationModal').classList.remove('active');
                 
-                let success2 = await enforceAdWatchTime(ad2Type, adTime);
+                let success2 = await enforceAdWatchTime(ad2Type, adTime, 2);
                 if(!success2) return showEarlyWarning(adTime, vidId, btn, totalSteps);
             }
 
@@ -6480,15 +6557,15 @@ function toggleLike(vidId) {
             const btnText = document.getElementById(`playerBtnText-${vidId}`);
 
             let adsForThisStep = parseInt(vid[`s${currentStep + 1}Ads`] || 2);
-            let ad1Type = vid.ad1Type || 'pop';
-            let ad2Type = vid.ad2Type || 'rewarded';
+            let ad1Type = vid.ad1Type || 'adsgram';
+            let ad2Type = vid.ad2Type || 'adsgram';
             let adTime = vid.adTime ? parseInt(vid.adTime) : 5; 
 
             // AD 1 (৩ সেকেন্ড লোডিং হবে তারপর প্রথম অ্যাড আসবে)
             await runModalCountdown(1, adsForThisStep, currentStep, totalSteps);
             document.getElementById('adSimulationModal').classList.remove('active');
             
-            let success1 = await enforceAdWatchTime(ad1Type, adTime);
+            let success1 = await enforceAdWatchTime(ad1Type, adTime, 1);
             if(!success1) return showEarlyWarningPlayer(adTime, vidId, btn, totalSteps);
 
             // AD 2 (প্রথম অ্যাড দেখা শেষে ব্যাক করলে ২ নাম্বার অ্যাড লোডিং হবে ৩ সেকেন্ড, ৩ সেকেন্ড পর ২ নাম্বার অ্যাড আসবে)
@@ -6496,7 +6573,7 @@ function toggleLike(vidId) {
                 await runModalCountdown(2, adsForThisStep, currentStep, totalSteps);
                 document.getElementById('adSimulationModal').classList.remove('active');
                 
-                let success2 = await enforceAdWatchTime(ad2Type, adTime);
+                let success2 = await enforceAdWatchTime(ad2Type, adTime, 2);
                 if(!success2) return showEarlyWarningPlayer(adTime, vidId, btn, totalSteps);
             }
 
@@ -7150,6 +7227,15 @@ function toggleLike(vidId) {
             try { localStorage.setItem('adsterraConfig', JSON.stringify(window.adsterraConfig)); } catch(e) {}
             settingsData.adsterraConfig = window.adsterraConfig;
 
+            // Adsgram.ai On/Off & Block IDs Config
+            window.adsgramConfig = {
+                enabled: document.getElementById('adsgramToggle') ? document.getElementById('adsgramToggle').checked : true,
+                blockId1: getVal('sAdsgram1stBlockId', (window.adsgramConfig && window.adsgramConfig.blockId1) || ""),
+                blockId2: getVal('sAdsgram2ndBlockId', (window.adsgramConfig && window.adsgramConfig.blockId2) || "")
+            };
+            try { localStorage.setItem('adsgramConfig', JSON.stringify(window.adsgramConfig)); } catch(e) {}
+            settingsData.adsgramConfig = window.adsgramConfig;
+
             // Ad Timings & Button Countdown Config
             let parsePositiveNum = (id, fallback) => {
                 let el = document.getElementById(id);
@@ -7301,6 +7387,11 @@ function toggleLike(vidId) {
                     if (document.getElementById('adToggleSocialBar')) document.getElementById('adToggleSocialBar').checked = (window.adsterraConfig.socialBar !== false);
                     if (document.getElementById('adToggleSmartlink')) document.getElementById('adToggleSmartlink').checked = (window.adsterraConfig.smartlink !== false);
                     if (document.getElementById('sAdsterraSmartlink') && window.adsterraConfig.smartlinkUrl) document.getElementById('sAdsterraSmartlink').value = window.adsterraConfig.smartlinkUrl;
+                }
+                if (window.adsgramConfig) {
+                    if (document.getElementById('adsgramToggle')) document.getElementById('adsgramToggle').checked = (window.adsgramConfig.enabled !== false);
+                    if (document.getElementById('sAdsgram1stBlockId')) document.getElementById('sAdsgram1stBlockId').value = window.adsgramConfig.blockId1 || "";
+                    if (document.getElementById('sAdsgram2ndBlockId')) document.getElementById('sAdsgram2ndBlockId').value = window.adsgramConfig.blockId2 || "";
                 }
                 if (window.appTimingConfig) {
                     if (document.getElementById('sAd1Countdown')) document.getElementById('sAd1Countdown').value = window.appTimingConfig.ad1Countdown || 3;
