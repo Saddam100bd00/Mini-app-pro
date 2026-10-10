@@ -17,6 +17,8 @@
     <!-- 1. Rewarded Popup Ad Code -->
     <script src='//libtl.com/sdk.js' data-zone='11439323' data-sdk='show_11439323'></script>
     
+    <!-- 2. Adsterra Social Bar (In-Page Push - Injected dynamically into body) -->
+    
     <style>
         /* --- CSS Variables & Theme --- */
         :root {
@@ -2997,6 +2999,13 @@
             <button class="promo-btn ripple-btn" onclick="goToPremiumFromPromo()">
                 Upgrade Now <span id="promoTimerText" style="font-size: 13px; font-weight: normal; margin-left: 5px;">(10s)</span>
             </button>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; cursor: pointer;" onclick="toggleDontShowPromoAgain()">
+                <input type="checkbox" id="chkDontShowPromo" style="width: 16px; height: 16px; accent-color: var(--primary-accent); cursor: pointer;">
+                <label for="chkDontShowPromo" style="font-size: 12px; color: var(--text-muted); cursor: pointer; user-select: none;">এই পপআপ আর দেখতে চাই না (Don't show again)</label>
+            </div>
+            <button class="ripple-btn" onclick="disablePromoForeverAndClose()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: var(--text-muted); font-size: 11.5px; border-radius: 8px; padding: 7px 12px; margin-top: 10px; cursor: pointer; width: 100%;">
+                <span class="material-symbols-rounded" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">visibility_off</span> এই পপআপ বন্ধ করুন এবং আর দেখাবেন না
+            </button>
         </div>
     </div>
 
@@ -3091,6 +3100,12 @@
                 <option value="popular">Top</option>
             </select>
         </div>
+    </div>
+
+    <!-- Adsterra Banner 320x50 Below Search Bar (Toggleable from Admin) -->
+    <div id="adsterra_banner_320x50_top" style="display:none; margin: 8px auto 6px auto; text-align: center; max-width: 320px;">
+        <div style="font-size: 8.5px; color: var(--text-muted); margin-bottom: 2px; letter-spacing: 0.5px;">SPONSORED AD (320x50)</div>
+        <iframe srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body><script>atOptions={'key':'8566f3fdb38636e468ed801196791c4b','format':'iframe','height':50,'width':320,'params':{}};</script><script src='https://www.highrevenueformat.com/8566f3fdb38636e468ed801196791c4b/invoke.js'></script></body></html>" width="320" height="50" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:8px;display:block;margin:0 auto;box-shadow:0 2px 10px rgba(0,0,0,0.35);"></iframe>
     </div>
 
     <!-- Free Unlocks Live Indicator (When Referral Milestones Reached) -->
@@ -4221,6 +4236,13 @@
             <div class="ad-progress-bg">
                 <div class="ad-progress-fill" id="adLineProgress"></div>
             </div>
+
+            <!-- Modal Sponsored Ad Banner (300x250) -->
+            <div id="adModalBannerWrapper" style="margin: 16px auto 10px auto; max-width: 300px; text-align: center;">
+                <div style="font-size: 8.5px; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.6px; text-transform: uppercase;">Sponsored Ad</div>
+                <iframe srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body><script>atOptions={'key':'7b370a5d35c972a4fa18f32aa3f8f16a','format':'iframe','height':250,'width':300,'params':{}};</script><script src='https://www.highrevenueformat.com/7b370a5d35c972a4fa18f32aa3f8f16a/invoke.js'></script></body></html>" width="300" height="250" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:12px;display:block;margin:0 auto;box-shadow:0 4px 18px rgba(0,0,0,0.5);"></iframe>
+            </div>
+
             <div class="ad-modal-detail-card">
                 <span class="material-symbols-rounded" style="color:#a855f7; font-size:18px;">auto_awesome</span>
                 <span>বিজ্ঞাপন দেখা শেষে ব্যাক করলে স্বয়ংক্রিয়ভাবে পরবর্তী ধাপে নিয়ে যাওয়া হবে।</span>
@@ -4908,22 +4930,33 @@
         }
 
         function applyAdsterraBannersUI() {
+            let show320 = (!window.adsterraConfig || window.adsterraConfig.banner320x50 !== false);
             let b320 = document.getElementById('adsterra_banner_320x50');
-            if (b320) {
-                b320.style.display = (window.adsterraConfig && window.adsterraConfig.banner320x50 !== false) ? 'block' : 'none';
+            if (b320) b320.style.display = show320 ? 'block' : 'none';
+            let b320Top = document.getElementById('adsterra_banner_320x50_top');
+            if (b320Top) b320Top.style.display = show320 ? 'block' : 'none';
+
+            let modalBanner = document.getElementById('adModalBannerWrapper');
+            if (modalBanner) {
+                let show300 = (!window.adsterraConfig || window.adsterraConfig.banner300x250 !== false);
+                modalBanner.style.display = show300 ? 'block' : 'none';
             }
-            if (window.adsterraConfig && window.adsterraConfig.socialBar !== false) {
+
+            let showSocial = (!window.adsterraConfig || window.adsterraConfig.socialBar !== false);
+            if (showSocial) {
                 if (!document.getElementById('adsterra_socialbar_script')) {
                     let s = document.createElement('script');
                     s.id = 'adsterra_socialbar_script';
-                    s.src = 'https://pl31756718.profitableratecpmnetwork.com/d5/dd/23/d5dd238d4ef4861bfafb01bb50df8876.js';
+                    s.type = 'text/javascript';
+                    s.src = (window.adsterraConfig && window.adsterraConfig.socialBarUrl) ? window.adsterraConfig.socialBarUrl : 'https://pl31756718.profitableratecpmnetwork.com/d5/dd/23/d5dd238d4ef4861bfafb01bb50df8876.js';
                     document.body.appendChild(s);
                 }
             } else {
                 let existing = document.getElementById('adsterra_socialbar_script');
                 if (existing) existing.remove();
             }
-            if (window.adsterraConfig && window.adsterraConfig.nativeBanner !== false) {
+
+            if (!window.adsterraConfig || window.adsterraConfig.nativeBanner !== false) {
                 if (!document.getElementById('adsterra_native_script')) {
                     let ns = document.createElement('script');
                     ns.id = 'adsterra_native_script';
@@ -5383,19 +5416,41 @@
         }
 
         function showPremiumPromo() {
+            if (localStorage.getItem('hidePremiumPromo') === 'true') return;
             const promo = document.getElementById('promoOverlay');
+            if (!promo) return;
             const closeBtn = document.getElementById('promoCloseBtn');
             const timerText = document.getElementById('promoTimerText');
-            promo.classList.add('active'); closeBtn.style.display = 'none';
-            let timeLeft = 10; timerText.innerText = `(${timeLeft}s)`;
+            promo.classList.add('active'); 
+            if (closeBtn) closeBtn.style.display = 'none';
+            let timeLeft = 10; 
+            if (timerText) timerText.innerText = `(${timeLeft}s)`;
             let pTimer = setInterval(() => {
                 timeLeft--;
-                if(timeLeft > 0) { timerText.innerText = `(${timeLeft}s)`; } 
-                else { timerText.innerText = ""; clearInterval(pTimer); }
-                if(timeLeft <= 7) closeBtn.style.display = 'flex';
+                if(timeLeft > 0) { if (timerText) timerText.innerText = `(${timeLeft}s)`; } 
+                else { if (timerText) timerText.innerText = ""; clearInterval(pTimer); }
+                if(timeLeft <= 7 && closeBtn) closeBtn.style.display = 'flex';
             }, 1000);
         }
-        function closePromo() { document.getElementById('promoOverlay').classList.remove('active'); }
+        function toggleDontShowPromoAgain() {
+            const chk = document.getElementById('chkDontShowPromo');
+            if (chk) chk.checked = !chk.checked;
+        }
+        function closePromo() {
+            const chk = document.getElementById('chkDontShowPromo');
+            if (chk && chk.checked) {
+                try { localStorage.setItem('hidePremiumPromo', 'true'); } catch(e){}
+            }
+            const promo = document.getElementById('promoOverlay');
+            if (promo) promo.classList.remove('active');
+        }
+        function disablePromoForeverAndClose() {
+            try { localStorage.setItem('hidePremiumPromo', 'true'); } catch(e){}
+            const chk = document.getElementById('chkDontShowPromo');
+            if (chk) chk.checked = true;
+            const promo = document.getElementById('promoOverlay');
+            if (promo) promo.classList.remove('active');
+        }
         function goToPremiumFromPromo() { closePromo(); openOverlay('premiumOverlay'); }
         function closePremiumCongrats() { document.getElementById('premiumCongratsOverlay').classList.remove('active'); }
 
