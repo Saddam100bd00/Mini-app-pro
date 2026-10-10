@@ -722,7 +722,7 @@
             box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
         }
 
-        /* Player Sleek Unlock Button */
+        /* Player Large Unlock Button */
         .unlock-btn-player {
             position: relative;
             overflow: hidden;
@@ -730,21 +730,21 @@
             color: white;
             border: none;
             width: 100%;
-            padding: 11px 16px; /* চেকোন ও আকর্ষণীয় স্লিম */
-            border-radius: 12px;
-            font-size: 14.5px;
+            padding: 15px;
+            border-radius: 14px;
+            font-size: 15px;
             font-weight: 800;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 18px rgba(124, 58, 237, 0.35);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .unlock-btn-player:active {
             transform: translateY(2px);
-            box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
         }
         .unlock-btn-player.waiting {
             background: #231f30;
@@ -814,128 +814,17 @@
         .step-line-container { flex-grow: 1; height: 3px; background: rgba(255,255,255,0.15); margin: 0 4px; position: relative; overflow: hidden; transform: translateY(-9px); border-radius: 2px; }
         .step-line-fill { width: 0%; height: 100%; background: #ffffff; box-shadow: 0 0 12px #ffffff, 0 0 6px rgba(255,255,255,0.8); border-radius: 2px; }
 
-        .unlock-btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 11px 16px; border-radius: 12px; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25); transition: transform 0.2s, box-shadow 0.2s;}
-        .unlock-btn:active { transform: translateY(2px); box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25); }
+        .unlock-btn { position: relative; overflow: hidden; background: linear-gradient(135deg, #a855f7, #7c3aed); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3); transition: transform 0.2s, box-shadow 0.2s;}
+        .unlock-btn:active { transform: translateY(2px); box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3); }
         .unlock-btn.waiting { background: #231f30; color: #d1d5db; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
         .btn-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
 
         .premium-btn-spinner { display: inline-block; width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.15); border-top-color: #ffffff; border-left-color: #10b981; border-radius: 50%; animation: spinPremium 0.8s linear infinite; box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); }
 
-        .direct-play-btn { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; width: 100%; padding: 11px 18px; border-radius: 12px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35); transition: 0.2s;}
+        .direct-play-btn { background: var(--success); color: white; border: none; width: 100%; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top:10px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: 0.3s;}
         .direct-play-btn:active { transform: translateY(2px); }
 
-        /* Restart Countdown Sleek Animated Progress Bar */
-        .restart-timer-box { display: none; width: 100%; margin-top: 10px; }
-        .restart-timer-track {
-            position: relative;
-            width: 100%;
-            height: 24px; /* তুলনামূলক চেকোন আকর্ষণীয় লাইন */
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(245, 158, 11, 0.35);
-            border-radius: 20px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
-        .restart-timer-progress-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(90deg, #10b981 0%, #f59e0b 60%, #ef4444 100%);
-            border-radius: 20px;
-            transition: width 1s linear;
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
-            z-index: 1;
-        }
-        .restart-timer-centered-text {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 800;
-            color: #ffffff;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 8px rgba(0, 0, 0, 0.9);
-            letter-spacing: 0.3px;
-        }
-        .restart-timer-centered-text .material-symbols-rounded {
-            font-size: 14px;
-            color: #fef08a;
-            animation: spinRestartIcon 3s linear infinite;
-        }
-        @keyframes spinRestartIcon {
-            0% { transform: rotate(0deg); }
-            50% { transform: rotate(180deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         .countdown-timer { display: none; text-align: center; font-size: 13px; font-weight: bold; color: var(--warning); margin-top: 10px; background: rgba(245, 158, 11, 0.1); padding: 8px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
-
-        /* Fake Video Ads & Switches CSS */
-        .fake-video-ad-section {
-            margin-top: 25px;
-            margin-bottom: 25px;
-            padding-top: 15px;
-            border-top: 1px dashed rgba(245, 158, 11, 0.35);
-        }
-        .fake-section-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            font-weight: 800;
-            color: #fbbf24;
-            margin-bottom: 12px;
-            padding: 0 4px;
-            letter-spacing: 0.3px;
-        }
-        .fake-video-card {
-            border: 1px solid rgba(245, 158, 11, 0.3) !important;
-            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.12) !important;
-        }
-        .fake-badge {
-            background: linear-gradient(135deg, #f59e0b, #ef4444) !important;
-            color: #ffffff !important;
-            font-weight: 800 !important;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.5) !important;
-        }
-        .switch-ui {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-            flex-shrink: 0;
-        }
-        .switch-ui input { opacity: 0; width: 0; height: 0; }
-        .slider-ui {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, 0.15);
-            transition: 0.3s;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .slider-ui:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 2px;
-            background-color: white;
-            transition: 0.3s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-        }
-        .switch-ui input:checked + .slider-ui { background-color: #10b981; }
-        .switch-ui input:checked + .slider-ui:before { transform: translateX(20px); }
 
         /* Floating Admin Support Anim - Small, Perfect Circle, Fixed on Premium Menu */
         @keyframes floatUpDownSupport {
@@ -965,15 +854,15 @@
         .nav-item .material-symbols-rounded { font-size: 26px; margin-bottom: 4px; transition: 0.3s;}
         .nav-item.active .material-symbols-rounded { font-variation-settings: 'FILL' 1; }
 
-        /* --- Full Screen Smooth Page Overlay System --- */
+        /* --- Full Screen Overlay System --- */
         .overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: var(--overlay-bg); 
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); 
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
             z-index: 1000; 
             opacity: 0; visibility: hidden; 
-            display: flex; align-items: stretch; justify-content: center;
-            transition: opacity 0.22s ease, visibility 0.22s ease; 
+            display: flex; align-items: flex-end; justify-content: center;
+            transition: opacity 0.28s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.28s cubic-bezier(0.25, 1, 0.5, 1); 
         }
         .overlay.active { opacity: 1; visibility: visible; }
         
@@ -981,17 +870,17 @@
             background: var(--bg-card); 
             width: 100%; 
             max-width: 600px;
-            border-radius: 0; /* ডাইরেক্ট ফুল পেজে ওপেন হবে */
-            padding: 20px 18px 95px 18px; 
-            height: 100vh; max-height: 100vh; 
+            border-radius: 24px 24px 0 0; 
+            padding: 24px 20px 30px 20px; 
+            height: 92vh; max-height: 92vh; 
             overflow-y: auto; 
-            transform: scale(0.98); 
+            transform: translateY(20px) scale(0.98); 
             opacity: 0;
-            transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease; 
-            box-shadow: none;
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1); 
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.45);
         }
         .overlay.active .bottom-sheet { 
-            transform: scale(1); 
+            transform: translateY(0) scale(1); 
             opacity: 1;
         }
         .bottom-sheet::-webkit-scrollbar { display: none; }
@@ -3098,12 +2987,6 @@
 
     <main id="videoFeed" style="padding: 0 10px;"></main>
 
-    <!-- Adsterra Banner 320x50 (Toggleable from Admin) -->
-    <div id="adsterra_banner_320x50" style="display:none; margin: 10px auto 85px auto; text-align: center; max-width: 320px;">
-        <div style="font-size: 9px; color: var(--text-muted); margin-bottom: 3px; letter-spacing: 0.5px;">SPONSORED AD (320x50)</div>
-        <iframe srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body><script>atOptions={'key':'8566f3fdb38636e468ed801196791c4b','format':'iframe','height':50,'width':320,'params':{}};</script><script src='https://www.highrevenueformat.com/8566f3fdb38636e468ed801196791c4b/invoke.js'></script></body></html>" width="320" height="50" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:8px;display:block;margin:0 auto;box-shadow:0 2px 10px rgba(0,0,0,0.35);"></iframe>
-    </div>
-
     <!-- Admin Support Button (Small, Perfect Circle, Floating exactly above Premium Icon) -->
     <a id="supportFloatingBtn" href="#" target="_blank" class="floating-support ripple-btn" style="display:none;">
         <span class="material-symbols-rounded">support_agent</span>
@@ -4072,123 +3955,6 @@
                     <button class="btn-submit ripple-btn" style="flex:1; background:var(--text-muted);" onclick="closeChannelForm()"><span class="material-symbols-rounded">close</span> Cancel</button>
                 </div>
             </div>
-
-            <!-- ADSTERRA ADS & BANNER CONTROLS (ON/OFF TOGGLES) -->
-            <div style="background:var(--bg-dark); padding:16px; border-radius:14px; border:1px solid #f59e0b; margin-bottom:16px;">
-                <h4 style="color:#f59e0b; font-size:15px; margin:0 0 12px 0; display:flex; align-items:center; gap:6px;">
-                    <span class="material-symbols-rounded">monetization_on</span> Adsterra Ads & Banner Controls
-                </h4>
-                
-                <!-- 300x250 Banner Toggle -->
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--divider);">
-                    <div>
-                        <b style="font-size:13px; color:var(--text-light);">Banner 300x250</b><br>
-                        <span style="font-size:11px; color:var(--text-muted);">ভিডিও প্লেয়ার ও কাউন্টডাউনের নিচে প্রদর্শন</span>
-                    </div>
-                    <label class="switch-ui"><input type="checkbox" id="adToggle300x250" checked><span class="slider-ui"></span></label>
-                </div>
-
-                <!-- 320x50 Banner Toggle -->
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--divider);">
-                    <div>
-                        <b style="font-size:13px; color:var(--text-light);">Banner 320x50</b><br>
-                        <span style="font-size:11px; color:var(--text-muted);">ফিডের নিচে বা বটম নেভিগেশনের উপরে প্রদর্শন</span>
-                    </div>
-                    <label class="switch-ui"><input type="checkbox" id="adToggle320x50" checked><span class="slider-ui"></span></label>
-                </div>
-
-                <!-- Native Banner Toggle -->
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--divider);">
-                    <div>
-                        <b style="font-size:13px; color:var(--text-light);">Native Banner Widget</b><br>
-                        <span style="font-size:11px; color:var(--text-muted);">নেটিভ স্পন্সর কনটেন্ট ব্যানার</span>
-                    </div>
-                    <label class="switch-ui"><input type="checkbox" id="adToggleNative" checked><span class="slider-ui"></span></label>
-                </div>
-
-                <!-- Social Bar Toggle -->
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--divider);">
-                    <div>
-                        <b style="font-size:13px; color:var(--text-light);">Social Bar (In-Page Push)</b><br>
-                        <span style="font-size:11px; color:var(--text-muted);">হাই-সিপিএম ফ্লোটিং সোশ্যাল বার</span>
-                    </div>
-                    <label class="switch-ui"><input type="checkbox" id="adToggleSocialBar" checked><span class="slider-ui"></span></label>
-                </div>
-
-                <!-- Smartlink / Direct Link Toggle & Input -->
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
-                    <div>
-                        <b style="font-size:13px; color:var(--text-light);">Smartlink / Direct Link</b><br>
-                        <span style="font-size:11px; color:var(--text-muted);">ক্লিক আনলক ও স্পন্সর কার্ডের ডাইরেক্ট লিঙ্ক</span>
-                    </div>
-                    <label class="switch-ui"><input type="checkbox" id="adToggleSmartlink" checked><span class="slider-ui"></span></label>
-                </div>
-                <div class="input-group" style="margin-top:5px;">
-                    <label>Smartlink URL</label>
-                    <input type="text" id="sAdsterraSmartlink" placeholder="https://www.profitableratecpmnetwork.com/..." value="https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6">
-                </div>
-            </div>
-
-            <!-- TIMING & COUNTDOWN SETTINGS -->
-            <div style="background:var(--bg-dark); padding:16px; border-radius:14px; border:1px solid var(--primary-accent); margin-bottom:16px;">
-                <h4 style="color:var(--primary-accent); font-size:15px; margin:0 0 12px 0; display:flex; align-items:center; gap:6px;">
-                    <span class="material-symbols-rounded">timer</span> Ad Timing & Button Countdown (সময় নির্ধারণ)
-                </h4>
-                <div class="input-group">
-                    <label>১ম অ্যাড আসার আগের কাউন্টডাউন (সেকেন্ড)</label>
-                    <input type="number" id="sAd1Countdown" min="1" max="60" placeholder="3" value="3">
-                </div>
-                <div class="input-group">
-                    <label>২য় অ্যাড আসার আগের কাউন্টডাউন (সেকেন্ড)</label>
-                    <input type="number" id="sAd2Countdown" min="1" max="60" placeholder="3" value="3">
-                </div>
-                <div class="input-group">
-                    <label>বাটন আনলক হবার লোডিং কামডাউন (সেকেন্ড)</label>
-                    <input type="number" id="sUnlockCountdown" min="1" max="60" placeholder="3" value="3">
-                </div>
-                <div class="input-group">
-                    <label>অ্যাড দেখার বাধ্যতামূলক ভিজিট টাইম (সেকেন্ড)</label>
-                    <input type="number" id="sAdWatchTime" min="1" max="60" placeholder="5" value="5">
-                </div>
-                <div class="input-group">
-                    <label>ভিডিও আনলক থাকার মেয়াদী সময় / Restart টাইম (মিনিট)</label>
-                    <input type="number" id="sRestartTime" min="1" max="1440" placeholder="5" value="5">
-                </div>
-            </div>
-
-            <!-- FAKE VIDEO CARDS (SPONSORED DIRECT LINK CARDS) MANAGER -->
-            <div style="background:var(--bg-dark); padding:16px; border-radius:14px; border:1px solid #10b981; margin-bottom:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <div>
-                        <h4 style="color:#10b981; font-size:15px; margin:0; display:flex; align-items:center; gap:6px;">
-                            <span class="material-symbols-rounded">smart_display</span> Fake Video Cards Manager (Adsterra Ads)
-                        </h4>
-                        <span style="font-size:11px; color:var(--text-muted);">রিয়েল ভিডিওর নিচে প্রদর্শিত হবে, ক্লিকে ডাইরেক্ট লিঙ্ক ওপেন হবে</span>
-                    </div>
-                    <button class="ripple-btn" onclick="openFakeVideoFormModal()" style="background:linear-gradient(135deg, #10b981, #059669); color:white; border:none; padding:6px 12px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
-                        <span class="material-symbols-rounded" style="font-size:16px;">add_circle</span> Add Fake Card
-                    </button>
-                </div>
-                
-                <div id="adminFakeVideosListContainer" style="max-height:240px; overflow-y:auto; padding-right:4px;">
-                    <!-- Fake cards rendered dynamically -->
-                </div>
-            </div>
-
-            <!-- Inline Fake Video Edit/Add Form -->
-            <div id="fakeVideoFormBox" style="display:none; background:rgba(28, 24, 43, 0.95); border:1px solid #10b981; padding:14px; border-radius:14px; margin-bottom:16px;">
-                <h4 style="color:#10b981; margin-bottom:10px; font-size:14px;" id="fakeVideoFormTitle">Add New Fake Video Card</h4>
-                <input type="hidden" id="editingFakeVideoId" value="">
-                <div class="input-group"><label>Video Title (আকর্ষণীয় শিরোনাম)</label><input type="text" id="fakeVidTitle" placeholder="e.g. Exclusive Viral HD Video - Full Clip"></div>
-                <div class="input-group"><label>Category / Tag</label><input type="text" id="fakeVidCategory" placeholder="e.g. Trending"></div>
-                <div class="input-group"><label>Views Display (e.g. 150K)</label><input type="text" id="fakeVidViews" placeholder="e.g. 185K"></div>
-                <div class="input-group"><label>Thumbnail Image URL</label><input type="text" id="fakeVidPhoto" placeholder="https://images.unsplash.com/..."></div>
-                <div class="input-group"><label>Direct Link (খালি রাখলে Adsterra Smartlink ব্যবহার হবে)</label><input type="text" id="fakeVidUrl" placeholder="https://..."></div>
-                <div style="display:flex; gap:10px; margin-top:12px;">
-                    <button class="btn-submit ripple-btn" style="flex:1; background:#10b981;" onclick="saveFakeVideoFromForm()"><span class="material-symbols-rounded">check</span> Save Card</button>
-                    <button class="btn-submit ripple-btn" style="flex:1; background:var(--text-muted);" onclick="closeFakeVideoForm()"><span class="material-symbols-rounded">close</span> Cancel</button>
-                </div>
-            </div>
             
             <button class="btn-submit ripple-btn" style="background:var(--success);" onclick="saveSettings()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">save</span> Save Settings</button>
             <hr style="border:0; border-top:1px dashed var(--divider); margin: 25px 0;">
@@ -4240,31 +4006,15 @@
             messagingSenderId: "557252190230",
             appId: "1:557252190230:web:7e6abb19fa1f9dea959537"
         };
-        let db = null;
-        let storage = null;
-        try {
-            if (typeof firebase !== 'undefined' && firebase && firebase.apps) {
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                if (typeof firebase.firestore === 'function') db = firebase.firestore();
-                if (typeof firebase.storage === 'function') storage = firebase.storage();
-            }
-        } catch (fbErr) {
-            console.warn("Firebase initialization notice:", fbErr);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
+        const db = firebase.firestore();
+        const storage = firebase.storage(); 
 
-        // Safe Telegram WebApp initialization (supports both Telegram WebApp and standard browsers)
-        const tg = (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : {
-            initDataUnsafe: {},
-            expand: function() {},
-            ready: function() {},
-            openLink: function(url) { window.open(url, '_blank'); },
-            openTelegramLink: function(url) { window.open(url, '_blank'); },
-            showAlert: function(msg) { alert(msg); }
-        };
-        try { if (typeof tg.expand === 'function') tg.expand(); } catch(e) {}
-        try { if (typeof tg.ready === 'function') tg.ready(); } catch(e) {}
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.ready();
 
         window.currentLBType = 'unlock';
         window.currentLBTime = 'all';
@@ -4523,101 +4273,8 @@
 
         const ADMIN_ID = 6836865426; 
         let currentUser = { id: 123456, name: "Guest", isPremium: false, photoUrl: '', referralCount: 0 }; 
-
-        // Categories and channels are initialized above for clean startup flow
-
-        // Default App Settings
-        const defaultAppSettings = {
-            appName: "MINI APP PRO 2.0",
-            appLogoUrl: "",
-            adsterraUrl: "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6",
-            monetagUrl: "https://omg10.com/4/11647301",
-            botUsername: "https://t.me/auto_accepr_sk_bot",
-            payNumber: "01700000000",
-            binanceId: "12345678",
-            price1m: "100 BDT",
-            price6m: "500 BDT",
-            price1y: "900 BDT",
-            supportName: "Admin Support",
-            supportUrl: "https://t.me/admin_support",
-            tutorialUrl: "https://t.me/auto_accepr_sk",
-            ch1Name: "Main VIP Channel",
-            ch1Desc: "🔥 50K+ Active Subscribers",
-            ch1Url: "https://t.me/miniappvip",
-            ch2Name: "Viral Backup Channel",
-            ch2Desc: "🚀 Daily Fresh Viral Content",
-            ch2Url: "https://t.me/miniappbackup",
-            adsterraConfig: {
-                banner300x250: true,
-                banner320x50: true,
-                nativeBanner: true,
-                socialBar: true,
-                smartlink: true,
-                smartlinkUrl: "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6"
-            },
-            appTimingConfig: {
-                ad1Countdown: 3,
-                ad2Countdown: 3,
-                unlockCountdown: 3,
-                adWatchTime: 5,
-                restartTime: 5
-            }
-        };
-
-        // Curated Default Initial 3 Videos (Feed is immediately loaded with 3 cards)
-        const defaultInitialVideos = [
-            {
-                id: 'init_v1',
-                title: '🔥 New Viral Trending Video - Full HD Uncensored Reel',
-                category: 'VIRAL',
-                photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
-                thumbnail: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
-                banner: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
-                adUrl: 'https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6',
-                adCount: 2,
-                views: '480K',
-                likes: 340,
-                watchClicks: 120,
-                timestamp: Date.now() - 3600000
-            },
-            {
-                id: 'init_v2',
-                title: '⚡ Secret Exposed Midnight Tape (Special Leaked Edition)',
-                category: 'EXposed 🌵',
-                photo: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&auto=format&fit=crop&q=80',
-                thumbnail: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&auto=format&fit=crop&q=80',
-                banner: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&auto=format&fit=crop&q=80',
-                adUrl: 'https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6',
-                adCount: 2,
-                views: '290K',
-                likes: 195,
-                watchClicks: 88,
-                timestamp: Date.now() - 7200000
-            },
-            {
-                id: 'init_v3',
-                title: '💥 Hot Romance Behind The Scenes - 4K Premium Video',
-                category: '🔥 Hot 🔥',
-                photo: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format&fit=crop&q=80',
-                thumbnail: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format&fit=crop&q=80',
-                banner: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format&fit=crop&q=80',
-                adUrl: 'https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6',
-                adCount: 2,
-                views: '510K',
-                likes: 420,
-                watchClicks: 210,
-                timestamp: Date.now() - 10800000
-            }
-        ];
-
-        let allVideos = (function() {
-            try {
-                let saved = JSON.parse(localStorage.getItem('cached_videos_list'));
-                if (Array.isArray(saved) && saved.length > 0) return saved;
-            } catch(e) {}
-            return defaultInitialVideos.slice();
-        })();
-        let isVideosLoading = false; 
+        let allVideos = [];
+        let isVideosLoading = true; 
         let allNotis = [];
         let currentCategory = 'All';
         let selectedPlan = '';
@@ -4630,384 +4287,8 @@
         let currentShareVid = '';
         let currentShareTitle = '';
         
-        window.globalAdsterraUrl = "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6";
+        window.globalAdsterraUrl = "https://www.profitableratecpmnetwork.com/bageku998?key=82c723cb1837a70dc3582077390c735f";
         window.globalMonetagUrl = "https://omg10.com/4/11647301";
-
-        // Adsterra Ads Configuration (Admin Toggleable)
-        window.adsterraConfig = (function() {
-            try {
-                let saved = JSON.parse(localStorage.getItem('adsterraConfig'));
-                if (saved && typeof saved === 'object') return saved;
-            } catch(e) {}
-            return {
-                banner300x250: true,
-                banner320x50: true,
-                nativeBanner: true,
-                socialBar: true,
-                smartlink: true,
-                smartlinkUrl: "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6"
-            };
-        })();
-
-        // Ad & Unlock Timings Configuration (Admin Configurable)
-        window.appTimingConfig = (function() {
-            try {
-                let saved = JSON.parse(localStorage.getItem('appTimingConfig'));
-                if (saved && typeof saved === 'object') return saved;
-            } catch(e) {}
-            return {
-                ad1Countdown: 3,
-                ad2Countdown: 3,
-                unlockCountdown: 3,
-                adWatchTime: 5,
-                restartTime: 5
-            };
-        })();
-
-        // Unified Settings Binder Function
-        function applySettingsToUIAndForm(d) {
-            if (!d) return;
-            let currentAppName = d.appName || "MINI APP PRO 2.0";
-            document.title = currentAppName;
-            let titleText = document.getElementById('appTitleText');
-            if (titleText) titleText.innerText = currentAppName;
-            let appLogoEl = document.getElementById('appLogoArea');
-            if (appLogoEl) {
-                let logoHtml = (d.appLogoUrl && d.appLogoUrl.trim() !== "") 
-                    ? `<div class="header-logo-circle" id="headerLogoCircle"><img src="${d.appLogoUrl}" alt="Logo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>` 
-                    : `<div class="header-logo-circle" id="headerLogoCircle"><span class="material-symbols-rounded" style="font-size:16px;">play_arrow</span></div>`;
-                appLogoEl.innerHTML = `${logoHtml}<span id="appTitleText" class="header-title-text">${currentAppName}</span>`;
-            }
-
-            if (document.getElementById('payNumberShow')) document.getElementById('payNumberShow').innerText = d.payNumber || "Not Set";
-            if (document.getElementById('binanceShow')) document.getElementById('binanceShow').innerText = d.binanceId || "Not Set";
-            if (document.getElementById('btnPrice1m')) document.getElementById('btnPrice1m').innerText = d.price1m || "100 BDT";
-            if (document.getElementById('btnPrice6m')) document.getElementById('btnPrice6m').innerText = d.price6m || "500 BDT";
-            if (document.getElementById('btnPrice1y')) document.getElementById('btnPrice1y').innerText = d.price1y || "900 BDT";
-
-            if (d.adsterraUrl) window.globalAdsterraUrl = d.adsterraUrl;
-            if (d.monetagUrl) window.globalMonetagUrl = d.monetagUrl;
-            if (d.ch1Url) mainChannelUrl = d.ch1Url;
-            if (d.botUsername) botBaseUrl = d.botUsername;
-
-            const setInpVal = (id, val) => {
-                let el = document.getElementById(id);
-                if (el && val !== undefined && val !== null) el.value = val;
-            };
-
-            setInpVal('sAppName', d.appName || "MINI APP PRO 2.0");
-            setInpVal('sAppLogo', d.appLogoUrl || "");
-            setInpVal('sAdsterraUrl', d.adsterraUrl || "");
-            setInpVal('sMonetagUrl', d.monetagUrl || "");
-            setInpVal('sBotUsername', d.botUsername || "");
-            setInpVal('sPayNum', d.payNumber || "");
-            setInpVal('sBinance', d.binanceId || "");
-            setInpVal('p1m', d.price1m || "100 BDT");
-            setInpVal('p6m', d.price6m || "500 BDT");
-            setInpVal('p1y', d.price1y || "900 BDT");
-            setInpVal('sSupportName', d.supportName || "");
-            setInpVal('sSupportUrl', d.supportUrl || "");
-            setInpVal('sTutorialUrlInput', d.tutorialUrl || "");
-            setInpVal('sTutorial', d.tutorialUrl || "");
-            setInpVal('ch1Name', d.ch1Name || "");
-            setInpVal('ch1Desc', d.ch1Desc || "");
-            setInpVal('ch1Url', d.ch1Url || "");
-            setInpVal('ch2Name', d.ch2Name || "");
-            setInpVal('ch2Desc', d.ch2Desc || "");
-            setInpVal('ch2Url', d.ch2Url || "");
-
-            let channelsHtml = "";
-            if (d.ch1Name && d.ch1Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch1Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--primary-accent);"><span class="material-symbols-rounded" style="color:var(--text-light)">campaign</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch1Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch1Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
-            if (d.ch2Name && d.ch2Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch2Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--danger);"><span class="material-symbols-rounded" style="color:var(--text-light)">local_fire_department</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch2Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch2Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
-            let chContainer = document.getElementById('channelListContainer');
-            if (chContainer && channelsHtml) chContainer.innerHTML = channelsHtml;
-
-            if (d.supportUrl && d.supportName) {
-                let supBtn = document.getElementById('supportFloatingBtn');
-                if (supBtn) { supBtn.style.display = 'flex'; supBtn.href = d.supportUrl; }
-            }
-
-            if (d.adsterraConfig && typeof d.adsterraConfig === 'object') {
-                window.adsterraConfig = Object.assign(window.adsterraConfig || {}, d.adsterraConfig);
-                try { localStorage.setItem('adsterraConfig', JSON.stringify(window.adsterraConfig)); } catch(e) {}
-            }
-            if (window.adsterraConfig) {
-                let a = window.adsterraConfig;
-                if (document.getElementById('adToggle300x250')) document.getElementById('adToggle300x250').checked = (a.banner300x250 !== false);
-                if (document.getElementById('adToggle320x50')) document.getElementById('adToggle320x50').checked = (a.banner320x50 !== false);
-                if (document.getElementById('adToggleNative')) document.getElementById('adToggleNative').checked = (a.nativeBanner !== false);
-                if (document.getElementById('adToggleSocialBar')) document.getElementById('adToggleSocialBar').checked = (a.socialBar !== false);
-                if (document.getElementById('adToggleSmartlink')) document.getElementById('adToggleSmartlink').checked = (a.smartlink !== false);
-                setInpVal('sAdsterraSmartlink', a.smartlinkUrl || "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6");
-                if (typeof applyAdsterraBannersUI === 'function') applyAdsterraBannersUI();
-            }
-
-            if (d.appTimingConfig && typeof d.appTimingConfig === 'object') {
-                window.appTimingConfig = Object.assign(window.appTimingConfig || {}, d.appTimingConfig);
-                try { localStorage.setItem('appTimingConfig', JSON.stringify(window.appTimingConfig)); } catch(e) {}
-            }
-            if (window.appTimingConfig) {
-                let t = window.appTimingConfig;
-                setInpVal('sAd1Countdown', t.ad1Countdown || 3);
-                setInpVal('sAd2Countdown', t.ad2Countdown || 3);
-                setInpVal('sUnlockCountdown', t.unlockCountdown || 3);
-                setInpVal('sAdWatchTime', t.adWatchTime || 5);
-                setInpVal('sRestartTime', t.restartTime || 5);
-            }
-
-            if (d.categories && Array.isArray(d.categories) && d.categories.length > 0) {
-                appCategories = d.categories.map(normalizeCategoryItem);
-                try { localStorage.setItem('appCategories', JSON.stringify(appCategories)); } catch(e) {}
-                if (typeof renderCategoryPills === 'function') renderCategoryPills();
-                if (typeof renderCategorySelectOptions === 'function') renderCategorySelectOptions();
-                if (typeof renderAdminCategoriesList === 'function') renderAdminCategoriesList();
-                if (typeof updateCategoryCounts === 'function') updateCategoryCounts();
-            }
-
-            if (d.channels && Array.isArray(d.channels) && d.channels.length > 0) {
-                officialChannels = d.channels.map((c, i) => normalizeChannelItem(c, i));
-                try { localStorage.setItem('officialChannels', JSON.stringify(officialChannels)); } catch(e) {}
-                if (typeof renderAdminChannelsList === 'function') renderAdminChannelsList();
-                if (typeof renderUserChannelsList === 'function') renderUserChannelsList();
-            }
-
-            if (d.fakeVideos && Array.isArray(d.fakeVideos) && d.fakeVideos.length > 0) {
-                window.fakeVideosList = d.fakeVideos;
-                try { localStorage.setItem('fakeVideosList', JSON.stringify(window.fakeVideosList)); } catch(e) {}
-                if (typeof renderAdminFakeVideosList === 'function') renderAdminFakeVideosList();
-            }
-        }
-
-        // Initialize settings immediately from local cache or default
-        (function() {
-            let initialSaved = null;
-            try {
-                initialSaved = JSON.parse(localStorage.getItem('appSettings'));
-            } catch(e) {}
-            let merged = Object.assign({}, defaultAppSettings, initialSaved || {});
-            applySettingsToUIAndForm(merged);
-        })();
-
-        // Default Fake / Sponsored Video Cards
-        const defaultFakeVideos = [
-            {
-                id: 'fake_1',
-                title: '🔥 Exclusive Viral Hot Reel - Full Uncensored Clip',
-                category: 'Viral',
-                views: '320K',
-                photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
-                directLink: ''
-            },
-            {
-                id: 'fake_2',
-                title: '⚡ VIP Midnight Secret Stream (HD 1080p)',
-                category: 'Trending',
-                views: '245K',
-                photo: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&auto=format&fit=crop&q=80',
-                directLink: ''
-            },
-            {
-                id: 'fake_3',
-                title: '💎 Top Leaked Telegram Video - Watch Now',
-                category: 'Exclusive',
-                views: '190K',
-                photo: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format&fit=crop&q=80',
-                directLink: ''
-            },
-            {
-                id: 'fake_4',
-                title: '💥 Most Requested Special Video (New Release)',
-                category: 'Hot',
-                views: '410K',
-                photo: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=600&auto=format&fit=crop&q=80',
-                directLink: ''
-            }
-        ];
-
-        window.fakeVideosList = (function() {
-            try {
-                let saved = JSON.parse(localStorage.getItem('fakeVideosList'));
-                if (Array.isArray(saved) && saved.length > 0) return saved;
-            } catch(e) {}
-            return defaultFakeVideos.slice();
-        })();
-
-        function getAdsterra300x250Html() {
-            if (!window.adsterraConfig || window.adsterraConfig.banner300x250 === false) return '';
-            return `
-                <div id="adsterra_banner_300x250" style="margin: 16px auto; text-align: center; max-width: 300px;">
-                    <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.8px;">SPONSORED AD (300x250)</div>
-                    <iframe srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body>&lt;script&gt;atOptions={'key':'7b370a5d35c972a4fa18f32aa3f8f16a','format':'iframe','height':250,'width':300,'params':{}};&lt;/script&gt;&lt;script src='https://www.highrevenueformat.com/7b370a5d35c972a4fa18f32aa3f8f16a/invoke.js'&gt;&lt;/script&gt;</body></html>" width="300" height="250" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:12px;display:block;margin:0 auto;box-shadow:0 4px 18px rgba(0,0,0,0.4);"></iframe>
-                </div>
-            `;
-        }
-
-        function getAdsterraNativeHtml() {
-            if (!window.adsterraConfig || window.adsterraConfig.nativeBanner === false) return '';
-            return `
-                <div id="adsterra_native_wrapper" style="margin: 15px 0;">
-                    <div style="font-size: 11px; font-weight:700; color:#f59e0b; margin-bottom: 6px; display:flex; align-items:center; gap:4px;">
-                        <span class="material-symbols-rounded" style="font-size:14px;">auto_awesome</span> Recommended Content
-                    </div>
-                    <div id="container-f1e987853ad414e1e7565893065c26fa"></div>
-                </div>
-            `;
-        }
-
-        function applyAdsterraBannersUI() {
-            let b320 = document.getElementById('adsterra_banner_320x50');
-            if (b320) {
-                b320.style.display = (window.adsterraConfig && window.adsterraConfig.banner320x50 !== false) ? 'block' : 'none';
-            }
-            if (window.adsterraConfig && window.adsterraConfig.socialBar !== false) {
-                if (!document.getElementById('adsterra_socialbar_script')) {
-                    let s = document.createElement('script');
-                    s.id = 'adsterra_socialbar_script';
-                    s.src = 'https://pl31756718.profitableratecpmnetwork.com/d5/dd/23/d5dd238d4ef4861bfafb01bb50df8876.js';
-                    document.body.appendChild(s);
-                }
-            } else {
-                let existing = document.getElementById('adsterra_socialbar_script');
-                if (existing) existing.remove();
-            }
-            if (window.adsterraConfig && window.adsterraConfig.nativeBanner !== false) {
-                if (!document.getElementById('adsterra_native_script')) {
-                    let ns = document.createElement('script');
-                    ns.id = 'adsterra_native_script';
-                    ns.async = true;
-                    ns.setAttribute('data-cfasync', 'false');
-                    ns.src = 'https://pl31756725.profitableratecpmnetwork.com/f1e987853ad414e1e7565893065c26fa/invoke.js';
-                    document.body.appendChild(ns);
-                }
-            }
-        }
-
-        function handleFakeVideoClick(fakeId, directUrl) {
-            let target = directUrl || (window.adsterraConfig ? window.adsterraConfig.smartlinkUrl : '') || window.globalAdsterraUrl || 'https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6';
-            showToast("ভিডিও ওপেন হচ্ছে...", "smart_display");
-            openExternalLink(target);
-        }
-
-        function renderAdminFakeVideosList() {
-            const container = document.getElementById('adminFakeVideosListContainer');
-            if (!container) return;
-            let list = window.fakeVideosList || defaultFakeVideos;
-            if (list.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted); font-size:12px; text-align:center; padding:10px;">কোনো ফেক ভিডিও কার্ড নেই। "Add Fake Card" বাটনে ক্লিক করে যোগ করুন।</p>';
-                return;
-            }
-            container.innerHTML = list.map(item => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); padding:10px 12px; border-radius:10px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.06);">
-                    <div style="display:flex; align-items:center; gap:10px; overflow:hidden;">
-                        <img src="${item.photo || 'https://via.placeholder.com/60'}" style="width:42px; height:42px; border-radius:8px; object-fit:cover; flex-shrink:0;">
-                        <div style="overflow:hidden;">
-                            <b style="color:var(--text-light); font-size:13px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(item.title || 'Fake Video')}</b>
-                            <span style="font-size:11px; color:#fbbf24;">${escapeHtml(item.category || 'Trending')} • ${item.views || '100K'} ভিউ</span>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:6px; flex-shrink:0;">
-                        <button class="ripple-btn" onclick="openFakeVideoFormModal('${item.id}')" style="background:rgba(245, 158, 11, 0.2); color:#fbbf24; border:1px solid rgba(245, 158, 11, 0.4); padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer;">এডিট</button>
-                        <button class="ripple-btn" onclick="deleteFakeVideo('${item.id}')" style="background:rgba(239, 68, 68, 0.2); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.4); padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer;">ডিলেট</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function openFakeVideoFormModal(fakeId = null) {
-            const formBox = document.getElementById('fakeVideoFormBox');
-            if (!formBox) return;
-            formBox.style.display = 'block';
-            if (fakeId) {
-                let item = (window.fakeVideosList || []).find(f => f.id === fakeId);
-                if (item) {
-                    document.getElementById('fakeVideoFormTitle').innerText = 'Edit Fake Video Card';
-                    document.getElementById('editingFakeVideoId').value = item.id;
-                    document.getElementById('fakeVidTitle').value = item.title || '';
-                    document.getElementById('fakeVidCategory').value = item.category || '';
-                    document.getElementById('fakeVidViews').value = item.views || '';
-                    document.getElementById('fakeVidPhoto').value = item.photo || '';
-                    document.getElementById('fakeVidUrl').value = item.directLink || '';
-                    return;
-                }
-            }
-            document.getElementById('fakeVideoFormTitle').innerText = 'Add New Fake Video Card';
-            document.getElementById('editingFakeVideoId').value = '';
-            document.getElementById('fakeVidTitle').value = '';
-            document.getElementById('fakeVidCategory').value = 'Trending';
-            document.getElementById('fakeVidViews').value = '195K';
-            document.getElementById('fakeVidPhoto').value = '';
-            document.getElementById('fakeVidUrl').value = '';
-        }
-
-        function closeFakeVideoForm() {
-            const formBox = document.getElementById('fakeVideoFormBox');
-            if (formBox) formBox.style.display = 'none';
-        }
-
-        function saveFakeVideoFromForm() {
-            let editId = document.getElementById('editingFakeVideoId')?.value;
-            let title = document.getElementById('fakeVidTitle')?.value.trim();
-            let category = document.getElementById('fakeVidCategory')?.value.trim() || 'Trending';
-            let views = document.getElementById('fakeVidViews')?.value.trim() || '150K';
-            let photo = document.getElementById('fakeVidPhoto')?.value.trim() || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80';
-            let directLink = document.getElementById('fakeVidUrl')?.value.trim();
-
-            if (!title) return notifyAdmin("ভিডিও টাইটেল দিন!", false);
-
-            if (!window.fakeVideosList) window.fakeVideosList = defaultFakeVideos.slice();
-
-            if (editId) {
-                let idx = window.fakeVideosList.findIndex(f => f.id === editId);
-                if (idx !== -1) {
-                    window.fakeVideosList[idx] = { id: editId, title, category, views, photo, directLink };
-                }
-            } else {
-                window.fakeVideosList.push({
-                    id: 'fake_' + Date.now(),
-                    title, category, views, photo, directLink
-                });
-            }
-
-            localStorage.setItem('fakeVideosList', JSON.stringify(window.fakeVideosList));
-            renderAdminFakeVideosList();
-            renderVideos();
-            closeFakeVideoForm();
-            notifyAdmin("🎉 ফেক ভিডিও কার্ড সেভ করা হয়েছে!");
-
-            db.collection("settings").doc("app_settings").set({
-                fakeVideos: window.fakeVideosList
-            }, { merge: true }).catch(e => console.log(e));
-        }
-
-        function deleteFakeVideo(fakeId) {
-            if (!confirm("Are you sure you want to delete this fake video card?")) return;
-            if (!window.fakeVideosList) window.fakeVideosList = defaultFakeVideos.slice();
-            window.fakeVideosList = window.fakeVideosList.filter(f => f.id !== fakeId);
-            localStorage.setItem('fakeVideosList', JSON.stringify(window.fakeVideosList));
-            renderAdminFakeVideosList();
-            renderVideos();
-            notifyAdmin("কার্ডটি সফলভাবে ডিলিট করা হয়েছে!");
-            db.collection("settings").doc("app_settings").set({
-                fakeVideos: window.fakeVideosList
-            }, { merge: true }).catch(e => console.log(e));
-        }
-
-        // Auto-sanitize any legacy 1-year timers to exactly 5 minutes
-        (function sanitizeLegacyUnlockTimers() {
-            try {
-                let maxAllowed = Date.now() + (30 * 60 * 1000);
-                for (let i = 0; i < localStorage.length; i++) {
-                    let key = localStorage.key(i);
-                    if (key && key.startsWith('vidProgress_')) {
-                        let val = JSON.parse(localStorage.getItem(key));
-                        if (val && val.unlockedUntil && val.unlockedUntil > maxAllowed) {
-                            val.unlockedUntil = Date.now() + (5 * 60 * 1000);
-                            localStorage.setItem(key, JSON.stringify(val));
-                        }
-                    }
-                }
-            } catch(e) {}
-        })();
 
         function notifyAdmin(msg, isSuccess = true) {
             if (typeof showToast === 'function') {
@@ -5083,15 +4364,7 @@
             overlay.addEventListener('click', function(e) {
                 if(e.target === this) {
                     this.classList.remove('active');
-                    const bs = this.querySelector('.bottom-sheet');
-                    if(bs) {
-                        if (this.id === 'sidebarOverlay') {
-                            bs.style.transform = 'translateX(-100%)';
-                        } else {
-                            bs.style.transform = 'scale(0.98)';
-                            bs.style.opacity = '0';
-                        }
-                    }
+                    if(this.querySelector('.bottom-sheet')) this.querySelector('.bottom-sheet').style.transform = 'translateY(100%)';
                 }
             });
         });
@@ -5268,9 +4541,7 @@
             }, 4000);
         })();
 
-        if (db && typeof db.collection === 'function') {
-            try {
-                db.collection("users").doc(currentUser.id.toString()).onSnapshot((doc) => {
+        db.collection("users").doc(currentUser.id.toString()).onSnapshot((doc) => {
             const badgeEl = document.getElementById('userStatusBadge');
             const crownBadgeEl = document.getElementById('profVipCrownBadge');
             if(doc.exists) {
@@ -5357,30 +4628,17 @@
                 handleReferralAttribution(null);
                 let initialReferrer = localStorage.getItem('pending_incoming_ref') || window.pendingReferralId || '';
 
-                try {
-                    db.collection("users").doc(currentUser.id.toString()).set({ 
-                        name: currentUser.name, 
-                        photoUrl: currentUser.photoUrl || '', 
-                        isPremium: false, 
-                        unlockedCount: unlockedCount, 
-                        referralCount: 0, 
-                        referredBy: initialReferrer,
-                        joinedAt: firebase.firestore.FieldValue.serverTimestamp() 
-                    }, { merge: true }).catch(e => console.warn(e));
-                } catch(e) {}
-                renderVideos();
+                db.collection("users").doc(currentUser.id.toString()).set({ 
+                    name: currentUser.name, 
+                    photoUrl: currentUser.photoUrl || '', 
+                    isPremium: false, 
+                    unlockedCount: unlockedCount, 
+                    referralCount: 0, 
+                    referredBy: initialReferrer,
+                    joinedAt: firebase.firestore.FieldValue.serverTimestamp() 
+                }, { merge: true });
             }
-        }, (err) => {
-            console.warn("User doc onSnapshot warning (using local user state):", err);
-            renderVideos();
         });
-            } catch(e) {
-                console.warn("User onSnapshot attach error:", e);
-                renderVideos();
-            }
-        } else {
-            renderVideos();
-        }
 
         function showPremiumPromo() {
             const promo = document.getElementById('promoOverlay');
@@ -5401,136 +4659,91 @@
 
         let videosUnsubscribe = null;
         function loadVideosFeed() {
+            isVideosLoading = true;
+            renderVideos();
             if (videosUnsubscribe) {
                 try { videosUnsubscribe(); } catch(e) {}
             }
 
-            if (!db || typeof db.collection !== 'function') {
-                isVideosLoading = false;
-                renderVideos();
-                if (typeof renderAdminVideoManageList === 'function') renderAdminVideoManageList();
-                if (typeof updateCategoryCounts === 'function') updateCategoryCounts();
-                return;
-            }
-
-            try {
-                // Query videos directly so Firestore never drops documents lacking timestamp field
-                videosUnsubscribe = db.collection("videos").onSnapshot((snapshot) => {
-                    isVideosLoading = false; 
-                    let firestoreList = [];
-                    snapshot.forEach((doc) => {
-                        let data = doc.data() || {}; 
-                        data.id = doc.id; 
-                        data.title = data.title || data.name || data.caption || data.video_title || 'Exclusive Video';
-                        data.photo = data.photo || data.thumbnail || data.banner || data.image || data.banner_url || data.thumbnail_url || data.poster || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
-                        data.category = data.category || data.cat || 'General';
-                        data.adUrl = data.adUrl || data.url || data.targetUrl || data.link || data.share_link || '#';
-                        data.adCount = parseInt(data.adCount) || 2;
-                        if(!data.views) data.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
-                        if(!data.likes) data.likes = Math.floor(Math.random() * 200 + 50);
-                        firestoreList.push(data);
-                    });
-
-                    if (firestoreList.length > 0) {
-                        allVideos = firestoreList;
-                        // Client-side sort by timestamp/date/createdAt
-                        allVideos.sort((a, b) => {
-                            let getSeconds = (v) => {
-                                if (!v) return 0;
-                                if (v.timestamp && typeof v.timestamp.seconds === 'number') return v.timestamp.seconds;
-                                if (v.timestamp instanceof Date) return Math.floor(v.timestamp.getTime() / 1000);
-                                if (typeof v.timestamp === 'number') return v.timestamp > 1e11 ? Math.floor(v.timestamp / 1000) : v.timestamp;
-                                if (typeof v.timestamp === 'string') {
-                                    let parsed = Date.parse(v.timestamp);
-                                    if (!isNaN(parsed)) return Math.floor(parsed / 1000);
-                                }
-                                if (v.createdAt && typeof v.createdAt.seconds === 'number') return v.createdAt.seconds;
-                                return 0;
-                            };
-                            return getSeconds(b) - getSeconds(a);
-                        });
-                        try {
-                            localStorage.setItem('cached_videos_list', JSON.stringify(allVideos));
-                        } catch(e) {}
-                    } else {
-                        try {
-                            let savedCache = JSON.parse(localStorage.getItem('cached_videos_list'));
-                            if (Array.isArray(savedCache) && savedCache.length > 0) {
-                                allVideos = savedCache;
-                            } else {
-                                allVideos = defaultInitialVideos.slice();
-                            }
-                        } catch(e) {
-                            allVideos = defaultInitialVideos.slice();
-                        }
-                    }
-
-                    let totalBadge = document.getElementById('totalVidCountBadge');
-                    if (totalBadge) totalBadge.innerText = `{${allVideos.length}}`;
-                    let totalCountEl = document.getElementById('totalVidCount');
-                    if (totalCountEl) totalCountEl.innerText = allVideos.length;
-
-                    renderVideos();
-                    if(currentUser && currentUser.id === ADMIN_ID) renderAdminVideoManageList();
-                    if (typeof updateCategoryCounts === 'function') updateCategoryCounts();
-
-                    // Auto-trigger video player & unlock screen if opened via Telegram "Watch Video" button
-                    if (window.pendingDeepLinkVideoId && !window.videoAutoOpened) {
-                        let targetId = window.pendingDeepLinkVideoId;
-                        let matchedVid = allVideos.find(v => v.id === targetId || v.shortCode === targetId || (v.id && v.id.toLowerCase() === targetId.toLowerCase()));
-                        if (matchedVid) {
-                            window.videoAutoOpened = true;
-                            setTimeout(() => {
-                                openVideoPlayer(matchedVid.id);
-                            }, 350);
-                        } else if (targetId) {
-                            db.collection("videos").doc(targetId).get().then(doc => {
-                                if (doc.exists) {
-                                    let vData = doc.data() || {}; vData.id = doc.id;
-                                    vData.title = vData.title || vData.name || 'Exclusive Video';
-                                    vData.photo = vData.photo || vData.thumbnail || vData.banner || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
-                                    if (!allVideos.some(v => v.id === vData.id)) {
-                                        allVideos.unshift(vData);
-                                        if (totalCountEl) totalCountEl.innerText = allVideos.length;
-                                        if (totalBadge) totalBadge.innerText = `{${allVideos.length}}`;
-                                    }
-                                    window.videoAutoOpened = true;
-                                    setTimeout(() => {
-                                        openVideoPlayer(vData.id);
-                                    }, 350);
-                                }
-                            }).catch(e => console.log("Deep link video fetch:", e));
-                        }
-                    }
-
-                    if (!window.promoShown && !currentUser.isPremium) {
-                        window.promoShown = true; setTimeout(showPremiumPromo, 1500); 
-                    }
-                }, (error) => {
-                    console.warn("Firestore onSnapshot videos error (using cached local videos):", error);
-                    isVideosLoading = false;
-                    if (!allVideos || allVideos.length === 0) {
-                        try {
-                            let saved = JSON.parse(localStorage.getItem('cached_videos_list'));
-                            if (Array.isArray(saved) && saved.length > 0) allVideos = saved;
-                            else allVideos = defaultInitialVideos.slice();
-                        } catch(e) {
-                            allVideos = defaultInitialVideos.slice();
-                        }
-                    }
-                    let totalBadge = document.getElementById('totalVidCountBadge');
-                    if (totalBadge) totalBadge.innerText = `{${allVideos.length}}`;
-                    let totalCountEl = document.getElementById('totalVidCount');
-                    if (totalCountEl) totalCountEl.innerText = allVideos.length;
-                    renderVideos();
-                    if(currentUser && currentUser.id === ADMIN_ID) renderAdminVideoManageList();
-                    if (typeof updateCategoryCounts === 'function') updateCategoryCounts();
+            // Query videos directly so Firestore never drops documents lacking timestamp field
+            videosUnsubscribe = db.collection("videos").onSnapshot((snapshot) => {
+                isVideosLoading = false; 
+                allVideos = [];
+                snapshot.forEach((doc) => {
+                    let data = doc.data() || {}; 
+                    data.id = doc.id; 
+                    data.title = data.title || data.name || data.caption || data.video_title || 'Exclusive Video';
+                    data.photo = data.photo || data.thumbnail || data.banner || data.image || data.banner_url || data.thumbnail_url || data.poster || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+                    data.category = data.category || data.cat || 'General';
+                    data.adUrl = data.adUrl || data.url || data.targetUrl || data.link || data.share_link || '#';
+                    data.adCount = parseInt(data.adCount) || 2;
+                    if(!data.views) data.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K';
+                    if(!data.likes) data.likes = Math.floor(Math.random() * 200 + 50);
+                    allVideos.push(data);
                 });
-            } catch(err) {
-                console.warn("Firestore videos listener init error:", err);
+
+                // Client-side sort by timestamp/date/createdAt
+                allVideos.sort((a, b) => {
+                    let getSeconds = (v) => {
+                        if (!v) return 0;
+                        if (v.timestamp && typeof v.timestamp.seconds === 'number') return v.timestamp.seconds;
+                        if (v.timestamp instanceof Date) return Math.floor(v.timestamp.getTime() / 1000);
+                        if (typeof v.timestamp === 'number') return v.timestamp > 1e11 ? Math.floor(v.timestamp / 1000) : v.timestamp;
+                        if (typeof v.timestamp === 'string') {
+                            let parsed = Date.parse(v.timestamp);
+                            if (!isNaN(parsed)) return Math.floor(parsed / 1000);
+                        }
+                        if (v.createdAt && typeof v.createdAt.seconds === 'number') return v.createdAt.seconds;
+                        return 0;
+                    };
+                    return getSeconds(b) - getSeconds(a);
+                });
+
+                let totalBadge = document.getElementById('totalVidCountBadge');
+                if (totalBadge) totalBadge.innerText = `{${allVideos.length}}`;
+                let totalCountEl = document.getElementById('totalVidCount');
+                if (totalCountEl) totalCountEl.innerText = allVideos.length;
+
+                renderVideos();
+                if(currentUser && currentUser.id === ADMIN_ID) renderAdminVideoManageList();
+
+                // Auto-trigger video player & unlock screen if opened via Telegram "Watch Video" button
+                if (window.pendingDeepLinkVideoId && !window.videoAutoOpened) {
+                    let targetId = window.pendingDeepLinkVideoId;
+                    let matchedVid = allVideos.find(v => v.id === targetId || v.shortCode === targetId || (v.id && v.id.toLowerCase() === targetId.toLowerCase()));
+                    if (matchedVid) {
+                        window.videoAutoOpened = true;
+                        setTimeout(() => {
+                            openVideoPlayer(matchedVid.id);
+                        }, 350);
+                    } else if (targetId) {
+                        db.collection("videos").doc(targetId).get().then(doc => {
+                            if (doc.exists) {
+                                let vData = doc.data() || {}; vData.id = doc.id;
+                                vData.title = vData.title || vData.name || 'Exclusive Video';
+                                vData.photo = vData.photo || vData.thumbnail || vData.banner || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+                                if (!allVideos.some(v => v.id === vData.id)) {
+                                    allVideos.unshift(vData);
+                                    if (totalCountEl) totalCountEl.innerText = allVideos.length;
+                                    if (totalBadge) totalBadge.innerText = `{${allVideos.length}}`;
+                                }
+                                window.videoAutoOpened = true;
+                                setTimeout(() => {
+                                    openVideoPlayer(vData.id);
+                                }, 350);
+                            }
+                        }).catch(e => console.log("Deep link video fetch:", e));
+                    }
+                }
+
+                if (!window.promoShown && !currentUser.isPremium) {
+                    window.promoShown = true; setTimeout(showPremiumPromo, 1500); 
+                }
+            }, (error) => {
+                console.error("Firestore onSnapshot videos error:", error);
                 isVideosLoading = false;
                 renderVideos();
-            }
+            });
         }
 
         // Initialize listener
@@ -5542,17 +4755,15 @@
                 isVideosLoading = false;
                 renderVideos();
             }
-        }, 1500);
+        }, 3500);
 
         function refreshVideosFeed() {
             loadVideosFeed();
             if (typeof showToast === 'function') showToast("ভিডিও ফিড রিফ্রেশ হচ্ছে...", "sync");
         }
 
-        if (db && typeof db.collection === 'function') {
-            try {
-                db.collection("notifications").onSnapshot(snap => {
-                    allNotis = []; let html = ""; let dotInd = document.getElementById('notiDotIndicator');
+        db.collection("notifications").onSnapshot(snap => {
+            allNotis = []; let html = ""; let dotInd = document.getElementById('notiDotIndicator');
             if(snap.empty) { 
                 if(dotInd) dotInd.style.display = 'none'; 
             } else {
@@ -5592,32 +4803,84 @@
         }, err => {
             console.error("Notifications listener error:", err);
         });
-            } catch(e) {
-                console.warn("Notifications onSnapshot attach error:", e);
-            }
-        }
 
         function closeLatestNotice() {
             localStorage.setItem('lastSeenNoticeId', window.currentLatestNoticeId);
             document.getElementById('latestNoticeOverlay').classList.remove('active');
         }
 
-        if (db && typeof db.collection === 'function') {
-            try {
-                db.collection("settings").doc("app_settings").onSnapshot(doc => {
-                    if(doc.exists) {
-                        let d = doc.data() || {};
-                        let merged = Object.assign({}, defaultAppSettings, d);
-                        try { localStorage.setItem('appSettings', JSON.stringify(merged)); } catch(e) {}
-                        applySettingsToUIAndForm(merged);
-                    }
-                }, err => {
-                    console.warn("Firestore app_settings onSnapshot err (using local settings):", err);
-                });
-            } catch(e) {
-                console.warn("Firestore settings listener init error:", e);
+        db.collection("settings").doc("app_settings").onSnapshot(doc => {
+            if(doc.exists) {
+                let d = doc.data();
+                document.getElementById('payNumberShow').innerText = d.payNumber || "Not Set";
+                document.getElementById('binanceShow').innerText = d.binanceId || "Not Set";
+                mainChannelUrl = d.ch1Url || ''; if(d.botUsername) botBaseUrl = d.botUsername;
+                
+                let currentAppName = d.appName || "MINI APP PRO 2.0";
+                document.title = currentAppName;
+                let appLogoEl = document.getElementById('appLogoArea');
+                if(appLogoEl) {
+                    let logoHtml = (d.appLogoUrl && d.appLogoUrl.trim() !== "") 
+                        ? `<div class="header-logo-circle" id="headerLogoCircle"><img src="${d.appLogoUrl}" alt="Logo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>` 
+                        : `<div class="header-logo-circle" id="headerLogoCircle"><span class="material-symbols-rounded" style="font-size:16px;">play_arrow</span></div>`;
+                    appLogoEl.innerHTML = `${logoHtml}<span id="appTitleText" class="header-title-text">${currentAppName}</span>`;
+                }
+                if(d.adsterraUrl) window.globalAdsterraUrl = d.adsterraUrl;
+                if(d.monetagUrl) window.globalMonetagUrl = d.monetagUrl;
+
+                document.getElementById('btnPrice1m').innerText = d.price1m || "100 BDT";
+                document.getElementById('btnPrice6m').innerText = d.price6m || "500 BDT";
+                document.getElementById('btnPrice1y').innerText = d.price1y || "900 BDT";
+
+                let channelsHtml = "";
+                if(d.ch1Name && d.ch1Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch1Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--primary-accent);"><span class="material-symbols-rounded" style="color:var(--text-light)">campaign</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch1Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch1Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
+                if(d.ch2Name && d.ch2Url) channelsHtml += `<div class="list-item ripple-btn" onclick="window.open('${d.ch2Url}', '_blank')"><div style="display:flex; align-items:center; gap:15px;"><div style="background:var(--bg-dark); padding:12px; border-radius:12px; border:1px solid var(--danger);"><span class="material-symbols-rounded" style="color:var(--text-light)">local_fire_department</span></div><div><b style="color:var(--text-light); font-size:15px;">${d.ch2Name}</b><br><span style="font-size:12px; color:var(--text-muted);">${d.ch2Desc || ''}</span></div></div><span class="material-symbols-rounded" style="color:var(--text-muted)">open_in_new</span></div>`;
+                document.getElementById('channelListContainer').innerHTML = channelsHtml || "<p style='text-align:center; color:var(--text-muted);'>No channels added yet.</p>";
+
+                if(d) {
+                    if(document.getElementById('sAppName')) document.getElementById('sAppName').value = d.appName || "";
+                    if(document.getElementById('sAppLogo')) document.getElementById('sAppLogo').value = d.appLogoUrl || "";
+                    if(document.getElementById('sAdsterraUrl')) document.getElementById('sAdsterraUrl').value = d.adsterraUrl || "";
+                    if(document.getElementById('sMonetagUrl')) document.getElementById('sMonetagUrl').value = d.monetagUrl || "";
+                    if(document.getElementById('sBotUsername')) document.getElementById('sBotUsername').value = d.botUsername || ""; 
+                    if(document.getElementById('sPayNum')) document.getElementById('sPayNum').value = d.payNumber || ""; 
+                    if(document.getElementById('sBinance')) document.getElementById('sBinance').value = d.binanceId || "";
+                    if(document.getElementById('p1m')) document.getElementById('p1m').value = d.price1m || ""; 
+                    if(document.getElementById('p6m')) document.getElementById('p6m').value = d.price6m || ""; 
+                    if(document.getElementById('p1y')) document.getElementById('p1y').value = d.price1y || "";
+                    if(document.getElementById('sSupportName')) document.getElementById('sSupportName').value = d.supportName || ""; 
+                    if(document.getElementById('sSupportUrl')) document.getElementById('sSupportUrl').value = d.supportUrl || "";
+                    if(document.getElementById('sTutorialUrlInput')) document.getElementById('sTutorialUrlInput').value = d.tutorialUrl || "";
+                    if(document.getElementById('sTutorial')) document.getElementById('sTutorial').value = d.tutorialUrl || "";
+                    if(document.getElementById('ch1Name')) document.getElementById('ch1Name').value = d.ch1Name || ""; 
+                    if(document.getElementById('ch1Desc')) document.getElementById('ch1Desc').value = d.ch1Desc || ""; 
+                    if(document.getElementById('ch1Url')) document.getElementById('ch1Url').value = d.ch1Url || "";
+                    if(document.getElementById('ch2Name')) document.getElementById('ch2Name').value = d.ch2Name || ""; 
+                    if(document.getElementById('ch2Desc')) document.getElementById('ch2Desc').value = d.ch2Desc || ""; 
+                    if(document.getElementById('ch2Url')) document.getElementById('ch2Url').value = d.ch2Url || "";
+                }
+
+                if (d.categories && Array.isArray(d.categories) && d.categories.length > 0) {
+                    appCategories = d.categories.map(normalizeCategoryItem);
+                    localStorage.setItem('appCategories', JSON.stringify(appCategories));
+                }
+                if (typeof renderCategoryPills === 'function') renderCategoryPills();
+                if (typeof renderCategorySelectOptions === 'function') renderCategorySelectOptions();
+                if (typeof renderAdminCategoriesList === 'function') renderAdminCategoriesList();
+                if (typeof updateCategoryCounts === 'function') updateCategoryCounts();
+
+                if (d.channels && Array.isArray(d.channels) && d.channels.length > 0) {
+                    officialChannels = d.channels.map((c, i) => normalizeChannelItem(c, i));
+                    localStorage.setItem('officialChannels', JSON.stringify(officialChannels));
+                }
+                if (typeof renderAdminChannelsList === 'function') renderAdminChannelsList();
+                if (typeof renderUserChannelsList === 'function') renderUserChannelsList();
+
+                if(d.supportUrl && d.supportName) {
+                    let supBtn = document.getElementById('supportFloatingBtn'); supBtn.style.display = 'flex'; supBtn.href = d.supportUrl;
+                }
             }
-        }
+        });
 
         function getBotLinkWithRef(extraParam = "") {
             let base = (botBaseUrl || "").trim();
@@ -5845,19 +5108,8 @@
                         btnHtml = `<button class="direct-play-btn ripple-btn" id="playerBtn-${activeVid.id}" onclick="watchVideoAction('${activeVid.id}', '${targetUrl}')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>`;
                         subNoteText = 'প্রিমিয়াম ইউজার — সরাসরি ভিডিও উপভোগ করুন!';
                     } else if (isUnlocked) {
-                        btnHtml = `
-                            <button class="direct-play-btn ripple-btn" id="playerBtn-${activeVid.id}" onclick="watchVideoAction('${activeVid.id}', '${targetUrl}')">
-                                <span class="material-symbols-rounded">play_circle</span> WATCH NOW
-                            </button>
-                            <div id="playerTimer-${activeVid.id}" class="restart-timer-box" style="display:block;">
-                                <div class="restart-timer-track">
-                                    <div class="restart-timer-progress-line" id="playerTimerLine-${activeVid.id}" style="width: 100%;"></div>
-                                    <div class="restart-timer-centered-text" id="playerTimerText-${activeVid.id}">
-                                        <span class="material-symbols-rounded">hourglass_top</span> Restart in 05:00 mins
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                        btnHtml = `<button class="direct-play-btn ripple-btn" id="playerBtn-${activeVid.id}" onclick="watchVideoAction('${activeVid.id}', '${targetUrl}')"><span class="material-symbols-rounded">play_circle</span> WATCH NOW</button>
+                                   <div id="playerTimer-${activeVid.id}" class="countdown-timer" style="display:block;"></div>`;
                         subNoteText = 'ভিডিওটি আনলক করা হয়েছে, এখন সরাসরি উপভোগ করুন!';
                     } else {
                         let freeUnlockBtn = '';
@@ -5876,15 +5128,7 @@
                                     <span class="material-symbols-rounded">videocam</span> আনলক করতে বিজ্ঞাপন দেখুন (${displayStep}/${activeVid.adCount})
                                 </span>
                             </button>
-                            <div id="playerTimer-${activeVid.id}" class="restart-timer-box">
-                                <div class="restart-timer-track">
-                                    <div class="restart-timer-progress-line" id="playerTimerLine-${activeVid.id}" style="width: 100%;"></div>
-                                    <div class="restart-timer-centered-text" id="playerTimerText-${activeVid.id}">
-                                        <span class="material-symbols-rounded">hourglass_top</span> Restart in 05:00 mins
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                            <div id="playerTimer-${activeVid.id}" class="countdown-timer"></div>`;
                         subNoteText = `আনলক করতে আরও ${activeVid.adCount - currentStep}টি বিজ্ঞাপন প্রয়োজন`;
                     }
 
@@ -5966,11 +5210,7 @@
                             <!-- Main Unlock/Watch Button -->
                             ${btnHtml}
 
-                            <p id="playerSubNote-${activeVid.id}" style="text-align: center; font-size: 12px; color: var(--text-muted); margin: 8px 0 10px 0;">${subNoteText}</p>
-
-                            <!-- Adsterra 300x250 & Native Banners -->
-                            ${getAdsterra300x250Html()}
-                            ${getAdsterraNativeHtml()}
+                            <p id="playerSubNote-${activeVid.id}" style="text-align: center; font-size: 12px; color: var(--text-muted); margin: 8px 0 14px 0;">${subNoteText}</p>
 
                             <!-- Quick Action Buttons -->
                             <div class="player-actions-row">
@@ -6049,54 +5289,6 @@
             });
             htmlOutput += `</div>`;
 
-            // Render Fake / Sponsored Video Cards (Adsterra Direct Link Cards) below real videos
-            let fakeList = (window.fakeVideosList && window.fakeVideosList.length > 0) ? window.fakeVideosList : defaultFakeVideos;
-            if (fakeList && fakeList.length > 0) {
-                htmlOutput += `
-                    <div class="fake-video-ad-section" id="fakeVideoAdSection">
-                        <div class="fake-section-header">
-                            <span class="material-symbols-rounded" style="color: #f59e0b; font-size:18px;">local_fire_department</span>
-                            <span>🔥 Recommended & Trending Picks (Direct Play)</span>
-                        </div>
-                        <div class="video-grid-container sponsored-grid">
-                `;
-                fakeList.forEach(fv => {
-                    let safeFvTitle = escapeHtml(fv.title || 'Recommended Video');
-                    let safeFvCat = escapeHtml(fv.category || 'Trending');
-                    let safeFvPhoto = fv.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80';
-                    let safeFvViews = fv.views || '150K';
-                    let fvLink = fv.directLink || (window.adsterraConfig ? window.adsterraConfig.smartlinkUrl : '') || window.globalAdsterraUrl || 'https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6';
-
-                    htmlOutput += `
-                        <div class="video-grid-card ripple-btn fake-video-card" onclick="handleFakeVideoClick('${fv.id}', '${escapeHtml(fvLink)}')">
-                            <div class="grid-thumb-box">
-                                <div class="thumb-lock-badge fake-badge">
-                                    <span class="material-symbols-rounded" style="font-size:11px;">bolt</span> Direct Play
-                                </div>
-                                <img src="${safeFvPhoto}" class="${thumbClass}" alt="Thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180?text=Video';">
-                                <div class="thumb-play-btn"><span class="material-symbols-rounded">play_arrow</span></div>
-                            </div>
-                            <div class="grid-card-info">
-                                <h4 class="grid-card-title">${safeFvTitle}</h4>
-                                <div>
-                                    <div class="grid-card-meta">
-                                        <span class="grid-card-cat" style="color:#fbbf24; border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.1);">${safeFvCat}</span>
-                                        <div class="grid-card-views">
-                                            <span class="material-symbols-rounded">visibility</span>
-                                            <span>${safeFvViews}</span>
-                                        </div>
-                                    </div>
-                                    <div class="grid-card-time">
-                                        <span class="material-symbols-rounded" style="font-size:11px;">schedule</span> Active Now
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                htmlOutput += `</div></div>`;
-            }
-
             feed.innerHTML = htmlOutput;
 
             // Start timer for active video if unlocked
@@ -6168,17 +5360,13 @@ function toggleLike(vidId) {
                 }
                 
                 const pillText = document.getElementById('adStatePill');
-                let countdown = adNum === 1 
-                    ? ((window.appTimingConfig && window.appTimingConfig.ad1Countdown) ? parseInt(window.appTimingConfig.ad1Countdown) : 3) 
-                    : ((window.appTimingConfig && window.appTimingConfig.ad2Countdown) ? parseInt(window.appTimingConfig.ad2Countdown) : 3);
-                if (countdown < 1) countdown = 1;
-
                 if (pillText) {
-                    pillText.innerHTML = `<span class="material-symbols-rounded" style="font-size:13px; vertical-align:middle; margin-right:4px;">hourglass_top</span> <span id="adPillText">${adNum === 1 ? `১ম বিজ্ঞাপন শুরু হচ্ছে (${countdown} সেকেন্ড)...` : `২য় বিজ্ঞাপন শুরু হচ্ছে (${countdown} সেকেন্ড)...`}</span>`;
+                    pillText.innerHTML = `<span class="material-symbols-rounded" style="font-size:13px; vertical-align:middle; margin-right:4px;">hourglass_top</span> <span id="adPillText">${adNum === 1 ? "১ম বিজ্ঞাপন শুরু হচ্ছে (৩ সেকেন্ড)..." : "২য় বিজ্ঞাপন শুরু হচ্ছে (৩ সেকেন্ড)..."}</span>`;
                     pillText.style.borderColor = adNum === 1 ? "var(--primary-accent)" : "#f59e0b";
                     pillText.style.color = adNum === 1 ? "var(--primary-light)" : "#fbbf24";
                 }
 
+                let countdown = 3; 
                 const timerCount = document.getElementById('adTimerCount');
                 if (timerCount) timerCount.innerText = countdown;
 
@@ -6191,7 +5379,7 @@ function toggleLike(vidId) {
                 adModal.classList.add('active');
                 setTimeout(() => {
                     if (progFill) {
-                        progFill.style.transition = `width ${countdown}s linear`; 
+                        progFill.style.transition = 'width 3s linear'; 
                         progFill.style.width = '100%';
                     }
                     const intv = setInterval(() => {
@@ -6318,17 +5506,16 @@ function toggleLike(vidId) {
                 if(!success2) return showEarlyWarning(adTime, vidId, btn, totalSteps);
             }
 
-            // নির্দিষ্ট টাইম পর ব্যাক করলে বাটন স্পিনিং লোডিং নিয়ে প্রথম/বর্তমান স্টেপ আনলক হবে
+            // নির্দিষ্ট টাইম পর ব্যাক করলে বাটন ৩ সেকেন্ড স্পিনিং লোডিং নিয়ে প্রথম/বর্তমান স্টেপ আনলক হবে
             btn.classList.add('waiting');
-            let waitTime = (window.appTimingConfig && window.appTimingConfig.unlockCountdown) ? parseInt(window.appTimingConfig.unlockCountdown) : 3;
-            if (isNaN(waitTime) || waitTime < 1) waitTime = 3;
+            let waitTime = 3;
             
             if(currentStep < totalSteps - 1) {
                 let lineEl = document.getElementById(`step-line-${vidId}-${currentStep}`);
-                if(lineEl) { lineEl.style.transition = `width ${waitTime}s linear`; lineEl.style.width = '100%'; }
+                if(lineEl) { lineEl.style.transition = 'width 3s linear'; lineEl.style.width = '100%'; }
             }
 
-            btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING ${waitTime}s</span>`;
+            btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING 3s</span>`;
             
             const waitInt = setInterval(() => {
                 waitTime--;
@@ -6341,9 +5528,7 @@ function toggleLike(vidId) {
                     
                     currentStep++;
                     if (currentStep >= totalSteps) {
-                        let restartMins = (window.appTimingConfig && window.appTimingConfig.restartTime) ? parseInt(window.appTimingConfig.restartTime) : 5;
-                        if (isNaN(restartMins) || restartMins < 1) restartMins = 5;
-                        let expiry = Date.now() + (restartMins * 60 * 1000); 
+                        let expiry = Date.now() + (5 * 60 * 1000); 
                         localStorage.setItem('vidProgress_' + vidId, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
                         updateStepVisuals(vidId, currentStep);
                         startUnlockTimer(vidId, targetUrl, btn, totalSteps, expiry);
@@ -6362,34 +5547,31 @@ function toggleLike(vidId) {
 
         function startUnlockTimer(vidId, targetUrl, btn, totalSteps, expiryTime) {
             const btnText = document.getElementById(`btn-text-${vidId}`);
-            if (btn) {
-                btn.classList.remove('waiting');
-                if (btnText) btnText.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
-                btn.style.background = 'var(--success)';
-                btn.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.4)';
-                btn.disabled = false; 
-                btn.onclick = () => watchVideoAction(vidId, targetUrl);
-            }
+            btn.classList.remove('waiting');
+            btnText.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
+            btn.style.background = 'var(--success)';
+            btn.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.4)';
+            btn.disabled = false; 
+            btn.onclick = () => watchVideoAction(vidId, targetUrl);
             
             let timerDisplay = document.getElementById(`timer-${vidId}`);
             if(timerDisplay) timerDisplay.style.display = 'block';
             if(window[`timerInt_${vidId}`]) clearInterval(window[`timerInt_${vidId}`]);
             
-            let tick = () => {
+            let tInt = setInterval(() => {
                 let timeLeft = Math.floor((expiryTime - Date.now()) / 1000);
                 if(timeLeft <= 0) {
-                    clearInterval(window[`timerInt_${vidId}`]);
+                    clearInterval(tInt);
                     if(timerDisplay) timerDisplay.style.display = 'none';
                     localStorage.removeItem('vidProgress_' + vidId); 
-                    if (btn && btnText) resetVideoCard(vidId, totalSteps, btn, btnText);
+                    resetVideoCard(vidId, totalSteps, btn, btnText);
                 } else {
                     let m = Math.floor(timeLeft / 60);
                     let s = timeLeft % 60;
-                    if(timerDisplay) timerDisplay.innerText = `Restart in ${(m < 10 ? '0'+m : m)}:${(s < 10 ? '0'+s : s)} mins`;
+                    if(timerDisplay) timerDisplay.innerText = `Restart in ${m}:${s < 10 ? '0'+s : s} mins`;
                 }
-            };
-            tick();
-            window[`timerInt_${vidId}`] = setInterval(tick, 1000);
+            }, 1000);
+            window[`timerInt_${vidId}`] = tInt;
         }
 
         function resetVideoCard(vidId, totalSteps, btn, btnText) {
@@ -6444,12 +5626,11 @@ function toggleLike(vidId) {
                 if(!success2) return showEarlyWarningPlayer(adTime, vidId, btn, totalSteps);
             }
 
-            // নির্দিষ্ট টাইম পর ব্যাক করলে বাটন স্পিনিং লোডিং নিয়ে বর্তমান স্টেপ আনলক হবে
+            // নির্দিষ্ট টাইম পর ব্যাক করলে বাটন ৩ সেকেন্ড স্পিনিং লোডিং নিয়ে প্রথম/বর্তমান স্টেপ আনলক হবে
             btn.classList.add('waiting');
-            let waitTime = (window.appTimingConfig && window.appTimingConfig.unlockCountdown) ? parseInt(window.appTimingConfig.unlockCountdown) : 3;
-            if (isNaN(waitTime) || waitTime < 1) waitTime = 3;
+            let waitTime = 3;
 
-            if(btnText) btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING ${waitTime}s</span>`;
+            if(btnText) btnText.innerHTML = `<span class="premium-btn-spinner"></span> <span style="font-weight:bold; letter-spacing:1px; color:#fff; text-shadow:0 0 8px rgba(255,255,255,0.5);">LOADING 3s</span>`;
             
             const waitInt = setInterval(() => {
                 waitTime--;
@@ -6471,9 +5652,7 @@ function toggleLike(vidId) {
                     if(adCountEl) adCountEl.innerText = `${currentStep}/${totalSteps}`;
 
                     if (currentStep >= totalSteps) {
-                        let restartMins = (window.appTimingConfig && window.appTimingConfig.restartTime) ? parseInt(window.appTimingConfig.restartTime) : 5;
-                        if (isNaN(restartMins) || restartMins < 1) restartMins = 5;
-                        let expiry = Date.now() + (restartMins * 60 * 1000); 
+                        let expiry = Date.now() + (5 * 60 * 1000); 
                         localStorage.setItem('vidProgress_' + vidId, JSON.stringify({ step: currentStep, unlockedUntil: expiry }));
                         startUnlockTimerPlayer(vidId, targetUrl, btn, totalSteps, expiry);
                         
@@ -6508,65 +5687,33 @@ function toggleLike(vidId) {
         }
 
         function startUnlockTimerPlayer(vidId, targetUrl, btn, totalSteps, expiryTime) {
-            if (!btn) btn = document.getElementById(`playerBtn-${vidId}`);
             const btnText = document.getElementById(`playerBtnText-${vidId}`);
-            if (btn) {
-                btn.classList.remove('waiting');
-                if(btnText) btnText.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
-                else btn.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
-                btn.style.background = 'var(--success)';
-                btn.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.4)';
-                btn.disabled = false; 
-                btn.onclick = () => watchVideoAction(vidId, targetUrl);
-            }
+            btn.classList.remove('waiting');
+            if(btnText) btnText.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
+            else btn.innerHTML = `<span class="material-symbols-rounded">play_circle</span> WATCH NOW`;
+            btn.style.background = 'var(--success)';
+            btn.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.4)';
+            btn.disabled = false; 
+            btn.onclick = () => watchVideoAction(vidId, targetUrl);
             
-            let timerBox = document.getElementById(`playerTimer-${vidId}`);
-            if(timerBox) {
-                timerBox.style.display = 'block';
-                if (!timerBox.querySelector('.restart-timer-track')) {
-                    timerBox.innerHTML = `
-                        <div class="restart-timer-track">
-                            <div class="restart-timer-progress-line" id="playerTimerLine-${vidId}" style="width: 100%;"></div>
-                            <div class="restart-timer-centered-text" id="playerTimerText-${vidId}">
-                                <span class="material-symbols-rounded">hourglass_top</span> Restart in 05:00 mins
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-
+            let timerDisplay = document.getElementById(`playerTimer-${vidId}`);
+            if(timerDisplay) timerDisplay.style.display = 'block';
             if(window[`timerInt_${vidId}`]) clearInterval(window[`timerInt_${vidId}`]);
             
-            let restartMins = (window.appTimingConfig && window.appTimingConfig.restartTime) ? parseInt(window.appTimingConfig.restartTime) : 5;
-            if (isNaN(restartMins) || restartMins < 1) restartMins = 5;
-            let totalSeconds = restartMins * 60;
-
-            const updateTimerUI = () => {
+            let tInt = setInterval(() => {
                 let timeLeft = Math.floor((expiryTime - Date.now()) / 1000);
                 if(timeLeft <= 0) {
-                    clearInterval(window[`timerInt_${vidId}`]);
-                    if(timerBox) timerBox.style.display = 'none';
+                    clearInterval(tInt);
+                    if(timerDisplay) timerDisplay.style.display = 'none';
                     localStorage.removeItem('vidProgress_' + vidId); 
-                    if (btn) resetVideoPlayer(vidId, totalSteps, btn);
-                    return;
+                    resetVideoPlayer(vidId, totalSteps, btn);
+                } else {
+                    let m = Math.floor(timeLeft / 60);
+                    let s = timeLeft % 60;
+                    if(timerDisplay) timerDisplay.innerText = `Restart in ${m}:${s < 10 ? '0'+s : s} mins`;
                 }
-
-                let percent = Math.max(0, Math.min(100, (timeLeft / totalSeconds) * 100));
-                let lineEl = document.getElementById(`playerTimerLine-${vidId}`);
-                if(lineEl) {
-                    lineEl.style.width = percent + '%';
-                }
-
-                let m = Math.floor(timeLeft / 60);
-                let s = timeLeft % 60;
-                let textEl = document.getElementById(`playerTimerText-${vidId}`);
-                if(textEl) {
-                    textEl.innerHTML = `<span class="material-symbols-rounded">hourglass_top</span> Restart in ${(m < 10 ? '0'+m : m)}:${(s < 10 ? '0'+s : s)} mins`;
-                }
-            };
-
-            updateTimerUI();
-            window[`timerInt_${vidId}`] = setInterval(updateTimerUI, 1000);
+            }, 1000);
+            window[`timerInt_${vidId}`] = tInt;
         }
 
         function resetVideoPlayer(vidId, totalSteps, btn) {
@@ -6691,7 +5838,7 @@ function toggleLike(vidId) {
                 return notifyAdmin("দয়া করে ভিডিওর Title পূরণ করুন!", false);
             }
             if(!targetUrl) {
-                targetUrl = window.globalAdsterraUrl || (window.adsterraConfig ? window.adsterraConfig.smartlinkUrl : '') || 'https://t.me/auto_accepr_sk_bot';
+                return notifyAdmin("দয়া করে Target URL (ভিডিও লিংক) পূরণ করুন!", false);
             }
 
             if(!photo) {
@@ -6699,7 +5846,7 @@ function toggleLike(vidId) {
                 if (previewImg && previewImg.src && previewImg.src.startsWith('data:image')) {
                     photo = previewImg.src;
                 } else {
-                    photo = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80";
+                    photo = "https://picsum.photos/600/350?random=" + Math.floor(Math.random() * 100);
                 }
             }
 
@@ -6726,42 +5873,47 @@ function toggleLike(vidId) {
                 if (existingIndex !== -1) {
                     allVideos[existingIndex] = { ...allVideos[existingIndex], ...videoData };
                 }
-                try { localStorage.setItem('cached_videos_list', JSON.stringify(allVideos)); } catch(e) {}
                 renderAdminVideoManageList();
                 renderVideos();
                 updateCategoryCounts();
                 cancelEditVideo();
-                notifyAdmin("🎉 ভিডিও সফলভাবে আপডেট হয়েছে!"); 
 
-                try {
-                    db.collection("videos").doc(editId).set(videoData, { merge: true }).catch(err => {
-                        console.warn("Firestore update warning (saved locally):", err);
-                    });
-                } catch(e) {}
+                db.collection("videos").doc(editId).set(videoData, { merge: true }).then(() => { 
+                    notifyAdmin("🎉 ভিডিও সফলভাবে আপডেট হয়েছে!"); 
+                    if(typeof loadVideosFeed === 'function') loadVideosFeed();
+                }).catch(err => {
+                    console.error("Error updating video in Firestore:", err);
+                    notifyAdmin("ভিডিও লোকাল আপডেট হয়েছে!");
+                });
             } else {
-                let tempId = 'vid_' + Date.now();
-                let newVid = {
-                    ...videoData,
-                    id: tempId,
-                    views: Math.floor(Math.random() * (500 - 10) + 10) + 'K', 
-                    likes: Math.floor(Math.random() * 200 + 50), 
-                    timestamp: Date.now(),
-                    watchClicks: 0
-                };
+                videoData.views = Math.floor(Math.random() * (500 - 10) + 10) + 'K'; 
+                videoData.likes = Math.floor(Math.random() * 200 + 50); 
+                videoData.timestamp = firebase.firestore.FieldValue.serverTimestamp(); 
+                videoData.watchClicks = 0;
 
-                allVideos.unshift(newVid);
-                try { localStorage.setItem('cached_videos_list', JSON.stringify(allVideos)); } catch(e) {}
+                let tempId = 'vid_' + Date.now();
+                videoData.id = tempId;
+                allVideos.unshift(videoData);
                 renderAdminVideoManageList();
                 renderVideos();
                 updateCategoryCounts();
                 cancelEditVideo();
-                notifyAdmin("🎉 নতুন ভিডিও সফলভাবে পাবলিশ হয়েছে!"); 
 
-                try {
-                    db.collection("videos").doc(tempId).set(newVid, { merge: true }).catch(err => {
-                        console.warn("Firestore save warning (saved locally):", err);
+                db.collection("videos").add(videoData).then((docRef) => { 
+                    if (docRef && docRef.id) {
+                        videoData.id = docRef.id;
+                    }
+                    notifyAdmin("🎉 নতুন ভিডিও সফলভাবে পাবলিশ হয়েছে!"); 
+                    if(typeof loadVideosFeed === 'function') loadVideosFeed();
+                }).catch(err => {
+                    console.error("Error adding video to Firestore, trying doc set:", err);
+                    db.collection("videos").doc(tempId).set(videoData).then(() => {
+                        notifyAdmin("🎉 নতুন ভিডিও সফলভাবে পাবলিশ হয়েছে!");
+                        if(typeof loadVideosFeed === 'function') loadVideosFeed();
+                    }).catch(e2 => {
+                        notifyAdmin("ভিডিও যোগ করা হয়েছে!");
                     });
-                } catch(e) {}
+                });
             }
         }
 
@@ -6863,14 +6015,15 @@ function toggleLike(vidId) {
         function deleteVideo(id) { 
             if(confirm("Are you sure you want to delete this video?")) { 
                 allVideos = allVideos.filter(v => v.id !== id);
-                try { localStorage.setItem('cached_videos_list', JSON.stringify(allVideos)); } catch(e) {}
                 renderAdminVideoManageList();
                 renderVideos();
                 updateCategoryCounts();
-                notifyAdmin("ভিডিও সফলভাবে ডিলিট করা হয়েছে!"); 
-                try {
-                    db.collection("videos").doc(id).delete().catch(err => console.warn(err));
-                } catch(e) {}
+                db.collection("videos").doc(id).delete().then(() => { 
+                    notifyAdmin("ভিডিও সফলভাবে ডিলিট করা হয়েছে!"); 
+                    if(typeof loadVideosFeed === 'function') loadVideosFeed();
+                }).catch(err => {
+                    notifyAdmin("ডিলিট হয়েছে: " + err.message, true);
+                }); 
             } 
         }
 
@@ -6986,93 +6139,35 @@ function toggleLike(vidId) {
             );
         }
 
-        function populateAdminSettingsForm() {
-            let saved = null;
-            try {
-                saved = JSON.parse(localStorage.getItem('appSettings'));
-            } catch(e) {}
-            let s = Object.assign({}, defaultAppSettings, saved || {});
-
-            const setInpVal = (id, val) => {
-                let el = document.getElementById(id);
-                if (el && val !== undefined && val !== null) el.value = val;
-            };
-
-            setInpVal('sAppName', s.appName || "MINI APP PRO 2.0");
-            setInpVal('sAppLogo', s.appLogoUrl || "");
-            setInpVal('sAdsterraUrl', s.adsterraUrl || "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6");
-            setInpVal('sMonetagUrl', s.monetagUrl || "https://omg10.com/4/11647301");
-            setInpVal('sBotUsername', s.botUsername || "https://t.me/auto_accepr_sk_bot");
-            setInpVal('sPayNum', s.payNumber || "01700000000");
-            setInpVal('sBinance', s.binanceId || "12345678");
-            setInpVal('p1m', s.price1m || "100 BDT");
-            setInpVal('p6m', s.price6m || "500 BDT");
-            setInpVal('p1y', s.price1y || "900 BDT");
-            setInpVal('sSupportName', s.supportName || "Admin Support");
-            setInpVal('sSupportUrl', s.supportUrl || "https://t.me/admin_support");
-            setInpVal('sTutorialUrlInput', s.tutorialUrl || "https://t.me/auto_accepr_sk");
-            setInpVal('sTutorial', s.tutorialUrl || "https://t.me/auto_accepr_sk");
-            setInpVal('ch1Name', s.ch1Name || "Main VIP Channel");
-            setInpVal('ch1Desc', s.ch1Desc || "🔥 50K+ Active Subscribers");
-            setInpVal('ch1Url', s.ch1Url || "https://t.me/miniappvip");
-            setInpVal('ch2Name', s.ch2Name || "Viral Backup Channel");
-            setInpVal('ch2Desc', s.ch2Desc || "🚀 Daily Fresh Viral Content");
-            setInpVal('ch2Url', s.ch2Url || "https://t.me/miniappbackup");
-
-            if (window.adsterraConfig) {
-                if (document.getElementById('adToggle300x250')) document.getElementById('adToggle300x250').checked = (window.adsterraConfig.banner300x250 !== false);
-                if (document.getElementById('adToggle320x50')) document.getElementById('adToggle320x50').checked = (window.adsterraConfig.banner320x50 !== false);
-                if (document.getElementById('adToggleNative')) document.getElementById('adToggleNative').checked = (window.adsterraConfig.nativeBanner !== false);
-                if (document.getElementById('adToggleSocialBar')) document.getElementById('adToggleSocialBar').checked = (window.adsterraConfig.socialBar !== false);
-                if (document.getElementById('adToggleSmartlink')) document.getElementById('adToggleSmartlink').checked = (window.adsterraConfig.smartlink !== false);
-                setInpVal('sAdsterraSmartlink', window.adsterraConfig.smartlinkUrl || "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6");
-            }
-
-            if (window.appTimingConfig) {
-                setInpVal('sAd1Countdown', window.appTimingConfig.ad1Countdown || 3);
-                setInpVal('sAd2Countdown', window.appTimingConfig.ad2Countdown || 3);
-                setInpVal('sUnlockCountdown', window.appTimingConfig.unlockCountdown || 3);
-                setInpVal('sAdWatchTime', window.appTimingConfig.adWatchTime || 5);
-                setInpVal('sRestartTime', window.appTimingConfig.restartTime || 5);
-            }
-        }
-
         function saveSettings() {
-            let prevSaved = null;
-            try {
-                prevSaved = JSON.parse(localStorage.getItem('appSettings'));
-            } catch(e) {}
-            let base = Object.assign({}, defaultAppSettings, prevSaved || {});
-
-            const getVal = (id, fallback) => {
+            const getVal = (id) => {
                 let el = document.getElementById(id);
-                let v = el ? el.value.trim() : "";
-                return v !== "" ? v : (fallback || "");
+                return el ? el.value.trim() : "";
             };
 
-            const appNameVal = getVal('sAppName', base.appName || "MINI APP PRO 2.0");
-            const appLogoVal = getVal('sAppLogo', base.appLogoUrl || "");
+            const appNameVal = getVal('sAppName');
+            const appLogoVal = getVal('sAppLogo');
 
             let settingsData = {
                 appName: appNameVal,
                 appLogoUrl: appLogoVal,
-                adsterraUrl: getVal('sAdsterraUrl', base.adsterraUrl),
-                monetagUrl: getVal('sMonetagUrl', base.monetagUrl),
-                botUsername: getVal('sBotUsername', base.botUsername),
-                payNumber: getVal('sPayNum', base.payNumber),
-                binanceId: getVal('sBinance', base.binanceId),
-                price1m: getVal('p1m', base.price1m),
-                price6m: getVal('p6m', base.price6m),
-                price1y: getVal('p1y', base.price1y),
-                supportName: getVal('sSupportName', base.supportName),
-                supportUrl: getVal('sSupportUrl', base.supportUrl),
-                tutorialUrl: getVal('sTutorial') || getVal('sTutorialUrlInput') || base.tutorialUrl,
-                ch1Name: getVal('ch1Name', base.ch1Name),
-                ch1Desc: getVal('ch1Desc', base.ch1Desc),
-                ch1Url: getVal('ch1Url', base.ch1Url),
-                ch2Name: getVal('ch2Name', base.ch2Name),
-                ch2Desc: getVal('ch2Desc', base.ch2Desc),
-                ch2Url: getVal('ch2Url', base.ch2Url)
+                adsterraUrl: getVal('sAdsterraUrl'),
+                monetagUrl: getVal('sMonetagUrl'),
+                botUsername: getVal('sBotUsername'),
+                payNumber: getVal('sPayNum'),
+                binanceId: getVal('sBinance'),
+                price1m: getVal('p1m'),
+                price6m: getVal('p6m'),
+                price1y: getVal('p1y'),
+                supportName: getVal('sSupportName'),
+                supportUrl: getVal('sSupportUrl'),
+                tutorialUrl: getVal('sTutorial') || getVal('sTutorialUrlInput'),
+                ch1Name: getVal('ch1Name'),
+                ch1Desc: getVal('ch1Desc'),
+                ch1Url: getVal('ch1Url'),
+                ch2Name: getVal('ch2Name'),
+                ch2Desc: getVal('ch2Desc'),
+                ch2Url: getVal('ch2Url')
             };
 
             if (Array.isArray(officialChannels) && officialChannels.length > 0) {
@@ -7082,94 +6177,64 @@ function toggleLike(vidId) {
                 settingsData.categories = appCategories;
             }
 
-            // Adsterra Banners & Smartlink On/Off Config
-            window.adsterraConfig = {
-                banner300x250: document.getElementById('adToggle300x250') ? document.getElementById('adToggle300x250').checked : true,
-                banner320x50: document.getElementById('adToggle320x50') ? document.getElementById('adToggle320x50').checked : true,
-                nativeBanner: document.getElementById('adToggleNative') ? document.getElementById('adToggleNative').checked : true,
-                socialBar: document.getElementById('adToggleSocialBar') ? document.getElementById('adToggleSocialBar').checked : true,
-                smartlink: document.getElementById('adToggleSmartlink') ? document.getElementById('adToggleSmartlink').checked : true,
-                smartlinkUrl: getVal('sAdsterraSmartlink', (window.adsterraConfig && window.adsterraConfig.smartlinkUrl) || base.adsterraUrl)
-            };
-            try { localStorage.setItem('adsterraConfig', JSON.stringify(window.adsterraConfig)); } catch(e) {}
-            settingsData.adsterraConfig = window.adsterraConfig;
+            // Immediately update UI elements and cache
+            localStorage.setItem('appSettings', JSON.stringify(settingsData));
+            if (appNameVal) {
+                document.title = appNameVal;
+                let titleText = document.getElementById('appTitleText');
+                if (titleText) titleText.innerText = appNameVal;
+            }
+            if (settingsData.payNumber) {
+                let pEl = document.getElementById('payNumberShow');
+                if (pEl) pEl.innerText = settingsData.payNumber;
+            }
+            if (settingsData.binanceId) {
+                let bEl = document.getElementById('binanceShow');
+                if (bEl) bEl.innerText = settingsData.binanceId;
+            }
+            if (settingsData.price1m && document.getElementById('btnPrice1m')) document.getElementById('btnPrice1m').innerText = settingsData.price1m;
+            if (settingsData.price6m && document.getElementById('btnPrice6m')) document.getElementById('btnPrice6m').innerText = settingsData.price6m;
+            if (settingsData.price1y && document.getElementById('btnPrice1y')) document.getElementById('btnPrice1y').innerText = settingsData.price1y;
 
-            // Ad Timings & Button Countdown Config
-            let parsePositiveNum = (id, fallback) => {
-                let el = document.getElementById(id);
-                let v = el ? parseInt(el.value.trim()) : NaN;
-                return (isNaN(v) || v < 1) ? fallback : v;
-            };
-            window.appTimingConfig = {
-                ad1Countdown: parsePositiveNum('sAd1Countdown', (base.appTimingConfig && base.appTimingConfig.ad1Countdown) || 3),
-                ad2Countdown: parsePositiveNum('sAd2Countdown', (base.appTimingConfig && base.appTimingConfig.ad2Countdown) || 3),
-                unlockCountdown: parsePositiveNum('sUnlockCountdown', (base.appTimingConfig && base.appTimingConfig.unlockCountdown) || 3),
-                adWatchTime: parsePositiveNum('sAdWatchTime', (base.appTimingConfig && base.appTimingConfig.adWatchTime) || 5),
-                restartTime: parsePositiveNum('sRestartTime', (base.appTimingConfig && base.appTimingConfig.restartTime) || 5)
-            };
-            try { localStorage.setItem('appTimingConfig', JSON.stringify(window.appTimingConfig)); } catch(e) {}
-            settingsData.appTimingConfig = window.appTimingConfig;
-
-            if (typeof applyAdsterraBannersUI === 'function') applyAdsterraBannersUI();
-            if (typeof renderVideos === 'function') renderVideos();
-            if (typeof applySettingsToUIAndForm === 'function') applySettingsToUIAndForm(settingsData);
-
-            try { localStorage.setItem('appSettings', JSON.stringify(settingsData)); } catch(e) {}
-
-            notifyAdmin("✅ সেটিংস সফলভাবে সেভ করা হয়েছে!");
-
-            try {
-                db.collection("settings").doc("app_settings").set(settingsData, { merge: true })
-                    .then(() => console.log("Settings synced to firestore"))
-                    .catch(err => console.warn("Firestore settings sync warning:", err));
-            } catch(e) {}
+            db.collection("settings").doc("app_settings").set(settingsData, { merge: true })
+                .then(() => {
+                    notifyAdmin("✅ সেটিংস সফলভাবে সেভ করা হয়েছে!");
+                })
+                .catch(err => {
+                    console.error("Save settings error:", err);
+                    notifyAdmin("✅ সেটিংস সেভ সম্পন্ন!");
+                });
         }
 
         function fetchAdminStats() { 
-            if (!db || typeof db.collection !== 'function') return;
-            try {
-                db.collection("users").get().then(snap => { 
-                    let uEl = document.getElementById('statTotalUsers');
-                    if (uEl) uEl.innerText = snap.size; 
-                    let prem = 0; snap.forEach(doc => { if(doc.data().isPremium) prem++; }); 
-                    let pEl = document.getElementById('statPremiumUsers');
-                    if (pEl) pEl.innerText = prem; 
-                }).catch(e => console.warn(e)); 
-                db.collection("settings").doc("app_stats").onSnapshot(doc => {
-                    let wEl = document.getElementById('statTotalWatches');
-                    if(doc.exists && wEl) { wEl.innerText = doc.data().totalWatches || 0; }
-                }, () => {});
-            } catch(e) {}
+            db.collection("users").get().then(snap => { 
+                document.getElementById('statTotalUsers').innerText = snap.size; 
+                let prem = 0; snap.forEach(doc => { if(doc.data().isPremium) prem++; }); 
+                document.getElementById('statPremiumUsers').innerText = prem; 
+            }); 
+            db.collection("settings").doc("app_stats").onSnapshot(doc => {
+                if(doc.exists) { document.getElementById('statTotalWatches').innerText = doc.data().totalWatches || 0; }
+            });
         }
 
         function fetchPendingTrx() {
-            if (!db || typeof db.collection !== 'function') return;
-            try {
-                db.collection("transactions").where("status", "==", "Pending").onSnapshot(snap => {
-                    let html = "";
-                    snap.forEach(doc => {
-                        let d = doc.data() || {};
-                        html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><div><strong style="color:var(--text-light); font-size:15px;">${d.userName || 'User'}</strong><br><small style="color:var(--text-muted)">ID: ${d.userId || ''}</small></div><div style="text-align:right;"><strong style="color:var(--warning); font-size:15px; font-family:monospace;">${d.trxId || ''}</strong><br><small>${d.plan || ''} - ${d.method || ''}</small></div></div><div style="display:flex; gap:10px;"><button class="btn-submit" style="flex:1; background:var(--success); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="approveTrx('${doc.id}', ${d.userId}, '${d.plan}', '${d.method}')">Approve</button><button class="btn-submit" style="flex:1; background:var(--danger); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="rejectTrx('${doc.id}')">Reject</button></div></div>`;
-                    });
-                    let pList = document.getElementById('pendingTrxList');
-                    if (pList) pList.innerHTML = html || "<p style='color:var(--text-muted); text-align:center; padding:20px;'>No pending requests.</p>";
-                }, () => {});
-            } catch(e) {}
+            db.collection("transactions").where("status", "==", "Pending").onSnapshot(snap => {
+                let html = "";
+                snap.forEach(doc => {
+                    let d = doc.data();
+                    html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><div><strong style="color:var(--text-light); font-size:15px;">${d.userName}</strong><br><small style="color:var(--text-muted)">ID: ${d.userId}</small></div><div style="text-align:right;"><strong style="color:var(--warning); font-size:15px; font-family:monospace;">${d.trxId}</strong><br><small>${d.plan} - ${d.method}</small></div></div><div style="display:flex; gap:10px;"><button class="btn-submit" style="flex:1; background:var(--success); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="approveTrx('${doc.id}', ${d.userId}, '${d.plan}', '${d.method}')">Approve</button><button class="btn-submit" style="flex:1; background:var(--danger); color:white; padding:10px; border-radius:10px; font-size:14px;" onclick="rejectTrx('${doc.id}')">Reject</button></div></div>`;
+                }); document.getElementById('pendingTrxList').innerHTML = html || "<p style='color:var(--text-muted); text-align:center; padding:20px;'>No pending requests.</p>";
+            });
         }
 
         function fetchPremiumUsers() {
-            if (!db || typeof db.collection !== 'function') return;
-            try {
-                db.collection("users").where("isPremium", "==", true).onSnapshot(snap => {
-                    let html = ""; let now = new Date().getTime();
-                    snap.forEach(doc => {
-                        let d = doc.data() || {}; let daysLeft = Math.ceil(((d.premiumExpiry || now) - now) / (1000 * 60 * 60 * 24));
-                        html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--primary-accent);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div><strong style="color:var(--text-light);">${d.name || 'User'}</strong><br><small style="color:var(--text-muted)">ID: ${doc.id}</small></div><div style="text-align:right;"><strong style="color:var(--success);">${daysLeft} Days Left</strong><br><small style="color:var(--warning)">${d.payMethod || 'Manual'}</small></div></div><button class="btn-submit" style="background:var(--danger); padding:8px; border-radius:8px; font-size:13px;" onclick="removePremium('${doc.id}')">Remove Premium</button></div>`;
-                    });
-                    let premList = document.getElementById('premiumUsersList');
-                    if (premList) premList.innerHTML = html || "<p style='color:var(--text-muted); text-align:center;'>No premium users.</p>";
-                }, () => {});
-            } catch(e) {}
+            db.collection("users").where("isPremium", "==", true).onSnapshot(snap => {
+                let html = ""; let now = new Date().getTime();
+                snap.forEach(doc => {
+                    let d = doc.data(); let daysLeft = Math.ceil((d.premiumExpiry - now) / (1000 * 60 * 60 * 24));
+                    html += `<div class="list-item" style="display:block; background:var(--bg-dark); padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid var(--primary-accent);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div><strong style="color:var(--text-light);">${d.name}</strong><br><small style="color:var(--text-muted)">ID: ${doc.id}</small></div><div style="text-align:right;"><strong style="color:var(--success);">${daysLeft} Days Left</strong><br><small style="color:var(--warning)">${d.payMethod || 'Manual'}</small></div></div><button class="btn-submit" style="background:var(--danger); padding:8px; border-radius:8px; font-size:13px;" onclick="removePremium('${doc.id}')">Remove Premium</button></div>`;
+                }); document.getElementById('premiumUsersList').innerHTML = html || "<p style='color:var(--text-muted); text-align:center;'>No premium users.</p>";
+            });
         }
 
         function approveTrx(docId, uid, plan, method) {
@@ -7198,24 +6263,15 @@ function toggleLike(vidId) {
         })();
         function openOverlay(id) { 
             document.querySelectorAll('.overlay').forEach(el => { 
-                if (el.id !== id) {
-                    el.classList.remove('active'); 
-                    const bs = el.querySelector('.bottom-sheet');
-                    if(bs && el.id !== 'sidebarOverlay') { bs.style.transform = 'scale(0.98)'; bs.style.opacity = '0'; }
-                }
+                el.classList.remove('active'); 
+                const bs = el.querySelector('.bottom-sheet');
+                if(bs) { bs.style.transform = ''; bs.style.opacity = ''; }
             }); 
             const overlay = document.getElementById(id); 
             if(!overlay) return; 
             overlay.classList.add('active'); 
             const bs = overlay.querySelector('.bottom-sheet');
-            if(bs) { 
-                if(id === 'sidebarOverlay') {
-                    bs.style.transform = 'translateX(0)';
-                } else {
-                    bs.style.transform = 'scale(1)'; 
-                    bs.style.opacity = '1'; 
-                }
-            }
+            if(bs) { bs.style.transform = 'translateY(0) scale(1)'; bs.style.opacity = '1'; }
             
             if(id === 'referralOverlay') {
                 let inp = document.getElementById('userRefLinkInput');
@@ -7228,7 +6284,6 @@ function toggleLike(vidId) {
             } else if (id === 'profileOverlay') {
                 updateLocalStatsUI();
             } else if (id === 'adminOverlay') {
-                if (typeof populateAdminSettingsForm === 'function') populateAdminSettingsForm();
                 if (typeof fetchAdminStats === 'function') fetchAdminStats();
                 if (typeof fetchPendingTrx === 'function') fetchPendingTrx();
                 if (typeof fetchPremiumUsers === 'function') fetchPremiumUsers();
@@ -7237,22 +6292,6 @@ function toggleLike(vidId) {
                 if (typeof renderAdminCategoriesList === 'function') renderAdminCategoriesList();
                 if (typeof renderAdminChannelsList === 'function') renderAdminChannelsList();
                 if (typeof renderCategorySelectOptions === 'function') renderCategorySelectOptions();
-                if (typeof renderAdminFakeVideosList === 'function') renderAdminFakeVideosList();
-                if (window.adsterraConfig) {
-                    if (document.getElementById('adToggle300x250')) document.getElementById('adToggle300x250').checked = (window.adsterraConfig.banner300x250 !== false);
-                    if (document.getElementById('adToggle320x50')) document.getElementById('adToggle320x50').checked = (window.adsterraConfig.banner320x50 !== false);
-                    if (document.getElementById('adToggleNative')) document.getElementById('adToggleNative').checked = (window.adsterraConfig.nativeBanner !== false);
-                    if (document.getElementById('adToggleSocialBar')) document.getElementById('adToggleSocialBar').checked = (window.adsterraConfig.socialBar !== false);
-                    if (document.getElementById('adToggleSmartlink')) document.getElementById('adToggleSmartlink').checked = (window.adsterraConfig.smartlink !== false);
-                    if (document.getElementById('sAdsterraSmartlink') && window.adsterraConfig.smartlinkUrl) document.getElementById('sAdsterraSmartlink').value = window.adsterraConfig.smartlinkUrl;
-                }
-                if (window.appTimingConfig) {
-                    if (document.getElementById('sAd1Countdown')) document.getElementById('sAd1Countdown').value = window.appTimingConfig.ad1Countdown || 3;
-                    if (document.getElementById('sAd2Countdown')) document.getElementById('sAd2Countdown').value = window.appTimingConfig.ad2Countdown || 3;
-                    if (document.getElementById('sUnlockCountdown')) document.getElementById('sUnlockCountdown').value = window.appTimingConfig.unlockCountdown || 3;
-                    if (document.getElementById('sAdWatchTime')) document.getElementById('sAdWatchTime').value = window.appTimingConfig.adWatchTime || 5;
-                    if (document.getElementById('sRestartTime')) document.getElementById('sRestartTime').value = window.appTimingConfig.restartTime || 5;
-                }
             }
         }
         function closeOverlay(e, id) { 
@@ -7260,27 +6299,13 @@ function toggleLike(vidId) {
             const overlay = document.getElementById(id); 
             if(!overlay) return; 
             const bs = overlay.querySelector('.bottom-sheet');
-            if(bs) { 
-                if (id === 'sidebarOverlay') {
-                    bs.style.transform = 'translateX(-100%)';
-                } else {
-                    bs.style.transform = 'scale(0.98)'; 
-                    bs.style.opacity = '0'; 
-                }
-            }
+            if(bs) { bs.style.transform = 'translateY(16px) scale(0.98)'; bs.style.opacity = '0'; }
             overlay.classList.remove('active');
         }
         function closeAllOverlays() { 
             document.querySelectorAll('.overlay').forEach(el => { 
                 const bs = el.querySelector('.bottom-sheet');
-                if(bs) { 
-                    if (el.id === 'sidebarOverlay') {
-                        bs.style.transform = 'translateX(-100%)';
-                    } else {
-                        bs.style.transform = 'scale(0.98)'; 
-                        bs.style.opacity = '0'; 
-                    }
-                }
+                if(bs) { bs.style.transform = 'translateY(16px) scale(0.98)'; bs.style.opacity = '0'; }
                 el.classList.remove('active'); 
             }); 
         }
@@ -7681,11 +6706,8 @@ function toggleLike(vidId) {
             used += 1;
             localStorage.setItem('freeUnlocksUsed', used.toString());
             
-            // Mark this video unlocked with restart time (default 5 minutes)
-            let restartMins = (window.appTimingConfig && window.appTimingConfig.restartTime) ? parseInt(window.appTimingConfig.restartTime) : 5;
-            if (isNaN(restartMins) || restartMins < 1) restartMins = 5;
-            let expiry = Date.now() + (restartMins * 60 * 1000);
-            let savedState = { step: 99, unlockedUntil: expiry };
+            // Mark this specific video permanently unlocked for this user
+            let savedState = { step: 99, unlockedUntil: Date.now() + (365 * 24 * 60 * 60 * 1000) };
             localStorage.setItem('vidProgress_' + vidId, JSON.stringify(savedState));
             
             // Increment unlockedCount
@@ -8027,31 +7049,10 @@ function toggleLike(vidId) {
             renderAdminChannelsList();
             renderUserChannelsList();
             notifyAdmin("চ্যানেল ডিলিট করা হয়েছে!");
-            try {
-                db.collection("settings").doc("app_settings").set({
-                    channels: officialChannels
-                }, { merge: true }).catch(e => console.log(e));
-            } catch(e) {}
+            db.collection("settings").doc("app_settings").set({
+                channels: officialChannels
+            }, { merge: true }).catch(e => console.log(e));
         }
-
-        // ==========================================
-        // 🚀 MASTER INITIALIZATION (Immediate UI & Data Mount)
-        // ==========================================
-        (function initAppMaster() {
-            try {
-                if (typeof populateAdminSettingsForm === 'function') populateAdminSettingsForm();
-                if (typeof renderCategoryPills === 'function') renderCategoryPills();
-                if (typeof renderCategorySelectOptions === 'function') renderCategorySelectOptions();
-                if (typeof renderAdminCategoriesList === 'function') renderAdminCategoriesList();
-                if (typeof renderAdminChannelsList === 'function') renderAdminChannelsList();
-                if (typeof renderUserChannelsList === 'function') renderUserChannelsList();
-                if (typeof renderAdminVideoManageList === 'function') renderAdminVideoManageList();
-                if (typeof updateCategoryCounts === 'function') updateCategoryCounts();
-                if (typeof renderVideos === 'function') renderVideos();
-            } catch(e) {
-                console.warn("App master init warning:", e);
-            }
-        })();
 
     </script>
 
