@@ -6334,17 +6334,37 @@ function toggleLike(vidId) {
                 // Adsgram.ai Integration Check
                 if (window.adsgramConfig && window.adsgramConfig.enabled !== false) {
                     let blockId = (adNumber === 1) ? (window.adsgramConfig.blockId1 || "") : (window.adsgramConfig.blockId2 || "");
-                    if (adType === 'adsgram' || (blockId && blockId.trim() !== "")) {
-                        let finalBlockId = (blockId && blockId.trim() !== "") ? blockId.trim() : ((window.adsgramConfig.blockId1 || window.adsgramConfig.blockId2 || "").trim());
-                        if (finalBlockId && window.Adsgram) {
+                    let finalBlockId = (blockId && blockId.trim() !== "") ? blockId.trim() : ((window.adsgramConfig.blockId1 || window.adsgramConfig.blockId2 || "").trim());
+                    
+                    if (adType === 'adsgram' || (finalBlockId && finalBlockId !== "")) {
+                        if (finalBlockId) {
+                            if (!window.Adsgram) {
+                                console.error("Adsgram SDK is not loaded.");
+                                alert("Adsgram SDK পাওয়া যায়নি! ইন্টারনেট কানেকশন বা ব্লক আইডি সঠিক আছে কিনা নিশ্চিত করুন।");
+                                resolve(false);
+                                return;
+                            }
                             try {
-                                const AdController = window.Adsgram.init({ blockId: finalBlockId });
-                                await AdController.show();
+                                let isTgWebApp = !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData && window.Telegram.WebApp.initData.length > 0);
+                                const AdController = window.Adsgram.init({
+                                    blockId: finalBlockId,
+                                    debug: !isTgWebApp // debug mode enabled when outside Telegram so test ads show and don't throw initData error
+                                });
+                                const result = await AdController.show();
+                                console.log("Adsgram ad completed successfully:", result);
                                 resolve(true);
                                 return;
                             } catch (e) {
                                 console.warn("Adsgram ad closed/error:", e);
+                                let errDesc = (e && e.description) ? e.description : (typeof e === 'string' ? e : "অ্যাড সম্পূর্ণ দেখা হয়নি!");
+                                alert("Adsgram Status: " + errDesc + "\n\nভিডিও আনলক করতে অ্যাডটি সম্পূর্ণ শেষ পর্যন্ত দেখুন।");
+                                resolve(false);
+                                return;
                             }
+                        } else if (adType === 'adsgram') {
+                            alert("Adsgram Block ID সেট করা নেই! অ্যাডমিন ড্যাশবোর্ড থেকে Adsgram Block ID (যেমন int-53223) বসিয়ে দিন।");
+                            resolve(false);
+                            return;
                         }
                     }
                 }
