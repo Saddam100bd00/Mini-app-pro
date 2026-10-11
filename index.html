@@ -1012,7 +1012,7 @@
         .floating-support .material-symbols-rounded { font-size: 26px !important; margin: 0 !important; padding: 0 !important; }
 
         /* --- Bottom Nav --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(16, 15, 20, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--divider); display: flex; justify-content: space-around; padding: 12px 0 20px 0; z-index: 100; transition: background-color 0.4s ease;}
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(16, 15, 20, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--divider); display: flex; justify-content: space-around; padding: 10px 0 16px 0; z-index: 9999; transition: background-color 0.4s ease;}
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 11px; font-weight: 600; background: none; border: none; cursor: pointer; transition: 0.3s ease; width: 20%;}
         .nav-item.active { color: var(--primary-light); transform: translateY(-3px);}
         .nav-item .material-symbols-rounded { font-size: 26px; margin-bottom: 4px; transition: 0.3s;}
@@ -1048,6 +1048,49 @@
             opacity: 1;
         }
         .bottom-sheet::-webkit-scrollbar { display: none; }
+        
+        /* Smooth Bottom-Sheet Share Popup (Slides up from bottom) */
+        #shareOverlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            z-index: 100000 !important;
+            display: flex !important;
+            align-items: flex-end !important;
+            justify-content: center !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease !important;
+        }
+        #shareOverlay.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        #shareOverlay .bottom-sheet {
+            position: relative !important;
+            width: 100% !important;
+            max-width: 520px !important;
+            height: auto !important;
+            max-height: 85vh !important;
+            border-radius: 28px 28px 0 0 !important;
+            padding: 16px 20px 45px 20px !important;
+            background: linear-gradient(180deg, #1d182e 0%, #110e1c 100%) !important;
+            border-top: 1.5px solid rgba(168, 85, 247, 0.45) !important;
+            box-shadow: 0 -14px 45px rgba(0, 0, 0, 0.9) !important;
+            transform: translateY(100%) !important;
+            opacity: 0 !important;
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
+            margin: 0 auto !important;
+        }
+        #shareOverlay.active .bottom-sheet {
+            transform: translateY(0) !important;
+            opacity: 1 !important;
+        }
         
         .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .sheet-header h2 { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px;}
@@ -1396,178 +1439,365 @@
 
         /* --- Video-Matching Luxury Profile Page System --- */
         .prof-hero-card {
-            background: linear-gradient(145deg, #1a162b, #100d1c);
-            border: 1px solid rgba(168, 85, 247, 0.25);
-            border-radius: 20px;
-            padding: 20px 16px 16px 16px;
+            background: #110e1e;
+            border-radius: 24px;
+            padding: 24px 18px 20px 18px;
             text-align: center;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            margin-bottom: 16px;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.65), 0 0 25px rgba(124, 58, 237, 0.25);
+            margin-bottom: 18px;
             overflow: hidden;
+            z-index: 1;
         }
+        /* Running Multi-Color Gradient Animated Border */
         .prof-hero-card::before {
             content: '';
             position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 170px;
-            height: 90px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, transparent 70%);
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg,
+                #ff007f,
+                #7c3aed,
+                #00e5ff,
+                #10b981,
+                #f59e0b,
+                #ec4899,
+                #7c3aed,
+                #ff007f
+            );
+            animation: runningBorderRotate 4.5s linear infinite;
+            z-index: -2;
+        }
+        .prof-hero-card::after {
+            content: '';
+            position: absolute;
+            inset: 2.5px;
+            background: linear-gradient(170deg, rgba(24, 19, 40, 0.95) 0%, rgba(13, 10, 24, 0.98) 100%);
+            border-radius: 22px;
+            z-index: -1;
+        }
+        @keyframes runningBorderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .prof-bg-blur {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: blur(28px) brightness(0.4) saturate(1.8);
+            opacity: 0.35;
+            z-index: 0;
             pointer-events: none;
+            transform: scale(1.2);
+            transition: opacity 0.5s ease;
         }
         .prof-avatar-box {
             position: relative;
-            width: 74px;
-            height: 74px;
-            margin: 0 auto 10px auto;
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 12px auto;
+            z-index: 2;
         }
         .prof-avatar-ring {
-            width: 74px;
-            height: 74px;
+            width: 82px;
+            height: 82px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            background: linear-gradient(135deg, #a855f7, #6366f1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 38px;
             font-weight: 800;
             color: #ffffff;
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
-            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.65), 0 0 50px rgba(99, 102, 241, 0.35);
+            border: 3px solid rgba(255, 255, 255, 0.35);
             overflow: hidden;
+            animation: avatarPulseGlow 3s ease-in-out infinite;
+        }
+        @keyframes avatarPulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(99, 102, 241, 0.3); }
+            50% { box-shadow: 0 0 32px rgba(236, 72, 153, 0.8), 0 0 60px rgba(168, 85, 247, 0.5); }
         }
         .prof-avatar-badge {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 26px;
-            height: 26px;
+            bottom: -2px;
+            right: -2px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #ffffff;
-            border: 2px solid #14121f;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            border: 2px solid #120e20;
+            box-shadow: 0 0 14px rgba(245, 158, 11, 0.8);
+            animation: badgeFloatAnim 2.5s ease-in-out infinite;
+            z-index: 3;
         }
-        .prof-avatar-badge .material-symbols-rounded { font-size: 15px; }
+        @keyframes badgeFloatAnim {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-2px) scale(1.08); }
+        }
+        .prof-avatar-badge .material-symbols-rounded { font-size: 16px; }
         .prof-name-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            margin-bottom: 4px;
+            gap: 7px;
+            margin-bottom: 3px;
+            position: relative;
+            z-index: 2;
         }
         .prof-user-name {
-            font-size: 19px;
+            font-size: 20px;
             font-weight: 800;
             color: #ffffff;
-            letter-spacing: 0.2px;
+            letter-spacing: 0.3px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
         .prof-id-pill {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #94a3b8;
-            padding: 3px 10px;
-            border-radius: 14px;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            padding: 4px 12px;
+            border-radius: 16px;
             font-size: 11.5px;
             font-family: monospace;
             cursor: pointer;
             margin-top: 4px;
-            transition: 0.2s;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .prof-id-pill:active { transform: scale(0.96); background: rgba(255, 255, 255, 0.12); }
+        .prof-id-pill:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.16); }
         .prof-status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 4px 12px;
-            border-radius: 14px;
-            font-size: 11.5px;
+            gap: 6px;
+            padding: 5px 16px;
+            border-radius: 18px;
+            font-size: 12px;
             font-weight: 800;
-            margin-top: 10px;
+            margin-top: 8px;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.4px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.4);
         }
 
-        /* 4 Stat Cards in Profile */
+        /* 4 Stat Cards in Profile (সেভ করা, আনলক, রেফারেল, হিস্ট্রি) */
         .prof-stat-grid-4 {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 9px;
             margin-bottom: 16px;
         }
         .prof-stat-tile {
-            background: #14121f;
+            background: linear-gradient(160deg, rgba(28, 23, 42, 0.95), rgba(16, 13, 26, 0.98));
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 12px 4px;
+            border-radius: 18px;
+            padding: 12px 6px 10px 6px;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .prof-stat-tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6);
         }
         .prof-stat-tile:active {
-            transform: scale(0.96);
+            transform: scale(0.95);
         }
+        .prof-stat-icon-wrap {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            margin: 0 auto 6px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .prof-stat-icon-wrap .material-symbols-rounded { font-size: 18px; }
         .prof-stat-tile h3 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             margin-bottom: 2px;
             line-height: 1.1;
         }
         .prof-stat-tile p {
-            font-size: 10.5px;
+            font-size: 11px;
             font-weight: 700;
             color: #94a3b8;
             margin: 0;
+            letter-spacing: 0.2px;
         }
-        .prof-stat-tile .material-symbols-rounded {
-            font-size: 16px;
-            margin-bottom: 3px;
-        }
+        .prof-stat-saved { border-top: 2px solid #f59e0b; }
+        .prof-stat-unlocked { border-top: 2px solid #10b981; }
+        .prof-stat-referral { border-top: 2px solid #a855f7; }
+        .prof-stat-history { border-top: 2px solid #3b82f6; }
 
-        /* Golden VIP Upgrade Banner in Profile */
+        /* Golden VIP Upgrade Banner with Shimmer & Pulsing Urge */
         .prof-vip-banner {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(217, 119, 6, 0.08));
-            border: 1px solid rgba(245, 158, 11, 0.4);
-            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.12) 50%, rgba(124, 58, 237, 0.2) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.55);
+            border-radius: 20px;
             padding: 14px 16px;
             margin-bottom: 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.15);
+            box-shadow: 0 6px 24px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+        .prof-vip-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.35);
+        }
+        .prof-vip-banner:active { transform: scale(0.98); }
+        .vip-shimmer-sweep {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+            animation: vipShimmerAnim 3s infinite;
+            pointer-events: none;
+        }
+        @keyframes vipShimmerAnim {
+            0% { left: -100%; }
+            50%, 100% { left: 150%; }
         }
         .prof-vip-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
             background: linear-gradient(135deg, #f59e0b, #d97706);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 14px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 18px rgba(245, 158, 11, 0.55);
             flex-shrink: 0;
             color: #ffffff;
+            animation: vipIconFloat 2s ease-in-out infinite;
         }
-        .prof-vip-icon .material-symbols-rounded { font-size: 22px; }
+        @keyframes vipIconFloat {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(-5deg) scale(1.06); }
+        }
+        .prof-vip-icon .material-symbols-rounded { font-size: 24px; }
+        .vip-live-pill {
+            background: #ef4444;
+            color: white;
+            font-size: 9.5px;
+            font-weight: 900;
+            padding: 2px 7px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+            letter-spacing: 0.5px;
+        }
         .prof-vip-btn {
             background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #ffffff;
             font-weight: 800;
-            font-size: 12.5px;
+            font-size: 12px;
             padding: 8px 14px;
-            border-radius: 12px;
-            border: none;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
             white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulseBtnGlow 2s infinite;
+        }
+        @keyframes pulseBtnGlow {
+            0%, 100% { box-shadow: 0 4px 15px rgba(245, 158, 11, 0.5); transform: scale(1); }
+            50% { box-shadow: 0 6px 22px rgba(245, 158, 11, 0.8); transform: scale(1.03); }
+        }
+
+        /* 3 Rich Action Cards in Profile */
+        .prof-action-buttons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .prof-action-card {
+            background: linear-gradient(160deg, rgba(26, 22, 40, 0.95), rgba(15, 12, 24, 0.98));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+        .prof-action-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(168, 85, 247, 0.35);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+        .prof-action-card:active {
+            transform: scale(0.98);
+        }
+        .prof-action-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .prof-action-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .prof-action-title {
+            color: #ffffff;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 2px;
+            font-weight: 700;
+        }
+        .prof-action-sub {
+            color: #94a3b8;
+            font-size: 11px;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .prof-action-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         /* Profile Menu Group */
@@ -2244,37 +2474,53 @@
         .category-pill {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(24, 20, 36, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12.5px;
-            font-weight: 700;
+            gap: 7px;
+            background: linear-gradient(135deg, rgba(32, 26, 48, 0.88) 0%, rgba(18, 14, 28, 0.94) 100%);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            padding: 7px 15px;
+            border-radius: 22px;
+            font-size: 13px;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.25s ease;
-            color: var(--text-light);
-            backdrop-filter: blur(8px);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #e2e8f0;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             flex-shrink: 0;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+            letter-spacing: 0.2px;
+        }
+        .category-pill:hover {
+            transform: translateY(-1px);
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 4px 16px rgba(168, 85, 247, 0.28);
+            color: #ffffff;
+        }
+        .category-pill:active {
+            transform: scale(0.96);
         }
         .category-pill.active {
-            background: linear-gradient(135deg, #7c3aed, #9333ea);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #4f46e5 100%);
+            border-color: rgba(255, 255, 255, 0.45);
             color: #ffffff;
-            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.65), 0 0 12px rgba(99, 102, 241, 0.4);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
         .cat-count-badge {
-            background: rgba(255, 255, 255, 0.15);
-            color: currentColor;
-            font-size: 10.5px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            font-size: 11px;
             font-weight: 800;
-            padding: 1px 6px;
-            border-radius: 10px;
+            padding: 1.5px 7px;
+            border-radius: 12px;
             margin-left: 2px;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
         }
         .category-pill.active .cat-count-badge {
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.35);
             color: #ffd700;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.45);
         }
 
         /* --- All Video {X} + Right Side Search Engine (Ultra Compact & Clean) --- */
@@ -2454,6 +2700,39 @@
             0% { transform: scale(0.7); }
             50% { transform: scale(1.35); }
             100% { transform: scale(1); }
+        }
+        .grid-share-btn {
+            position: absolute;
+            top: 7px;
+            right: 44px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .grid-share-btn:hover {
+            transform: scale(1.12);
+            background: rgba(168, 85, 247, 0.45);
+            border-color: #a855f7;
+            box-shadow: 0 0 14px rgba(168, 85, 247, 0.6);
+        }
+        .grid-share-btn:active { transform: scale(0.85); }
+        .grid-share-btn .material-symbols-rounded {
+            font-size: 18px;
+            color: #ffffff;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .thumb-play-btn {
@@ -3118,8 +3397,6 @@
 
     <!-- Categories Bar with Dynamic Video Counts -->
     <div class="categories-wrapper" id="categoryContainer">
-        <div class="category-pill ripple-btn active" onclick="setCategory('All', this)"><span>All</span> <span class="cat-count-badge" id="catCount-All">0</span></div>
-        <div class="category-pill ripple-btn" onclick="setCategory('SAVED', this)"><span class="material-symbols-rounded" style="font-size:13px; color:#f59e0b;">bookmark</span><span>Saved</span> <span class="cat-count-badge" id="catCount-SAVED">0</span></div>
         <div class="category-pill ripple-btn" onclick="setCategory('VIRAL', this)"><span>VIRAL</span> <span class="cat-count-badge" id="catCount-VIRAL">0</span></div>
         <div class="category-pill ripple-btn" onclick="setCategory('EXposed', this)"><span>EXposed 🌵</span> <span class="cat-count-badge" id="catCount-EXposed">0</span></div>
         <div class="category-pill ripple-btn" onclick="setCategory('Hot', this)"><span>🔥 Hot 🔥</span> <span class="cat-count-badge" id="catCount-Hot">0</span></div>
@@ -3129,7 +3406,7 @@
     
     <!-- All Video {X} Bar + Compact Right Side Search Engine -->
     <div class="all-videos-and-search-bar" id="allVideosSearchRow">
-        <div class="all-video-count-box ripple-btn" onclick="setCategory('All', document.querySelector('.category-pill'))" title="View all videos">
+        <div class="all-video-count-box ripple-btn" onclick="setCategory('All', null)" title="View all videos">
             <div class="all-vid-icon-badge">
                 <span class="material-symbols-rounded">video_library</span>
             </div>
@@ -3604,8 +3881,11 @@
                 <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'profileOverlay')"><span class="material-symbols-rounded">close</span></button>
             </div>
 
-            <!-- Profile Hero Card with Glowing Aura -->
+            <!-- Profile Hero Card with Running Color Border Animation & Blurred Background Logo -->
             <div class="prof-hero-card">
+                <!-- Blurred User Profile Avatar/Logo in the Background -->
+                <div class="prof-bg-blur" id="profBgBlur"></div>
+
                 <div class="prof-avatar-box">
                     <div class="prof-avatar-ring" id="profAvatar">U</div>
                     <div class="prof-avatar-badge" id="profVipCrownBadge" title="Status">
@@ -3614,125 +3894,122 @@
                 </div>
                 <div class="prof-name-row">
                     <h2 class="prof-user-name" id="profName">User Name</h2>
-                    <span class="material-symbols-rounded" style="color:#00e5ff; font-size:18px;" title="Verified User">verified</span>
+                    <span class="material-symbols-rounded" style="color:#00e5ff; font-size:20px; filter: drop-shadow(0 0 6px rgba(0,229,255,0.7));" title="Verified User">verified</span>
                 </div>
-                <p id="profUsername" style="color:var(--text-muted); font-size:13px; margin: 0 0 6px 0;">@username</p>
+                <p id="profUsername" style="color:#cbd5e1; font-size:13px; font-weight:600; margin: 0 0 8px 0; text-shadow: 0 1px 4px rgba(0,0,0,0.8); position:relative; z-index:2;">@username</p>
                 <div class="prof-id-pill ripple-btn" onclick="copyUserId()" title="Click to copy Telegram ID">
-                    <span class="material-symbols-rounded" style="font-size:13px; color:var(--primary-light);">badge</span>
+                    <span class="material-symbols-rounded" style="font-size:14px; color:var(--primary-light);">badge</span>
                     <span id="profTgId">ID: 123456</span>
-                    <span class="material-symbols-rounded" style="font-size:13px; color:var(--text-muted);">content_copy</span>
+                    <span class="material-symbols-rounded" style="font-size:13px; color:#cbd5e1;">content_copy</span>
                 </div>
                 <br>
                 <div id="userStatusBadge" class="badge-free prof-status-pill">Free User</div>
-                <div id="premiumCount" style="color:#ffd700; font-size:12px; font-weight:800; margin-top:4px;"></div>
+                <div id="premiumCount" style="color:#ffd700; font-size:12px; font-weight:800; margin-top:6px; position:relative; z-index:2; text-shadow:0 0 8px rgba(255,215,0,0.5);"></div>
             </div>
             
-            <!-- 4 Interactive Quick Stats Cards -->
+            <!-- 4 Interactive Quick Stats Cards (সেভ করা, আনলক, রেফারেল, হিস্ট্রি) -->
             <div class="prof-stat-grid-4">
-                <div class="prof-stat-tile ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('favoritesOverlay'); loadFavorites();" style="border-color: rgba(245, 158, 11, 0.35);">
-                    <span class="material-symbols-rounded" style="color: #f59e0b;">bookmark</span>
+                <div class="prof-stat-tile prof-stat-saved ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('favoritesOverlay'); loadFavorites();" title="আমার সেভ করা ভিডিও">
+                    <div class="prof-stat-icon-wrap" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.35);">
+                        <span class="material-symbols-rounded">bookmark</span>
+                    </div>
                     <h3 style="color:#ffd700;" id="favCount">0</h3>
                     <p>সেভ করা</p>
                 </div>
-                <div class="prof-stat-tile ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('historyOverlay');" style="border-color: rgba(16, 185, 129, 0.35);">
-                    <span class="material-symbols-rounded" style="color: #10b981;">lock_open</span>
+                <div class="prof-stat-tile prof-stat-unlocked ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('historyOverlay');" title="আনলক করা ভিডিও">
+                    <div class="prof-stat-icon-wrap" style="background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.35);">
+                        <span class="material-symbols-rounded">lock_open</span>
+                    </div>
                     <h3 style="color:#10b981;" id="unlockedCount">0</h3>
                     <p>আনলক</p>
                 </div>
-                <div class="prof-stat-tile ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('referralOverlay');" style="border-color: rgba(168, 85, 247, 0.35);">
-                    <span class="material-symbols-rounded" style="color: #c084fc;">redeem</span>
+                <div class="prof-stat-tile prof-stat-referral ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('referralOverlay');" title="আমার মোট রেফারেল">
+                    <div class="prof-stat-icon-wrap" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35);">
+                        <span class="material-symbols-rounded">redeem</span>
+                    </div>
                     <h3 style="color:#c084fc;" id="profRefCount">0</h3>
                     <p>রেফারেল</p>
                 </div>
-                <div class="prof-stat-tile ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('historyOverlay');" style="border-color: rgba(59, 130, 246, 0.35);">
-                    <span class="material-symbols-rounded" style="color: #60a5fa;">history</span>
+                <div class="prof-stat-tile prof-stat-history ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('historyOverlay');" title="ভিডিও দেখার হিস্ট্রি">
+                    <div class="prof-stat-icon-wrap" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35);">
+                        <span class="material-symbols-rounded">history</span>
+                    </div>
                     <h3 style="color:#60a5fa;" id="profHistoryCount">0</h3>
                     <p>হিস্ট্রি</p>
                 </div>
             </div>
 
-            <!-- Golden VIP Upgrade Banner -->
+            <!-- Golden VIP Upgrade Box (Enticing, Pulsing Animation) -->
             <div class="prof-vip-banner ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('premiumOverlay');">
-                <div style="display:flex; align-items:center; gap:12px;">
+                <div class="vip-shimmer-sweep"></div>
+                <div style="display:flex; align-items:center; gap:12px; position:relative; z-index:2;">
                     <div class="prof-vip-icon">
                         <span class="material-symbols-rounded">workspace_premium</span>
                     </div>
                     <div>
-                        <b style="color:#ffd700; font-size:14.5px; display:block;">👑 গোল্ডেন VIP মেম্বারশিপ</b>
-                        <span style="font-size:11.5px; color:#cbd5e1;">১০০% অ্যাড ছাড়া সরাসরি আল্ট্রা এইচডি ভিডিও</span>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <b style="color:#ffd700; font-size:15px; display:block; text-shadow: 0 0 10px rgba(255,215,0,0.5);">👑 ভিআইপি মেম্বারশিপ</b>
+                            <span class="vip-live-pill">HOT OFFER</span>
+                        </div>
+                        <span style="font-size:12px; color:#e2e8f0; display:block; margin-top:2px;">১০০% নো-অ্যাড, আল্ট্রা এইচডি ও আনলিমিটেড ভিডিও এক্সেস</span>
                     </div>
                 </div>
-                <button class="prof-vip-btn ripple-btn">আপগ্রেড ➔</button>
+                <button class="prof-vip-btn ripple-btn" style="position:relative; z-index:2;">
+                    <span>আনলক করুন</span>
+                    <span class="material-symbols-rounded" style="font-size:16px;">arrow_forward</span>
+                </button>
             </div>
             
-            <!-- Quick Actions Menu Card Group -->
+            <!-- 3 Distinct Action Buttons (আমার রেফারেল লিংক, টপ লিডার বোর্ড, অফিসিয়াল টেলিগ্রাম চ্যানেল) -->
+            <div class="prof-action-buttons-group">
+                <!-- 1. My Referral Link Button -->
+                <div class="prof-action-card ripple-btn" onclick="copyBotLink()">
+                    <div class="prof-action-icon-box" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);">
+                        <span class="material-symbols-rounded" style="color:#ffffff; font-size:22px;">link</span>
+                    </div>
+                    <div class="prof-action-content">
+                        <span class="prof-action-title">আমার রেফারেল লিংক</span>
+                        <span class="prof-action-sub">বন্ধুদের ইনভাইট করে ফ্রি ভিআইপি পান</span>
+                    </div>
+                    <div class="prof-action-pill-btn" style="background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35);">
+                        <span>কপি করুন</span>
+                        <span class="material-symbols-rounded" style="font-size:14px;">content_copy</span>
+                    </div>
+                </div>
+
+                <!-- 2. Top Leaderboard Button -->
+                <div class="prof-action-card ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); loadLeaderboard('referral', 'all');">
+                    <div class="prof-action-icon-box" style="background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);">
+                        <span class="material-symbols-rounded" style="color:#ffffff; font-size:22px;">emoji_events</span>
+                    </div>
+                    <div class="prof-action-content">
+                        <span class="prof-action-title">টপ লিডার বোর্ড</span>
+                        <span class="prof-action-sub">সেরা রেফারেল ইউজারদের রেংকিং দেখুন</span>
+                    </div>
+                    <div class="prof-action-pill-btn" style="background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35);">
+                        <span>র‍্যাংক দেখুন</span>
+                        <span class="material-symbols-rounded" style="font-size:14px;">chevron_right</span>
+                    </div>
+                </div>
+
+                <!-- 3. Official Telegram Channel Button -->
+                <div class="prof-action-card ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('channelsOverlay');">
+                    <div class="prof-action-icon-box" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);">
+                        <span class="material-symbols-rounded" style="color:#ffffff; font-size:22px;">send</span>
+                    </div>
+                    <div class="prof-action-content">
+                        <span class="prof-action-title">অফিসিয়াল টেলিগ্রাম চ্যানেল</span>
+                        <span class="prof-action-sub">সবার আগে নতুন সব ভিডিও আপডেট পান</span>
+                    </div>
+                    <div class="prof-action-pill-btn" style="background: rgba(14, 165, 233, 0.18); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.35);">
+                        <span>যুক্ত হন</span>
+                        <span class="material-symbols-rounded" style="font-size:14px;">chevron_right</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Menu Row -->
             <div class="prof-menu-group">
-                <div class="prof-menu-row ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('favoritesOverlay'); loadFavorites();">
-                    <div class="prof-menu-left">
-                        <div class="prof-menu-icon" style="background:rgba(245, 158, 11, 0.15); color:#f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);">
-                            <span class="material-symbols-rounded">bookmark</span>
-                        </div>
-                        <span class="prof-menu-text">আমার সেভ করা ভিডিও</span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <span class="prof-menu-badge" style="background:rgba(245, 158, 11, 0.2); color:#ffd700;" id="profMenuFavCount">0</span>
-                        <span class="material-symbols-rounded" style="color:var(--text-muted); font-size:18px;">chevron_right</span>
-                    </div>
-                </div>
-
-                <div class="prof-menu-row ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('referralOverlay');">
-                    <div class="prof-menu-left">
-                        <div class="prof-menu-icon" style="background:rgba(168, 85, 247, 0.15); color:#c084fc; border: 1px solid rgba(168, 85, 247, 0.3);">
-                            <span class="material-symbols-rounded">redeem</span>
-                        </div>
-                        <span class="prof-menu-text">রেফার ও আর্ন - ফ্রি ভিআইপি পান</span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <span class="prof-menu-badge" style="background:rgba(168, 85, 247, 0.2); color:#d8b4fe;" id="profMenuRefCount">0 Ref</span>
-                        <span class="material-symbols-rounded" style="color:var(--text-muted); font-size:18px;">chevron_right</span>
-                    </div>
-                </div>
-
-                <div class="prof-menu-row ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('historyOverlay');">
-                    <div class="prof-menu-left">
-                        <div class="prof-menu-icon" style="background:rgba(59, 130, 246, 0.15); color:#60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">
-                            <span class="material-symbols-rounded">history</span>
-                        </div>
-                        <span class="prof-menu-text">ভিডিও ওয়াচ হিস্ট্রি</span>
-                    </div>
-                    <span class="material-symbols-rounded" style="color:var(--text-muted); font-size:18px;">chevron_right</span>
-                </div>
-
-                <div class="prof-menu-row ripple-btn" onclick="copyBotLink()">
-                    <div class="prof-menu-left">
-                        <div class="prof-menu-icon" style="background:rgba(16, 185, 129, 0.15); color:#10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
-                            <span class="material-symbols-rounded">content_copy</span>
-                        </div>
-                        <span class="prof-menu-text">আমার রেফারেল লিংক কপি করুন</span>
-                    </div>
-                    <span class="material-symbols-rounded" style="color:var(--text-muted); font-size:18px;">link</span>
-                </div>
-
-                <div class="prof-menu-row ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); loadLeaderboard('referral', 'all');">
-                    <div class="prof-menu-left">
-                        <div class="prof-menu-icon" style="background:rgba(239, 68, 68, 0.15); color:#f87171; border: 1px solid rgba(239, 68, 68, 0.3);">
-                            <span class="material-symbols-rounded">emoji_events</span>
-                        </div>
-                        <span class="prof-menu-text">টপ লিডারবোর্ড ও রেংকিং</span>
-                    </div>
-                    <span class="material-symbols-rounded" style="color:var(--text-muted); font-size:18px;">chevron_right</span>
-                </div>
-
-                <div class="prof-menu-row ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('channelsOverlay');">
-                    <div class="prof-menu-left">
-                        <div class="prof-menu-icon" style="background:rgba(14, 165, 233, 0.15); color:#38bdf8; border: 1px solid rgba(14, 165, 233, 0.3);">
-                            <span class="material-symbols-rounded">send</span>
-                        </div>
-                        <span class="prof-menu-text">আমাদের অফিসিয়াল টেলিগ্রাম চ্যানেল</span>
-                    </div>
-                    <span class="material-symbols-rounded" style="color:var(--text-muted); font-size:18px;">chevron_right</span>
-                </div>
-
                 <div class="prof-menu-row ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('settingsOverlay');">
                     <div class="prof-menu-left">
                         <div class="prof-menu-icon" style="background:rgba(100, 116, 139, 0.15); color:#94a3b8; border: 1px solid rgba(100, 116, 139, 0.3);">
@@ -3856,7 +4133,77 @@
         </div>
     </div>
     <div class="overlay" id="paymentOverlay" onclick="closeOverlay(event, 'paymentOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">arrow_back</span></button><h2 style="color:var(--success); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">payments</span> Complete Payment</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'paymentOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="notice-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);"><b style="color:var(--success); font-size:15px;">কিভাবে পেমেন্ট করবেন?</b><br><br>দয়া করে নিচের নাম্বারে <b>Send Money (পার্সোনাল)</b> করুন। অথবা বাইনান্স পে আইডিতে ডলার পাঠাতে পারেন। টাকা পাঠানোর পর আপনার <b>Transaction ID (TrxID)</b> নিচের বক্সে দিয়ে সাবমিট করুন।</div><div style="background: var(--bg-dark); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid var(--divider);"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--text-muted)">Selected Plan:</span><b id="selectedPlanShow" style="color:var(--warning); font-size:16px;"></b></div><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span style="color:var(--text-muted)">Amount to Send:</span><b id="selectedAmountShow" style="color:var(--success); font-size:16px;"></b></div><hr style="border:0; border-top:1px dashed var(--divider); margin: 15px 0;"><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">bKash / Nagad / Rocket (Personal):</p><b id="payNumberShow" style="color:white; font-size: 20px; user-select: all; display:block; margin-bottom:15px; letter-spacing: 1px;">Loading...</b><p style="color:var(--text-muted); font-size:12px; margin-bottom:5px;">Binance Pay ID:</p><b id="binanceShow" style="color:var(--warning); font-size: 20px; user-select: all; display:block; letter-spacing: 1px;">Loading...</b></div><div class="input-group"><label>Select Payment Method</label><select id="payMethodInput"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Binance">Binance</option></select></div><div id="pendingStatusBox" style="display:none; text-align:center; padding:20px; background:rgba(245, 158, 11, 0.15); border:1px solid rgba(245, 158, 11, 0.3); border-radius:16px; color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="font-size:40px; margin-bottom:10px;">hourglass_top</span><br><b style="font-size:16px;">Your Request is Pending!</b><br><span style="font-size:13px; color:var(--text-muted); margin-top:5px; display:block;">Please wait for admin approval. We will activate your premium soon.</span></div><div id="submitTrxBox"><div class="input-group"><label>Enter Transaction ID (TrxID) / Binance ID</label><input type="text" id="trxInput" placeholder="e.g. 9G3H8K2..." style="font-family:monospace; font-size:16px; letter-spacing:1px;"></div><button class="btn-submit ripple-btn" onclick="submitTrx()"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">send</span> Submit for Approval</button></div></div></div>
-    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()" style="height: auto; max-height: 50vh;"><div class="sheet-header"><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">arrow_back</span></button><h2>Share Options</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'shareOverlay')"><span class="material-symbols-rounded">close</span></button></div><div class="list-item ripple-btn" onclick="shareOnTelegram()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(59, 130, 246, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:#3b82f6;">send</span></div><div><b style="color:var(--text-light); font-size:15px;">Share with friends</b><br><span style="font-size:12px; color:var(--text-muted);">Share on Telegram</span></div></div></div><div class="list-item ripple-btn" onclick="copyVideoLink()"><div style="display:flex; align-items:center; gap:15px;"><div style="background:rgba(16, 185, 129, 0.2); padding:12px; border-radius:12px;"><span class="material-symbols-rounded" style="color:var(--success);">content_copy</span></div><div><b style="color:var(--text-light); font-size:15px;">Copy Video Link</b><br><span style="font-size:12px; color:var(--text-muted);">Direct link to this video</span></div></div></div></div></div>
+    <div class="overlay" id="shareOverlay" onclick="closeOverlay(event, 'shareOverlay')">
+        <div class="bottom-sheet" onclick="event.stopPropagation()">
+            <div style="width: 44px; height: 4px; background: rgba(255,255,255,0.25); border-radius: 4px; margin: 0 auto 16px auto;"></div>
+            <div class="sheet-header" style="margin-bottom: 16px;">
+                <h2 style="display:flex; align-items:center; gap:8px; font-size:18px; color:#ffffff;">
+                    <span class="material-symbols-rounded" style="color:var(--primary-light);">share</span> Share Options
+                </h2>
+                <button class="close-btn ripple-btn" onclick="closeOverlay(null, 'shareOverlay')">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- 1. WhatsApp Share -->
+                <div class="list-item ripple-btn" onclick="shareOnWhatsApp()" style="background: rgba(37, 211, 102, 0.08); border: 1px solid rgba(37, 211, 102, 0.25); border-radius: 16px; padding: 12px 14px; margin-bottom: 0;">
+                    <div style="display:flex; align-items:center; gap:14px; width: 100%;">
+                        <div style="background: linear-gradient(135deg, #25D366, #128C7E); width: 44px; height: 44px; border-radius: 14px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4); flex-shrink: 0;">
+                            <span class="material-symbols-rounded" style="color:#ffffff; font-size: 24px;">chat</span>
+                        </div>
+                        <div style="flex: 1;">
+                            <b style="color:#ffffff; font-size:15px; display:block;">WhatsApp Share</b>
+                            <span style="font-size:12px; color:#a7f3d0;">সরাসরি হোয়াটসঅ্যাপে বন্ধুদের পাঠান</span>
+                        </div>
+                        <span class="material-symbols-rounded" style="color: #25D366; font-size: 20px;">chevron_right</span>
+                    </div>
+                </div>
+
+                <!-- 2. Telegram Share -->
+                <div class="list-item ripple-btn" onclick="shareOnTelegram()" style="background: rgba(41, 182, 246, 0.08); border: 1px solid rgba(41, 182, 246, 0.25); border-radius: 16px; padding: 12px 14px; margin-bottom: 0;">
+                    <div style="display:flex; align-items:center; gap:14px; width: 100%;">
+                        <div style="background: linear-gradient(135deg, #29b6f6, #0288d1); width: 44px; height: 44px; border-radius: 14px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 14px rgba(41, 182, 246, 0.4); flex-shrink: 0;">
+                            <span class="material-symbols-rounded" style="color:#ffffff; font-size: 22px;">send</span>
+                        </div>
+                        <div style="flex: 1;">
+                            <b style="color:#ffffff; font-size:15px; display:block;">Telegram Share</b>
+                            <span style="font-size:12px; color:#bae6fd;">টেলিগ্রাম চ্যাট ও গ্রুপে পাঠান</span>
+                        </div>
+                        <span class="material-symbols-rounded" style="color: #38bdf8; font-size: 20px;">chevron_right</span>
+                    </div>
+                </div>
+
+                <!-- 3. All Apps / Device Native Share -->
+                <div class="list-item ripple-btn" onclick="shareDeviceNative()" style="background: rgba(236, 72, 153, 0.08); border: 1px solid rgba(236, 72, 153, 0.25); border-radius: 16px; padding: 12px 14px; margin-bottom: 0;">
+                    <div style="display:flex; align-items:center; gap:14px; width: 100%;">
+                        <div style="background: linear-gradient(135deg, #ec4899, #8b5cf6); width: 44px; height: 44px; border-radius: 14px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4); flex-shrink: 0;">
+                            <span class="material-symbols-rounded" style="color:#ffffff; font-size: 22px;">share</span>
+                        </div>
+                        <div style="flex: 1;">
+                            <b style="color:#ffffff; font-size:15px; display:block;">More Share Apps (সকল অ্যাপস)</b>
+                            <span style="font-size:12px; color:#fbcfe8;">ফেসবুক, মেসেঞ্জার ও সব অ্যাপে শেয়ার</span>
+                        </div>
+                        <span class="material-symbols-rounded" style="color: #ec4899; font-size: 20px;">chevron_right</span>
+                    </div>
+                </div>
+
+                <!-- 4. Copy Link -->
+                <div class="list-item ripple-btn" onclick="copyVideoLink()" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.25); border-radius: 16px; padding: 12px 14px; margin-bottom: 0;">
+                    <div style="display:flex; align-items:center; gap:14px; width: 100%;">
+                        <div style="background: linear-gradient(135deg, #a855f7, #6366f1); width: 44px; height: 44px; border-radius: 14px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4); flex-shrink: 0;">
+                            <span class="material-symbols-rounded" style="color:#ffffff; font-size: 22px;">content_copy</span>
+                        </div>
+                        <div style="flex: 1;">
+                            <b style="color:#ffffff; font-size:15px; display:block;">Copy Video Link</b>
+                            <span style="font-size:12px; color:#ddd6fe;">সরাসরি ভিডিওর লিংক কপি করুন</span>
+                        </div>
+                        <span class="material-symbols-rounded" style="color: #a855f7; font-size: 20px;">chevron_right</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="overlay" id="channelsOverlay" onclick="closeOverlay(event, 'channelsOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header"><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">arrow_back</span></button><h2 style="color:var(--primary-light); display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded">send</span> Our Channels</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'channelsOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="channelListContainer">Loading channels...</div></div></div>
     
     <div class="overlay" id="favoritesOverlay" onclick="closeOverlay(event, 'favoritesOverlay')"><div class="bottom-sheet" onclick="event.stopPropagation()"><div class="sheet-header" style="position: sticky; top: -20px; background: var(--bg-card); z-index: 10; padding: 20px 0; margin-top:-20px;"><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'favoritesOverlay')"><span class="material-symbols-rounded">arrow_back</span></button><h2 style="display:flex; align-items:center; gap:8px;"><span class="material-symbols-rounded" style="color:#f59e0b">bookmark</span> সেভ করা ভিডিও (<span id="favHeaderCount">0</span>)</h2><button class="close-btn ripple-btn" onclick="closeOverlay(null, 'favoritesOverlay')"><span class="material-symbols-rounded">close</span></button></div><div id="favoritesList" style="margin-top: 10px;"></div></div></div>
@@ -4316,8 +4663,8 @@
             </div>
 
             <!-- Modal Sponsored Ad Banner (300x250) -->
-            <div id="adModalBannerWrapper" style="margin: 16px auto 10px auto; max-width: 300px; text-align: center;">
-                <div style="font-size: 8.5px; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.6px; text-transform: uppercase;">Sponsored Ad</div>
+            <div id="adModalBannerWrapper" style="margin: 14px auto 10px auto; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                <div style="font-size: 9px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 0.8px; text-transform: uppercase;">Sponsored Ad (300x250)</div>
                 <iframe srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body><script>atOptions={'key':'7b370a5d35c972a4fa18f32aa3f8f16a','format':'iframe','height':250,'width':300,'params':{}};</script><script src='https://www.highrevenueformat.com/7b370a5d35c972a4fa18f32aa3f8f16a/invoke.js'></script></body></html>" width="300" height="250" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:12px;display:block;margin:0 auto;box-shadow:0 4px 18px rgba(0,0,0,0.5);"></iframe>
             </div>
 
@@ -5021,8 +5368,8 @@
         function getAdsterra300x250Html() {
             if (!window.adsterraConfig || window.adsterraConfig.banner300x250 === false) return '';
             return `
-                <div id="adsterra_banner_300x250" style="margin: 16px auto; text-align: center; max-width: 300px;">
-                    <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.8px;">SPONSORED AD (300x250)</div>
+                <div id="adsterra_banner_300x250" style="margin: 14px auto; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 0.8px; text-align: center; width: 100%;">SPONSORED AD (300x250)</div>
                     <iframe srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body>&lt;script&gt;atOptions={'key':'7b370a5d35c972a4fa18f32aa3f8f16a','format':'iframe','height':250,'width':300,'params':{}};&lt;/script&gt;&lt;script src='https://www.highrevenueformat.com/7b370a5d35c972a4fa18f32aa3f8f16a/invoke.js'&gt;&lt;/script&gt;</body></html>" width="300" height="250" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:12px;display:block;margin:0 auto;box-shadow:0 4px 18px rgba(0,0,0,0.4);"></iframe>
                 </div>
             `;
@@ -5284,12 +5631,16 @@
             let username = tg.initDataUnsafe.user.username;
             
             if(currentUser.photoUrl) {
-                document.getElementById('headerProfileInitials').innerHTML = `<img src="${currentUser.photoUrl}" style="width:100%;height:100%;object-fit:cover;">`;
-                document.getElementById('profAvatar').innerHTML = `<img src="${currentUser.photoUrl}" style="width:100%;height:100%;object-fit:cover;">`;
+                document.getElementById('headerProfileInitials').innerHTML = `<img src="${currentUser.photoUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                document.getElementById('profAvatar').innerHTML = `<img src="${currentUser.photoUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
                 document.getElementById('profAvatar').style.background = 'none';
+                let bBlur = document.getElementById('profBgBlur');
+                if (bBlur) bBlur.style.backgroundImage = `url("${currentUser.photoUrl}")`;
             } else {
                 document.getElementById('headerProfileInitials').innerText = currentUser.name.charAt(0);
                 document.getElementById('profAvatar').innerText = currentUser.name.charAt(0);
+                let bBlur = document.getElementById('profBgBlur');
+                if (bBlur) bBlur.style.backgroundImage = `radial-gradient(circle at center, #a855f7 0%, #4f46e5 50%, #110e1e 100%)`;
             }
             
             document.getElementById('profName').innerText = currentUser.name;
@@ -5346,6 +5697,11 @@
             let dSaver = localStorage.getItem('dataSaver') === 'true';
             if(document.getElementById('dataSaverToggle')) document.getElementById('dataSaverToggle').checked = dSaver;
             if(document.getElementById('profTgId')) document.getElementById('profTgId').innerText = "ID: " + currentUser.id;
+            let bBlur = document.getElementById('profBgBlur');
+            if(bBlur) {
+                if(currentUser && currentUser.photoUrl) bBlur.style.backgroundImage = `url("${currentUser.photoUrl}")`;
+                else bBlur.style.backgroundImage = `radial-gradient(circle at center, #a855f7 0%, #4f46e5 50%, #110e1e 100%)`;
+            }
         }
 
         function handleReferralAttribution(userDocData) {
@@ -5813,7 +6169,28 @@
         }
         function shareAppOnTelegram() { let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef())}&text=${encodeURIComponent("Join now and watch unlimited videos!")}`; window.open(shareUrl, '_blank'); }
         function shareOnTelegram() { let shareUrl = `https://t.me/share/url?url=${encodeURIComponent(getBotLinkWithRef(`post_${currentShareVid}`))}&text=${encodeURIComponent('Check out this video: ' + currentShareTitle)}`; window.open(shareUrl, '_blank'); }
-        function copyVideoLink() { navigator.clipboard.writeText(getBotLinkWithRef(`post_${currentShareVid}`)).then(() => { alert('Video Link Copied to Clipboard!'); closeOverlay(null, 'shareOverlay'); }); }
+        function shareOnWhatsApp() {
+            let shareLink = getBotLinkWithRef(`post_${currentShareVid}`);
+            let text = `🔥 Watch this exclusive video: ${currentShareTitle || ''}\n${shareLink}`;
+            let waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+        }
+        function shareDeviceNative() {
+            let shareLink = getBotLinkWithRef(`post_${currentShareVid}`);
+            let shareTitle = currentShareTitle || 'Exclusive Video';
+            if (navigator.share) {
+                navigator.share({
+                    title: shareTitle,
+                    text: `🔥 Watch this exclusive video: ${shareTitle}`,
+                    url: shareLink
+                }).catch(err => {
+                    console.log('Native share closed:', err);
+                });
+            } else {
+                copyVideoLink();
+            }
+        }
+        function copyVideoLink() { navigator.clipboard.writeText(getBotLinkWithRef(`post_${currentShareVid}`)).then(() => { alert('✅ Video Link Copied to Clipboard!'); closeOverlay(null, 'shareOverlay'); }); }
 
         var activeVideoId = null;
 
@@ -6134,19 +6511,23 @@
 
                             <p id="playerSubNote-${activeVid.id}" style="text-align: center; font-size: 12px; color: var(--text-muted); margin: 8px 0 10px 0;">${subNoteText}</p>
 
-                            <!-- Adsterra 300x250 & Native Banners -->
+                            <!-- Quick Action Buttons (Placed above Sponsored Ad, below Unlock Button) -->
+                            <div class="player-actions-row" style="margin: 10px 0 14px 0; gap: 8px;">
+                                <button class="player-action-btn ripple-btn" style="padding: 7px 12px; font-size: 12px; border-radius: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);" onclick="closeVideoPlayer()">
+                                    <span class="material-symbols-rounded" style="font-size:16px;">home</span> Home
+                                </button>
+                                <button class="player-action-btn ripple-btn ${isVidSaved ? 'saved' : ''}" style="padding: 7px 12px; font-size: 12px; border-radius: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);" id="playerSaveBtn-${activeVid.id}" onclick="toggleSaveVideo('${activeVid.id}', '', '', event)">
+                                    <span class="material-symbols-rounded" style="font-size:16px; ${isVidSaved ? 'color:#ef4444;' : ''}">${isVidSaved ? 'favorite' : 'favorite_border'}</span>
+                                    <span>${isVidSaved ? 'সেভড' : 'সেভ'}</span>
+                                </button>
+                                <button class="player-action-btn ripple-btn" style="padding: 7px 12px; font-size: 12px; border-radius: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);" onclick="openShareDialog('${activeVid.id}', '')">
+                                    <span class="material-symbols-rounded" style="font-size:16px;">share</span> শেয়ার
+                                </button>
+                            </div>
+
+                            <!-- Adsterra 300x250 & Native Banners (Placed below Quick Action Buttons) -->
                             ${getAdsterra300x250Html()}
                             ${getAdsterraNativeHtml()}
-
-                            <!-- Quick Action Buttons -->
-                            <div class="player-actions-row">
-                                <button class="player-action-btn ripple-btn" onclick="closeVideoPlayer()"><span class="material-symbols-rounded">home</span> হোম</button>
-                                <button class="player-action-btn ripple-btn ${isVidSaved ? 'saved' : ''}" id="playerSaveBtn-${activeVid.id}" onclick="toggleSaveVideo('${activeVid.id}', '', '', event)">
-                                    <span class="material-symbols-rounded" style="${isVidSaved ? 'color:#ef4444;' : ''}">${isVidSaved ? 'favorite' : 'favorite_border'}</span>
-                                    <span>${isVidSaved ? 'সেভ করা ♥️' : 'সেভ করুন ♥️'}</span>
-                                </button>
-                                <button class="player-action-btn ripple-btn" onclick="openShareDialog('${activeVid.id}', '')"><span class="material-symbols-rounded">share</span> শেয়ার</button>
-                            </div>
 
                             <!-- Popular Videos Under Player -->
                             ${popHtml}
@@ -6192,6 +6573,9 @@
                         <div class="grid-thumb-box">
                             ${lockBadgeHtml}
                             ${saveBtnHtml}
+                            <button class="grid-share-btn ripple-btn" onclick="event.stopPropagation(); openShareDialog('${vid.id}', '${safeTitle}');" title="ভিডিও শেয়ার করুন">
+                                <span class="material-symbols-rounded">share</span>
+                            </button>
                             <img src="${safePhoto}" class="${thumbClass}" alt="Thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/300x180?text=Video';">
                             <div class="thumb-play-btn"><span class="material-symbols-rounded">play_arrow</span></div>
                         </div>
@@ -6298,7 +6682,7 @@ function toggleLike(vidId) {
             sc.style.display = sc.style.display === 'flex' ? 'none' : 'flex'; 
             if(sc.style.display === 'flex') document.getElementById('searchInput').focus(); 
         }
-        function setCategory(cat, btn) { document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active')); btn.classList.add('active'); currentCategory = cat; renderVideos(); }
+        function setCategory(cat, btn) { document.querySelectorAll('.category-pill').forEach(el => el.classList.remove('active')); if (btn) btn.classList.add('active'); currentCategory = cat; renderVideos(); }
         function filterVideos() { renderVideos(); }
         function navSwitch(btn) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); btn.classList.add('active'); }
         function openShareDialog(vidId, title = '') { 
@@ -6511,17 +6895,15 @@ function toggleLike(vidId) {
 
             // AD 1 (৩ সেকেন্ড লোডিং হবে তারপর প্রথম অ্যাড আসবে)
             await runModalCountdown(1, adsForThisStep, currentStep, totalSteps);
-            document.getElementById('adSimulationModal').classList.remove('active');
-            
             let success1 = await enforceAdWatchTime(ad1Type, adTime, 1);
+            document.getElementById('adSimulationModal').classList.remove('active');
             if(!success1) return showEarlyWarning(adTime, vidId, btn, totalSteps);
 
             // AD 2 (প্রথম অ্যাড দেখা শেষে ব্যাক করলে ২ নাম্বার অ্যাড লোডিং হবে ৩ সেকেন্ড, ৩ সেকেন্ড পর ২ নাম্বার অ্যাড আসবে)
             if (adsForThisStep >= 2) {
                 await runModalCountdown(2, adsForThisStep, currentStep, totalSteps);
-                document.getElementById('adSimulationModal').classList.remove('active');
-                
                 let success2 = await enforceAdWatchTime(ad2Type, adTime, 2);
+                document.getElementById('adSimulationModal').classList.remove('active');
                 if(!success2) return showEarlyWarning(adTime, vidId, btn, totalSteps);
             }
 
@@ -6637,17 +7019,15 @@ function toggleLike(vidId) {
 
             // AD 1 (৩ সেকেন্ড লোডিং হবে তারপর প্রথম অ্যাড আসবে)
             await runModalCountdown(1, adsForThisStep, currentStep, totalSteps);
-            document.getElementById('adSimulationModal').classList.remove('active');
-            
             let success1 = await enforceAdWatchTime(ad1Type, adTime, 1);
+            document.getElementById('adSimulationModal').classList.remove('active');
             if(!success1) return showEarlyWarningPlayer(adTime, vidId, btn, totalSteps);
 
             // AD 2 (প্রথম অ্যাড দেখা শেষে ব্যাক করলে ২ নাম্বার অ্যাড লোডিং হবে ৩ সেকেন্ড, ৩ সেকেন্ড পর ২ নাম্বার অ্যাড আসবে)
             if (adsForThisStep >= 2) {
                 await runModalCountdown(2, adsForThisStep, currentStep, totalSteps);
-                document.getElementById('adSimulationModal').classList.remove('active');
-                
                 let success2 = await enforceAdWatchTime(ad2Type, adTime, 2);
+                document.getElementById('adSimulationModal').classList.remove('active');
                 if(!success2) return showEarlyWarningPlayer(adTime, vidId, btn, totalSteps);
             }
 
@@ -7417,7 +7797,11 @@ function toggleLike(vidId) {
                 if (el.id !== id) {
                     el.classList.remove('active'); 
                     const bs = el.querySelector('.bottom-sheet');
-                    if(bs && el.id !== 'sidebarOverlay') { bs.style.transform = 'scale(0.98)'; bs.style.opacity = '0'; }
+                    if(bs) {
+                        if (el.id === 'sidebarOverlay') bs.style.transform = 'translateX(-100%)';
+                        else if (el.id === 'shareOverlay') { bs.style.transform = 'translateY(100%)'; bs.style.opacity = '0'; }
+                        else { bs.style.transform = 'scale(0.98)'; bs.style.opacity = '0'; }
+                    }
                 }
             }); 
             const overlay = document.getElementById(id); 
@@ -7427,6 +7811,9 @@ function toggleLike(vidId) {
             if(bs) { 
                 if(id === 'sidebarOverlay') {
                     bs.style.transform = 'translateX(0)';
+                } else if(id === 'shareOverlay') {
+                    bs.style.transform = 'translateY(0)';
+                    bs.style.opacity = '1';
                 } else {
                     bs.style.transform = 'scale(1)'; 
                     bs.style.opacity = '1'; 
@@ -7484,6 +7871,9 @@ function toggleLike(vidId) {
             if(bs) { 
                 if (id === 'sidebarOverlay') {
                     bs.style.transform = 'translateX(-100%)';
+                } else if (id === 'shareOverlay') {
+                    bs.style.transform = 'translateY(100%)';
+                    bs.style.opacity = '0';
                 } else {
                     bs.style.transform = 'scale(0.98)'; 
                     bs.style.opacity = '0'; 
@@ -7497,6 +7887,9 @@ function toggleLike(vidId) {
                 if(bs) { 
                     if (el.id === 'sidebarOverlay') {
                         bs.style.transform = 'translateX(-100%)';
+                    } else if (el.id === 'shareOverlay') {
+                        bs.style.transform = 'translateY(100%)';
+                        bs.style.opacity = '0';
                     } else {
                         bs.style.transform = 'scale(0.98)'; 
                         bs.style.opacity = '0'; 
@@ -7947,10 +8340,7 @@ function toggleLike(vidId) {
         function renderCategoryPills() {
             let container = document.getElementById('categoryContainer');
             if (!container) return;
-            let html = `
-                <div class="category-pill ripple-btn ${currentCategory === 'All' ? 'active' : ''}" onclick="setCategory('All', this)"><span>All</span> <span class="cat-count-badge" id="catCount-All">0</span></div>
-                <div class="category-pill ripple-btn ${currentCategory === 'SAVED' ? 'active' : ''}" onclick="setCategory('SAVED', this)"><span class="material-symbols-rounded" style="font-size:13px; color:#f59e0b;">bookmark</span><span>Saved</span> <span class="cat-count-badge" id="catCount-SAVED">0</span></div>
-            `;
+            let html = '';
             appCategories.forEach(c => {
                 let isActive = currentCategory.toLowerCase().trim() === c.name.toLowerCase().trim();
                 let bId = 'catCount-' + (c.id || c.name.replace(/[^a-zA-Z0-9]/g, '_'));
