@@ -4273,7 +4273,36 @@
                 </select>
             </div>
 
-            <button onclick="closeOverlay(null, 'settingsOverlay'); openOverlay('adminOverlay');" class="btn-submit ripple-btn" style="background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.4); color:#fca5a5; margin-bottom:12px; margin-top:15px; font-weight:700;"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:6px; color:#ef4444;">admin_panel_settings</span> Open Admin Panel & Ads Controls</button>
+            <!-- QUICK ADS CONTROL SECTION IN SETTINGS -->
+            <div style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.35); border-radius:14px; padding:14px; margin:15px 0 10px 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <div style="padding-right:10px;">
+                        <b style="font-size:13px; color:#fca5a5; display:flex; align-items:center; gap:6px;">
+                            <span class="material-symbols-rounded" style="color:#ef4444; font-size:18px;">power_settings_new</span>
+                            Adsterra & Monetag All Ads (Master ON/OFF)
+                        </b>
+                        <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:2px;">
+                            অফ করলে Adsterra ও Monetag-এর সব অ্যাড বন্ধ থাকবে (অ্যাপ সম্পূর্ণ ক্লিন থাকবে)
+                        </span>
+                    </div>
+                    <label class="switch-ui"><input type="checkbox" id="settingsAdToggleAllMaster" onchange="handleAllAdsMasterToggle(this.checked)" checked><span class="slider-ui"></span></label>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.1);">
+                    <div style="padding-right:10px;">
+                        <b style="font-size:13px; color:#6ee7b7; display:flex; align-items:center; gap:6px;">
+                            <span class="material-symbols-rounded" style="color:#10b981; font-size:18px;">visibility</span>
+                            Fake Video Cards Manager (অন/অফ)
+                        </b>
+                        <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:2px;">
+                            অফ করলে নিচের সকল স্পন্সরড ফেক কার্ড রিমুভ হয়ে যাবে
+                        </span>
+                    </div>
+                    <label class="switch-ui"><input type="checkbox" id="settingsFakeCardsToggle" onchange="handleFakeCardsToggle(this.checked)" checked><span class="slider-ui"></span></label>
+                </div>
+            </div>
+
+            <button onclick="closeOverlay(null, 'settingsOverlay'); openOverlay('adminOverlay');" class="btn-submit ripple-btn" style="background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.4); color:#fca5a5; margin-bottom:12px; margin-top:5px; font-weight:700;"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:6px; color:#ef4444;">admin_panel_settings</span> Open Admin Panel & All Ads Settings</button>
 
             <button onclick="clearAppCache()" class="btn-submit ripple-btn" style="background:var(--bg-dark); border:1px solid var(--warning); color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">delete_sweep</span> Clear App Cache</button>
             
@@ -5329,12 +5358,14 @@
                 let a = window.adsterraConfig;
                 let isMaster = (a.allAdsMaster !== false && window.thirdPartyAdsEnabled !== false);
                 if (document.getElementById('adToggleAllMaster')) document.getElementById('adToggleAllMaster').checked = isMaster;
+                if (document.getElementById('settingsAdToggleAllMaster')) document.getElementById('settingsAdToggleAllMaster').checked = isMaster;
                 if (document.getElementById('adToggle300x250')) document.getElementById('adToggle300x250').checked = (a.banner300x250 !== false);
                 if (document.getElementById('adToggle320x50')) document.getElementById('adToggle320x50').checked = (a.banner320x50 !== false);
                 if (document.getElementById('adToggleNative')) document.getElementById('adToggleNative').checked = (a.nativeBanner !== false);
                 if (document.getElementById('adToggleSocialBar')) document.getElementById('adToggleSocialBar').checked = (a.socialBar !== false);
                 if (document.getElementById('adToggleSmartlink')) document.getElementById('adToggleSmartlink').checked = (a.smartlink !== false);
                 if (document.getElementById('fakeCardsToggle')) document.getElementById('fakeCardsToggle').checked = (window.fakeCardsEnabled !== false);
+                if (document.getElementById('settingsFakeCardsToggle')) document.getElementById('settingsFakeCardsToggle').checked = (window.fakeCardsEnabled !== false);
                 setInpVal('sAdsterraSmartlink', a.smartlinkUrl || "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6");
                 if (typeof applyAdsterraBannersUI === 'function') applyAdsterraBannersUI();
             }
@@ -5544,6 +5575,11 @@
             window.adsterraConfig.smartlink = checked;
             try { localStorage.setItem('adsterraConfig', JSON.stringify(window.adsterraConfig)); } catch(e) {}
 
+            ['adToggleAllMaster', 'settingsAdToggleAllMaster'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.checked = checked;
+            });
+
             ['adToggle300x250', 'adToggle320x50', 'adToggleNative', 'adToggleSocialBar', 'adToggleSmartlink'].forEach(id => {
                 let el = document.getElementById(id);
                 if (el) el.checked = checked;
@@ -5569,6 +5605,10 @@
         function handleFakeCardsToggle(checked) {
             window.fakeCardsEnabled = checked;
             try { localStorage.setItem('fakeCardsEnabled', String(checked)); } catch(e) {}
+            ['fakeCardsToggle', 'settingsFakeCardsToggle'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.checked = checked;
+            });
             if (typeof renderVideos === 'function') renderVideos();
 
             if (window.db) {
@@ -7862,12 +7902,13 @@ function toggleLike(vidId) {
             }
 
             // Adsterra Banners & Smartlink On/Off Config
-            let masterAllAdsVal = document.getElementById('adToggleAllMaster') ? document.getElementById('adToggleAllMaster').checked : true;
+            let masterAllAdsVal = document.getElementById('adToggleAllMaster') ? document.getElementById('adToggleAllMaster').checked : (document.getElementById('settingsAdToggleAllMaster') ? document.getElementById('settingsAdToggleAllMaster').checked : true);
             window.thirdPartyAdsEnabled = masterAllAdsVal;
             try { localStorage.setItem('thirdPartyAdsEnabled', String(masterAllAdsVal)); } catch(e) {}
             settingsData.thirdPartyAdsEnabled = masterAllAdsVal;
 
-            window.fakeCardsEnabled = document.getElementById('fakeCardsToggle') ? document.getElementById('fakeCardsToggle').checked : true;
+            let fakeCardsVal = document.getElementById('fakeCardsToggle') ? document.getElementById('fakeCardsToggle').checked : (document.getElementById('settingsFakeCardsToggle') ? document.getElementById('settingsFakeCardsToggle').checked : true);
+            window.fakeCardsEnabled = fakeCardsVal;
             try { localStorage.setItem('fakeCardsEnabled', String(window.fakeCardsEnabled)); } catch(e) {}
             settingsData.fakeCardsEnabled = window.fakeCardsEnabled;
 
@@ -8030,6 +8071,10 @@ function toggleLike(vidId) {
                 loadFavorites();
             } else if (id === 'historyOverlay') {
                 loadHistory();
+            } else if (id === 'settingsOverlay') {
+                let isMaster = (!window.adsterraConfig || window.adsterraConfig.allAdsMaster !== false) && (window.thirdPartyAdsEnabled !== false);
+                if (document.getElementById('settingsAdToggleAllMaster')) document.getElementById('settingsAdToggleAllMaster').checked = isMaster;
+                if (document.getElementById('settingsFakeCardsToggle')) document.getElementById('settingsFakeCardsToggle').checked = (window.fakeCardsEnabled !== false);
             } else if (id === 'profileOverlay') {
                 updateLocalStatsUI();
             } else if (id === 'adminOverlay') {
@@ -8046,6 +8091,7 @@ function toggleLike(vidId) {
                 if (window.adsterraConfig) {
                     let isMaster = (window.adsterraConfig.allAdsMaster !== false && window.thirdPartyAdsEnabled !== false);
                     if (document.getElementById('adToggleAllMaster')) document.getElementById('adToggleAllMaster').checked = isMaster;
+                    if (document.getElementById('settingsAdToggleAllMaster')) document.getElementById('settingsAdToggleAllMaster').checked = isMaster;
                     if (document.getElementById('adToggle300x250')) document.getElementById('adToggle300x250').checked = (window.adsterraConfig.banner300x250 !== false);
                     if (document.getElementById('adToggle320x50')) document.getElementById('adToggle320x50').checked = (window.adsterraConfig.banner320x50 !== false);
                     if (document.getElementById('adToggleNative')) document.getElementById('adToggleNative').checked = (window.adsterraConfig.nativeBanner !== false);
@@ -8055,6 +8101,9 @@ function toggleLike(vidId) {
                 }
                 if (document.getElementById('fakeCardsToggle')) {
                     document.getElementById('fakeCardsToggle').checked = (window.fakeCardsEnabled !== false);
+                }
+                if (document.getElementById('settingsFakeCardsToggle')) {
+                    document.getElementById('settingsFakeCardsToggle').checked = (window.fakeCardsEnabled !== false);
                 }
                 if (window.adsgramConfig) {
                     if (document.getElementById('adsgramToggle')) document.getElementById('adsgramToggle').checked = (window.adsgramConfig.enabled !== false);
