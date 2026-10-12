@@ -4494,6 +4494,20 @@
                     <span class="material-symbols-rounded">monetization_on</span> Adsterra Ads & Banner Controls
                 </h4>
                 
+                <!-- ALL ADS MASTER KILL-SWITCH (ADSTERRA & MONETAG) -->
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:14px; background:rgba(239, 68, 68, 0.12); border:1px solid rgba(239, 68, 68, 0.4); border-radius:10px;">
+                    <div>
+                        <b style="font-size:13px; color:#fca5a5; display:flex; align-items:center; gap:5px;">
+                            <span class="material-symbols-rounded" style="font-size:17px; color:#ef4444;">power_settings_new</span>
+                            Adsterra & Monetag All Ads (Master ON/OFF)
+                        </b>
+                        <span style="font-size:11px; color:var(--text-muted);">
+                            এক ক্লিকে Adsterra ও Monetag-এর সব অ্যাড বন্ধ/চালু করুন (Adsgram ছাড়া অ্যাপ সম্পূর্ণ ক্লিন থাকবে)
+                        </span>
+                    </div>
+                    <label class="switch-ui"><input type="checkbox" id="adToggleAllMaster" onchange="handleAllAdsMasterToggle(this.checked)" checked><span class="slider-ui"></span></label>
+                </div>
+
                 <!-- 300x250 Banner Toggle -->
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--divider);">
                     <div>
@@ -4560,12 +4574,28 @@
 
                 <div class="input-group" style="margin-top:10px;">
                     <label>1st Unlock Ad Block ID (প্রথম অ্যাডের ব্লক আইডি)</label>
-                    <input type="text" id="sAdsgram1stBlockId" placeholder="e.g. pad-1234 or 1234">
+                    <input type="text" id="sAdsgram1stBlockId" placeholder="int-53510" value="int-53510">
                 </div>
 
                 <div class="input-group">
                     <label>2nd Unlock Ad Block ID (দ্বিতীয় অ্যাডের ব্লক আইডি)</label>
-                    <input type="text" id="sAdsgram2ndBlockId" placeholder="e.g. pad-5678 or 5678">
+                    <input type="text" id="sAdsgram2ndBlockId" placeholder="int-53510" value="int-53510">
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:10px;">
+                    <button type="button" class="ripple-btn" onclick="testAdsgramAd()" style="background:linear-gradient(135deg, #7c3aed, #6d28d9); color:white; border:none; padding:8px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+                        <span class="material-symbols-rounded" style="font-size:16px;">play_circle</span> Test Adsgram Ad Now
+                    </button>
+                    <span style="font-size:11px; color:#c4b5fd;">ব্লক আইডি: <b>int-53510</b> কনফিগার করা আছে</span>
+                </div>
+
+                <div style="background:rgba(124, 58, 237, 0.12); border:1px dashed #7c3aed; border-radius:10px; padding:10px 12px; margin-top:12px; font-size:11.5px; color:#c4b5fd; line-height:1.5;">
+                    <b style="color:#e9d5ff; display:flex; align-items:center; gap:4px; margin-bottom:4px;">
+                        <span class="material-symbols-rounded" style="font-size:15px; color:#a78bfa;">verified</span>
+                        Adsgram Approval Policy (Clause 11 সমাধান):
+                    </b>
+                    ১. Adsgram মডারেশন চলাকালীন উপরের <b>"Adsterra & Monetag All Ads"</b> এবং নিচের <b>"Fake Cards"</b> অপশন দুটি <b>অফ</b> রাখুন।<br>
+                    ২. এতে অ্যাপ সম্পূর্ণ ক্লিন ও জেনুইন থাকবে এবং কোনো অপ্রয়োজনীয় পপআপ ছাড়া Adsgram দ্রুত অ্যাপ্রুভ হয়ে যাবে।
                 </div>
             </div>
 
@@ -4608,6 +4638,18 @@
                     <button class="ripple-btn" onclick="openFakeVideoFormModal()" style="background:linear-gradient(135deg, #10b981, #059669); color:white; border:none; padding:6px 12px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
                         <span class="material-symbols-rounded" style="font-size:16px;">add_circle</span> Add Fake Card
                     </button>
+                </div>
+                
+                <!-- Fake Video Cards Master ON/OFF Toggle -->
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; margin-bottom:12px; background:rgba(16, 185, 129, 0.12); border:1px solid rgba(16, 185, 129, 0.35); border-radius:10px;">
+                    <div>
+                        <b style="font-size:13px; color:#6ee7b7; display:flex; align-items:center; gap:5px;">
+                            <span class="material-symbols-rounded" style="font-size:16px; color:#10b981;">visibility</span>
+                            Show Fake Cards on Feed (অন / অফ)
+                        </b>
+                        <span style="font-size:11px; color:var(--text-muted);">অফ করলে হোমপেজের নিচের সকল ফেক কার্ড সাথে সাথে রিমুভ হয়ে যাবে</span>
+                    </div>
+                    <label class="switch-ui"><input type="checkbox" id="fakeCardsToggle" onchange="handleFakeCardsToggle(this.checked)" checked><span class="slider-ui"></span></label>
                 </div>
                 
                 <div id="adminFakeVideosListContainer" style="max-height:240px; overflow-y:auto; padding-right:4px;">
@@ -4666,6 +4708,12 @@
             <div id="adModalBannerWrapper" style="margin: 14px auto 10px auto; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
                 <div style="font-size: 9px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 0.8px; text-transform: uppercase;">Sponsored Ad (300x250)</div>
                 <iframe srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body><script>atOptions={'key':'7b370a5d35c972a4fa18f32aa3f8f16a','format':'iframe','height':250,'width':300,'params':{}};</script><script src='https://www.highrevenueformat.com/7b370a5d35c972a4fa18f32aa3f8f16a/invoke.js'></script></body></html>" width="300" height="250" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:12px;display:block;margin:0 auto;box-shadow:0 4px 18px rgba(0,0,0,0.5);"></iframe>
+            </div>
+
+            <!-- Adsgram Official Rewarded Notice (Shown when Adsterra is off) -->
+            <div id="adsgramOfficialNotice" style="display:none; align-items:center; justify-content:center; gap:8px; background:rgba(124, 58, 237, 0.14); border:1px solid rgba(124, 58, 237, 0.4); border-radius:12px; padding:10px 14px; margin:12px auto; max-width:320px; color:#c4b5fd; font-size:12px; text-align:center;">
+                <span class="material-symbols-rounded" style="color:#a78bfa; font-size:18px;">verified</span>
+                <span><b>Adsgram.ai Official Sponsored Unlock</b><br><small style="color:#a78bfa;">বিজ্ঞাপন দেখা শেষ হলে স্বয়ংক্রিয়ভাবে ভিডিও আনলক হবে</small></span>
             </div>
 
             <div class="ad-modal-detail-card">
@@ -5048,6 +5096,7 @@
             ch2Desc: "🚀 Daily Fresh Viral Content",
             ch2Url: "https://t.me/miniappbackup",
             adsterraConfig: {
+                allAdsMaster: true,
                 banner300x250: true,
                 banner320x50: true,
                 nativeBanner: true,
@@ -5055,10 +5104,12 @@
                 smartlink: true,
                 smartlinkUrl: "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6"
             },
+            fakeCardsEnabled: true,
+            thirdPartyAdsEnabled: true,
             adsgramConfig: {
                 enabled: true,
-                blockId1: "int-53223",
-                blockId2: "int-53223"
+                blockId1: "int-53510",
+                blockId2: "int-53510"
             },
             appTimingConfig: {
                 ad1Countdown: 3,
@@ -5249,17 +5300,29 @@
                 if (supBtn) { supBtn.style.display = 'flex'; supBtn.href = d.supportUrl; }
             }
 
+            if (d.fakeCardsEnabled !== undefined) {
+                window.fakeCardsEnabled = (d.fakeCardsEnabled !== false);
+                try { localStorage.setItem('fakeCardsEnabled', String(window.fakeCardsEnabled)); } catch(e) {}
+            }
+            if (d.thirdPartyAdsEnabled !== undefined) {
+                window.thirdPartyAdsEnabled = (d.thirdPartyAdsEnabled !== false);
+                try { localStorage.setItem('thirdPartyAdsEnabled', String(window.thirdPartyAdsEnabled)); } catch(e) {}
+            }
+
             if (d.adsterraConfig && typeof d.adsterraConfig === 'object') {
                 window.adsterraConfig = Object.assign(window.adsterraConfig || {}, d.adsterraConfig);
                 try { localStorage.setItem('adsterraConfig', JSON.stringify(window.adsterraConfig)); } catch(e) {}
             }
             if (window.adsterraConfig) {
                 let a = window.adsterraConfig;
+                let isMaster = (a.allAdsMaster !== false && window.thirdPartyAdsEnabled !== false);
+                if (document.getElementById('adToggleAllMaster')) document.getElementById('adToggleAllMaster').checked = isMaster;
                 if (document.getElementById('adToggle300x250')) document.getElementById('adToggle300x250').checked = (a.banner300x250 !== false);
                 if (document.getElementById('adToggle320x50')) document.getElementById('adToggle320x50').checked = (a.banner320x50 !== false);
                 if (document.getElementById('adToggleNative')) document.getElementById('adToggleNative').checked = (a.nativeBanner !== false);
                 if (document.getElementById('adToggleSocialBar')) document.getElementById('adToggleSocialBar').checked = (a.socialBar !== false);
                 if (document.getElementById('adToggleSmartlink')) document.getElementById('adToggleSmartlink').checked = (a.smartlink !== false);
+                if (document.getElementById('fakeCardsToggle')) document.getElementById('fakeCardsToggle').checked = (window.fakeCardsEnabled !== false);
                 setInpVal('sAdsterraSmartlink', a.smartlinkUrl || "https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6");
                 if (typeof applyAdsterraBannersUI === 'function') applyAdsterraBannersUI();
             }
@@ -5271,8 +5334,8 @@
             if (window.adsgramConfig) {
                 let ag = window.adsgramConfig;
                 if (document.getElementById('adsgramToggle')) document.getElementById('adsgramToggle').checked = (ag.enabled !== false);
-                setInpVal('sAdsgram1stBlockId', ag.blockId1 || "");
-                setInpVal('sAdsgram2ndBlockId', ag.blockId2 || "");
+                setInpVal('sAdsgram1stBlockId', ag.blockId1 || "int-53510");
+                setInpVal('sAdsgram2ndBlockId', ag.blockId2 || "int-53510");
             }
 
             if (d.appTimingConfig && typeof d.appTimingConfig === 'object') {
@@ -5365,18 +5428,40 @@
             return defaultFakeVideos.slice();
         })();
 
+        window.thirdPartyAdsEnabled = (function() {
+            try {
+                let saved = localStorage.getItem('thirdPartyAdsEnabled');
+                if (saved !== null) return (saved === 'true');
+            } catch(e) {}
+            return true;
+        })();
+
+        window.fakeCardsEnabled = (function() {
+            try {
+                let saved = localStorage.getItem('fakeCardsEnabled');
+                if (saved !== null) return (saved === 'true');
+            } catch(e) {}
+            return true;
+        })();
+
         function getAdsterra300x250Html() {
-            if (!window.adsterraConfig || window.adsterraConfig.banner300x250 === false) return '';
+            let isMasterOn = (!window.adsterraConfig || window.adsterraConfig.allAdsMaster !== false) && (window.thirdPartyAdsEnabled !== false);
+            if (!isMasterOn || !window.adsterraConfig || window.adsterraConfig.banner300x250 === false) return '';
+            let iframeDoc = '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body>' +
+                '<script>atOptions={"key":"7b370a5d35c972a4fa18f32aa3f8f16a","format":"iframe","height":250,"width":300,"params":{}};<\\/script>' +
+                '<script src="https://www.highrevenueformat.com/7b370a5d35c972a4fa18f32aa3f8f16a/invoke.js"><\\/script>' +
+                '</body></html>';
             return `
                 <div id="adsterra_banner_300x250" style="margin: 14px auto; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
                     <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 0.8px; text-align: center; width: 100%;">SPONSORED AD (300x250)</div>
-                    <iframe srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;overflow:hidden;}</style></head><body>&lt;script&gt;atOptions={'key':'7b370a5d35c972a4fa18f32aa3f8f16a','format':'iframe','height':250,'width':300,'params':{}};&lt;/script&gt;&lt;script src='https://www.highrevenueformat.com/7b370a5d35c972a4fa18f32aa3f8f16a/invoke.js'&gt;&lt;/script&gt;</body></html>" width="300" height="250" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:12px;display:block;margin:0 auto;box-shadow:0 4px 18px rgba(0,0,0,0.4);"></iframe>
+                    <iframe srcdoc="${iframeDoc.replace(/"/g, '&quot;')}" width="300" height="250" frameborder="0" scrolling="no" style="border:none;overflow:hidden;border-radius:12px;display:block;margin:0 auto;box-shadow:0 4px 18px rgba(0,0,0,0.4);"></iframe>
                 </div>
             `;
         }
 
         function getAdsterraNativeHtml() {
-            if (!window.adsterraConfig || window.adsterraConfig.nativeBanner === false) return '';
+            let isMasterOn = (!window.adsterraConfig || window.adsterraConfig.allAdsMaster !== false) && (window.thirdPartyAdsEnabled !== false);
+            if (!isMasterOn || !window.adsterraConfig || window.adsterraConfig.nativeBanner === false) return '';
             return `
                 <div id="adsterra_native_wrapper" style="margin: 15px 0;">
                     <div style="font-size: 11px; font-weight:700; color:#f59e0b; margin-bottom: 6px; display:flex; align-items:center; gap:4px;">
@@ -5388,19 +5473,22 @@
         }
 
         function applyAdsterraBannersUI() {
-            let show320 = (!window.adsterraConfig || window.adsterraConfig.banner320x50 !== false);
+            let isMasterOn = (!window.adsterraConfig || window.adsterraConfig.allAdsMaster !== false) && (window.thirdPartyAdsEnabled !== false);
+            let show320 = isMasterOn && (!window.adsterraConfig || window.adsterraConfig.banner320x50 !== false);
             let b320 = document.getElementById('adsterra_banner_320x50');
             if (b320) b320.style.display = show320 ? 'block' : 'none';
             let b320Top = document.getElementById('adsterra_banner_320x50_top');
             if (b320Top) b320Top.style.display = show320 ? 'block' : 'none';
 
             let modalBanner = document.getElementById('adModalBannerWrapper');
+            let adsgramNotice = document.getElementById('adsgramOfficialNotice');
             if (modalBanner) {
-                let show300 = (!window.adsterraConfig || window.adsterraConfig.banner300x250 !== false);
+                let show300 = isMasterOn && (!window.adsterraConfig || window.adsterraConfig.banner300x250 !== false);
                 modalBanner.style.display = show300 ? 'block' : 'none';
+                if (adsgramNotice) adsgramNotice.style.display = show300 ? 'none' : 'flex';
             }
 
-            let showSocial = (!window.adsterraConfig || window.adsterraConfig.socialBar !== false);
+            let showSocial = isMasterOn && (!window.adsterraConfig || window.adsterraConfig.socialBar !== false);
             if (showSocial) {
                 if (!document.getElementById('adsterra_socialbar_script')) {
                     let s = document.createElement('script');
@@ -5414,7 +5502,8 @@
                 if (existing) existing.remove();
             }
 
-            if (!window.adsterraConfig || window.adsterraConfig.nativeBanner !== false) {
+            let showNative = isMasterOn && (!window.adsterraConfig || window.adsterraConfig.nativeBanner !== false);
+            if (showNative) {
                 if (!document.getElementById('adsterra_native_script')) {
                     let ns = document.createElement('script');
                     ns.id = 'adsterra_native_script';
@@ -5423,10 +5512,95 @@
                     ns.src = 'https://pl31756725.profitableratecpmnetwork.com/f1e987853ad414e1e7565893065c26fa/invoke.js';
                     document.body.appendChild(ns);
                 }
+            } else {
+                let existingNative = document.getElementById('adsterra_native_script');
+                if (existingNative) existingNative.remove();
+                let nativeWrap = document.getElementById('adsterra_native_wrapper');
+                if (nativeWrap) nativeWrap.style.display = 'none';
             }
         }
 
+        function handleAllAdsMasterToggle(checked) {
+            window.thirdPartyAdsEnabled = checked;
+            try { localStorage.setItem('thirdPartyAdsEnabled', String(checked)); } catch(e) {}
+            if (!window.adsterraConfig) window.adsterraConfig = {};
+            window.adsterraConfig.allAdsMaster = checked;
+            window.adsterraConfig.banner300x250 = checked;
+            window.adsterraConfig.banner320x50 = checked;
+            window.adsterraConfig.nativeBanner = checked;
+            window.adsterraConfig.socialBar = checked;
+            window.adsterraConfig.smartlink = checked;
+            try { localStorage.setItem('adsterraConfig', JSON.stringify(window.adsterraConfig)); } catch(e) {}
+
+            ['adToggle300x250', 'adToggle320x50', 'adToggleNative', 'adToggleSocialBar', 'adToggleSmartlink'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.checked = checked;
+            });
+
+            applyAdsterraBannersUI();
+            if (typeof renderVideos === 'function') renderVideos();
+
+            if (window.db) {
+                db.collection("settings").doc("app_settings").set({
+                    thirdPartyAdsEnabled: checked,
+                    adsterraConfig: window.adsterraConfig
+                }, { merge: true }).catch(e => console.log(e));
+            }
+
+            if (checked) {
+                notifyAdmin("✅ Adsterra ও Monetag সব অ্যাড চালু করা হয়েছে!");
+            } else {
+                notifyAdmin("🚫 Adsterra ও Monetag-এর সব অ্যাড বন্ধ করা হয়েছে! অ্যাপ এখন সম্পূর্ণ ক্লিন (শুধুমাত্র Adsgram সক্রিয়)।");
+            }
+        }
+
+        function handleFakeCardsToggle(checked) {
+            window.fakeCardsEnabled = checked;
+            try { localStorage.setItem('fakeCardsEnabled', String(checked)); } catch(e) {}
+            if (typeof renderVideos === 'function') renderVideos();
+
+            if (window.db) {
+                db.collection("settings").doc("app_settings").set({
+                    fakeCardsEnabled: checked
+                }, { merge: true }).catch(e => console.log(e));
+            }
+
+            if (checked) {
+                notifyAdmin("✅ ফেক ভিডিও কার্ড প্রদর্শন চালু করা হয়েছে!");
+            } else {
+                notifyAdmin("🚫 সকল ফেক ভিডিও কার্ড হোমপেজ থেকে রিমুভ করা হয়েছে!");
+            }
+        }
+
+        window.testAdsgramAd = async function() {
+            let blockId = (document.getElementById('sAdsgram1stBlockId')?.value || (window.adsgramConfig && window.adsgramConfig.blockId1) || "int-53510").trim();
+            if (!window.Adsgram) {
+                showToast("Adsgram SDK লোড হচ্ছে... কিছুক্ষণ পর আবার চেষ্টা করুন।", "info");
+                return;
+            }
+            try {
+                showToast("Adsgram অ্যাড লোড হচ্ছে...", "ads_click");
+                let isTgWebApp = !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData && window.Telegram.WebApp.initData.length > 0);
+                const AdController = window.Adsgram.init({
+                    blockId: blockId,
+                    debug: !isTgWebApp
+                });
+                const res = await AdController.show();
+                console.log("Adsgram Test Result:", res);
+                showToast("🎉 Adsgram Ad সফলভাবে সম্পন্ন হয়েছে!", "verified");
+            } catch(err) {
+                console.log("Adsgram Test status:", err);
+                let msg = (err && (err.description || err.message)) ? (err.description || err.message) : "অ্যাড শেষ বা বন্ধ হয়েছে";
+                showToast("Adsgram: " + msg, "info");
+            }
+        };
+
         function handleFakeVideoClick(fakeId, directUrl) {
+            let isAllowed = (window.fakeCardsEnabled !== false) && (window.thirdPartyAdsEnabled !== false) && (!window.adsterraConfig || window.adsterraConfig.allAdsMaster !== false);
+            if (!isAllowed) {
+                showToast("স্পন্সর লিংক বর্তমানে বন্ধ আছে।", "info");
+                return;
+            }
             let target = directUrl || (window.adsterraConfig ? window.adsterraConfig.smartlinkUrl : '') || window.globalAdsterraUrl || 'https://www.profitableratecpmnetwork.com/deu1br5r?key=d3edca5e522428ac5df63ca5fb68f4a6';
             showToast("ভিডিও ওপেন হচ্ছে...", "smart_display");
             openExternalLink(target);
@@ -6600,8 +6774,9 @@
             htmlOutput += `</div>`;
 
             // Render Fake / Sponsored Video Cards (Adsterra Direct Link Cards) below real videos
+            let showFake = (window.fakeCardsEnabled !== false) && (window.thirdPartyAdsEnabled !== false) && (!window.adsterraConfig || window.adsterraConfig.allAdsMaster !== false);
             let fakeList = (window.fakeVideosList && window.fakeVideosList.length > 0) ? window.fakeVideosList : defaultFakeVideos;
-            if (fakeList && fakeList.length > 0) {
+            if (showFake && fakeList && fakeList.length > 0) {
                 htmlOutput += `
                     <div class="fake-video-ad-section" id="fakeVideoAdSection">
                         <div class="fake-section-header">
@@ -6801,18 +6976,23 @@ function toggleLike(vidId) {
                                 }
                             }
                         } else if (adType === 'adsgram') {
-                            // If block ID is empty, fallback to int-53223
-                            finalBlockId = "int-53223";
+                            // If block ID is empty, fallback to int-53510
+                            finalBlockId = "int-53510";
                         }
                     }
                 }
 
-                if(adType === 'adsterra_link') { openExternalLink(window.globalAdsterraUrl); }
-                else if(adType === 'monetag_link') { openExternalLink(window.globalMonetagUrl); }
-                else {
-                    if (adType === 'pop') { if (typeof show_11439323 === 'function') show_11439323('pop'); }
-                    else if (adType === 'rewarded') { if (typeof show_11439323 === 'function') show_11439323(); }
-                    else if (adType === 'inapp') { if (typeof show_11439323 === 'function') show_11439323('inapp'); }
+                let isMaster3rdPartyOn = (!window.adsterraConfig || window.adsterraConfig.allAdsMaster !== false) && (window.thirdPartyAdsEnabled !== false);
+                if (isMaster3rdPartyOn) {
+                    if(adType === 'adsterra_link') { openExternalLink(window.globalAdsterraUrl); }
+                    else if(adType === 'monetag_link') { openExternalLink(window.globalMonetagUrl); }
+                    else {
+                        if (adType === 'pop') { if (typeof show_11439323 === 'function') show_11439323('pop'); }
+                        else if (adType === 'rewarded') { if (typeof show_11439323 === 'function') show_11439323(); }
+                        else if (adType === 'inapp') { if (typeof show_11439323 === 'function') show_11439323('inapp'); }
+                    }
+                } else {
+                    console.log("Adsterra & Monetag ads are disabled (Clean / Adsgram Mode).");
                 }
 
                 const checkReturn = () => {
@@ -7670,7 +7850,17 @@ function toggleLike(vidId) {
             }
 
             // Adsterra Banners & Smartlink On/Off Config
+            let masterAllAdsVal = document.getElementById('adToggleAllMaster') ? document.getElementById('adToggleAllMaster').checked : true;
+            window.thirdPartyAdsEnabled = masterAllAdsVal;
+            try { localStorage.setItem('thirdPartyAdsEnabled', String(masterAllAdsVal)); } catch(e) {}
+            settingsData.thirdPartyAdsEnabled = masterAllAdsVal;
+
+            window.fakeCardsEnabled = document.getElementById('fakeCardsToggle') ? document.getElementById('fakeCardsToggle').checked : true;
+            try { localStorage.setItem('fakeCardsEnabled', String(window.fakeCardsEnabled)); } catch(e) {}
+            settingsData.fakeCardsEnabled = window.fakeCardsEnabled;
+
             window.adsterraConfig = {
+                allAdsMaster: masterAllAdsVal,
                 banner300x250: document.getElementById('adToggle300x250') ? document.getElementById('adToggle300x250').checked : true,
                 banner320x50: document.getElementById('adToggle320x50') ? document.getElementById('adToggle320x50').checked : true,
                 nativeBanner: document.getElementById('adToggleNative') ? document.getElementById('adToggleNative').checked : true,
@@ -7684,8 +7874,8 @@ function toggleLike(vidId) {
             // Adsgram.ai On/Off & Block IDs Config
             window.adsgramConfig = {
                 enabled: document.getElementById('adsgramToggle') ? document.getElementById('adsgramToggle').checked : true,
-                blockId1: getVal('sAdsgram1stBlockId', (window.adsgramConfig && window.adsgramConfig.blockId1) || ""),
-                blockId2: getVal('sAdsgram2ndBlockId', (window.adsgramConfig && window.adsgramConfig.blockId2) || "")
+                blockId1: getVal('sAdsgram1stBlockId', (window.adsgramConfig && window.adsgramConfig.blockId1) || "int-53510"),
+                blockId2: getVal('sAdsgram2ndBlockId', (window.adsgramConfig && window.adsgramConfig.blockId2) || "int-53510")
             };
             try { localStorage.setItem('adsgramConfig', JSON.stringify(window.adsgramConfig)); } catch(e) {}
             settingsData.adsgramConfig = window.adsgramConfig;
@@ -7842,6 +8032,8 @@ function toggleLike(vidId) {
                 if (typeof renderCategorySelectOptions === 'function') renderCategorySelectOptions();
                 if (typeof renderAdminFakeVideosList === 'function') renderAdminFakeVideosList();
                 if (window.adsterraConfig) {
+                    let isMaster = (window.adsterraConfig.allAdsMaster !== false && window.thirdPartyAdsEnabled !== false);
+                    if (document.getElementById('adToggleAllMaster')) document.getElementById('adToggleAllMaster').checked = isMaster;
                     if (document.getElementById('adToggle300x250')) document.getElementById('adToggle300x250').checked = (window.adsterraConfig.banner300x250 !== false);
                     if (document.getElementById('adToggle320x50')) document.getElementById('adToggle320x50').checked = (window.adsterraConfig.banner320x50 !== false);
                     if (document.getElementById('adToggleNative')) document.getElementById('adToggleNative').checked = (window.adsterraConfig.nativeBanner !== false);
@@ -7849,10 +8041,13 @@ function toggleLike(vidId) {
                     if (document.getElementById('adToggleSmartlink')) document.getElementById('adToggleSmartlink').checked = (window.adsterraConfig.smartlink !== false);
                     if (document.getElementById('sAdsterraSmartlink') && window.adsterraConfig.smartlinkUrl) document.getElementById('sAdsterraSmartlink').value = window.adsterraConfig.smartlinkUrl;
                 }
+                if (document.getElementById('fakeCardsToggle')) {
+                    document.getElementById('fakeCardsToggle').checked = (window.fakeCardsEnabled !== false);
+                }
                 if (window.adsgramConfig) {
                     if (document.getElementById('adsgramToggle')) document.getElementById('adsgramToggle').checked = (window.adsgramConfig.enabled !== false);
-                    if (document.getElementById('sAdsgram1stBlockId')) document.getElementById('sAdsgram1stBlockId').value = window.adsgramConfig.blockId1 || "";
-                    if (document.getElementById('sAdsgram2ndBlockId')) document.getElementById('sAdsgram2ndBlockId').value = window.adsgramConfig.blockId2 || "";
+                    if (document.getElementById('sAdsgram1stBlockId')) document.getElementById('sAdsgram1stBlockId').value = window.adsgramConfig.blockId1 || "int-53510";
+                    if (document.getElementById('sAdsgram2ndBlockId')) document.getElementById('sAdsgram2ndBlockId').value = window.adsgramConfig.blockId2 || "int-53510";
                 }
                 if (window.appTimingConfig) {
                     if (document.getElementById('sAd1Countdown')) document.getElementById('sAd1Countdown').value = window.appTimingConfig.ad1Countdown || 3;
