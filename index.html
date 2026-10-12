@@ -5704,32 +5704,35 @@
             }
         }
 
-        function handleReferralAttribution(userDocData) {
-            let targetRef = localStorage.getItem('pending_incoming_ref') || window.pendingReferralId || '';
-            let currentUserIdStr = (currentUser && currentUser.id) ? currentUser.id.toString() : '';
-            if (!currentUserIdStr) return;
-
-            let alreadyCredited = localStorage.getItem('referral_credited_done') === 'true';
+        async function handleReferralAttribution(userDocData) {
+            const targetRef = String(localStorage.getItem('pending_incoming_ref') || window.pendingReferralId || '').trim();
+            const currentUserIdStr = (currentUser && currentUser.id) ? String(currentUser.id) : '';
+            if (!currentUserIdStr || !targetRef || targetRef === currentUserIdStr || !db || !firebase.firestore) return;
+            // Referral attribution is per Telegram account, never per browser-wide boolean.
             if (userDocData && userDocData.referredBy) {
-                alreadyCredited = true;
+                localStorage.removeItem('pending_incoming_ref');
+                return;
             }
-
-            if (targetRef && targetRef !== currentUserIdStr && !alreadyCredited) {
-                console.log("Crediting referrer:", targetRef);
-                db.collection("users").doc(targetRef).set({
-                    referralCount: firebase.firestore.FieldValue.increment(1),
-                    lastReferralAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true }).then(() => {
-                    console.log("Successfully credited referrer:", targetRef);
-                    localStorage.setItem('referral_credited_done', 'true');
-                    localStorage.removeItem('pending_incoming_ref');
-                }).catch(err => {
-                    console.error("Error crediting referrer:", err);
+            try {
+                await db.runTransaction(async (tx) => {
+                    const newUserRef = db.collection('users').doc(currentUserIdStr);
+                    const referrerRef = db.collection('users').doc(targetRef);
+                    const newUserSnap = await tx.get(newUserRef);
+                    if (!newUserSnap.exists) return;
+                    const newUserData = newUserSnap.data() || {};
+                    if (newUserData.referredBy) return;
+                    const referrerSnap = await tx.get(referrerRef);
+                    if (!referrerSnap.exists) return;
+                    tx.update(newUserRef, { referredBy: targetRef, referredAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    tx.update(referrerRef, {
+                        referralCount: firebase.firestore.FieldValue.increment(1),
+                        lastReferralAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                 });
-
-                db.collection("users").doc(currentUserIdStr).set({
-                    referredBy: targetRef
-                }, { merge: true }).catch(e => console.log(e));
+                localStorage.removeItem('pending_incoming_ref');
+                window.pendingReferralId = '';
+            } catch (err) {
+                console.error('Referral attribution transaction failed:', err);
             }
         }
 
@@ -5775,6 +5778,7 @@
             const crownBadgeEl = document.getElementById('profVipCrownBadge');
             if(doc.exists) {
                 let data = doc.data();
+                currentUser.freeUnlocksUsed = parseInt(data.freeUnlocksUsed || 0) || 0;
                 handleReferralAttribution(data);
 
                 let rCount = parseInt(data.referralCount) || 0;
@@ -5854,7 +5858,6 @@
                 }
                 renderVideos(); 
             } else {
-                handleReferralAttribution(null);
                 let initialReferrer = localStorage.getItem('pending_incoming_ref') || window.pendingReferralId || '';
 
                 try {
@@ -5864,7 +5867,6 @@
                         isPremium: false, 
                         unlockedCount: unlockedCount, 
                         referralCount: 0, 
-                        referredBy: initialReferrer,
                         joinedAt: firebase.firestore.FieldValue.serverTimestamp() 
                     }, { merge: true }).catch(e => console.warn(e));
                 } catch(e) {}
@@ -6772,10 +6774,22 @@ function toggleLike(vidId) {
                 if (adType === 'adsgram') {
                     const cfg = window.adsgramConfig || {};
                     if (cfg.enabled === false) {
-                        console.warn('[AdsGram] Ads are disabled in settings.');
-                        resolve(false);
-                        return;
+                        // Respect the admin's global fallback URLs when AdsGram is switched off.
+                        // Prefer the configured Adsterra smartlink, then the general Adsterra URL, then Monetag.
+                        const aCfg = window.adsterraConfig || {};
+                        const fallbackUrl = (aCfg.smartlink !== false && aCfg.smartlinkUrl) || window.globalAdsterraUrl || window.globalMonetagUrl || '';
+                        if (fallbackUrl) {
+                            console.info('[Ads] AdsGram is OFF; using admin-configured fallback link.');
+                            window.__fallbackAdOpened = true; openExternalLink(fallbackUrl);
+                            // Keep the existing configured watch-time/visibility gate for link ads below.
+                            adType = 'adsterra_link';
+                        } else {
+                            console.warn('[Ads] AdsGram is OFF and no fallback ad URL is configured.');
+                            resolve(false);
+                            return;
+                        }
                     }
+                    if (adType === 'adsgram') {
 
                     const selectedId = (adNumber === 1 ? cfg.blockId1 : cfg.blockId2) || '';
                     const fallbackId = cfg.blockId1 || cfg.blockId2 || 'int-53510';
@@ -6787,9 +6801,13 @@ function toggleLike(vidId) {
                         return;
                     }
                     if (!window.Adsgram || typeof window.Adsgram.init !== 'function') {
-                        console.error('[AdsGram] SDK did not load; refusing to unlock without an ad.');
-                        resolve(false);
-                        return;
+                        console.warn('[AdsGram] SDK did not load; trying configured fallback ad.');
+                        const aCfg = window.adsterraConfig || {};
+                        const fallbackUrl = (aCfg.smartlink !== false && aCfg.smartlinkUrl) || window.globalAdsterraUrl || window.globalMonetagUrl || '';
+                        if (!fallbackUrl) { resolve(false); return; }
+                        window.__fallbackAdOpened = true;
+                        openExternalLink(fallbackUrl);
+                        adType = 'adsterra_link';
                     }
 
                     try {
@@ -6806,13 +6824,19 @@ function toggleLike(vidId) {
                         return;
                     } catch (e) {
                         console.warn('[AdsGram] Ad failed, was unavailable, or was skipped:', e);
-                        resolve(false);
-                        return;
+                        // On SDK failure, attempt the configured fallback URL instead of auto-unlocking.
+                        const aCfg = window.adsterraConfig || {};
+                        const fallbackUrl = (aCfg.smartlink !== false && aCfg.smartlinkUrl) || window.globalAdsterraUrl || window.globalMonetagUrl || '';
+                        if (!fallbackUrl) { resolve(false); return; }
+                        window.__fallbackAdOpened = true; openExternalLink(fallbackUrl);
+                        adType = 'adsterra_link';
+                    }
+                    if (adType === 'adsgram') return;
                     }
                 }
 
                 // Other existing ad providers retain their current timer/visibility behavior.
-                if (adType === 'adsterra_link') { openExternalLink(window.globalAdsterraUrl); }
+                if (adType === 'adsterra_link') { /* URL was opened by fallback branch when applicable; otherwise open configured link. */ if (!window.__fallbackAdOpened) openExternalLink(window.globalAdsterraUrl); window.__fallbackAdOpened = false; }
                 else if (adType === 'monetag_link') { openExternalLink(window.globalMonetagUrl); }
                 else {
                     if (adType === 'pop') { if (typeof show_11439323 === 'function') show_11439323('pop'); }
@@ -8178,9 +8202,13 @@ function toggleLike(vidId) {
         }
 
         function getRemainingFreeUnlocks() {
-            let rCount = (currentUser && currentUser.referralCount) ? currentUser.referralCount : 0;
-            let earned = getEarnedFreeUnlocks(rCount);
-            let used = parseInt(localStorage.getItem('freeUnlocksUsed') || '0');
+            const rCount = Math.max(0, parseInt((currentUser && currentUser.referralCount) || 0) || 0);
+            const earned = getEarnedFreeUnlocks(rCount);
+            const uid = currentUser && currentUser.id ? String(currentUser.id) : 'guest';
+            const key = 'freeUnlocksUsed_' + uid;
+            const stored = parseInt(localStorage.getItem(key) || '0') || 0;
+            const cloud = parseInt((currentUser && currentUser.freeUnlocksUsed) || 0) || 0;
+            const used = Math.max(stored, cloud);
             return Math.max(0, earned - used);
         }
 
@@ -8292,9 +8320,15 @@ function toggleLike(vidId) {
         }
 
         function useFreeUnlock(vidId) {
-            let used = parseInt(localStorage.getItem('freeUnlocksUsed') || '0');
+            if (!currentUser || !currentUser.id) { alert('আপনার অ্যাকাউন্ট লোড হচ্ছে। আবার চেষ্টা করুন।'); return; }
+            const remainingBeforeUse = getRemainingFreeUnlocks();
+            if (remainingBeforeUse <= 0) { alert('আপনার কোনো ফ্রি আনলক বাকি নেই। আরও রেফারেল করুন।'); return; }
+            const uid = String(currentUser.id);
+            const usedKey = 'freeUnlocksUsed_' + uid;
+            let used = Math.max(parseInt(localStorage.getItem(usedKey) || '0') || 0, parseInt(currentUser.freeUnlocksUsed || 0) || 0);
             used += 1;
-            localStorage.setItem('freeUnlocksUsed', used.toString());
+            localStorage.setItem(usedKey, used.toString());
+            currentUser.freeUnlocksUsed = used;
             
             // Mark this video unlocked with restart time (default 5 minutes)
             let restartMins = (window.appTimingConfig && window.appTimingConfig.restartTime) ? parseInt(window.appTimingConfig.restartTime) : 5;
