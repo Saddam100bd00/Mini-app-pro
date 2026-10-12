@@ -6763,52 +6763,57 @@ function toggleLike(vidId) {
 
         function enforceAdWatchTime(adType, waitSeconds, adNumber = 1) {
             return new Promise(async (resolve) => {
-                let requiredTime = waitSeconds * 1000;
-                let startTime = Date.now();
+                const requiredTime = Math.max(1, parseInt(waitSeconds, 10) || 5) * 1000;
+                const startTime = Date.now();
                 let failed = false;
 
-                // Adsgram.ai Integration Check
-                if (window.adsgramConfig && window.adsgramConfig.enabled !== false) {
-                    let blockId = (adNumber === 1) ? (window.adsgramConfig.blockId1 || "") : (window.adsgramConfig.blockId2 || "");
-                    let finalBlockId = (blockId && blockId.trim() !== "") ? blockId.trim() : ((window.adsgramConfig.blockId1 || window.adsgramConfig.blockId2 || "").trim());
-                    
-                    if (adType === 'adsgram' || (finalBlockId && finalBlockId !== "")) {
-                        if (finalBlockId) {
-                            if (!window.Adsgram) {
-                                console.warn("Adsgram SDK is not loaded, proceeding with 5s timer.");
-                            } else {
-                                try {
-                                    let isTgWebApp = !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData && window.Telegram.WebApp.initData.length > 0);
-                                    const AdController = window.Adsgram.init({
-                                        blockId: finalBlockId,
-                                        debug: !isTgWebApp // debug mode enabled when outside Telegram so test ads show cleanly
-                                    });
-                                    const result = await AdController.show();
-                                    console.log("Adsgram ad completed successfully:", result);
-                                    resolve(true);
-                                    return;
-                                } catch (e) {
-                                    console.log("Adsgram ad finished/closed by user:", e);
-                                    // 5-second exit feature: If user closes after close button appears (3-5s elapsed) or closes ad, treat as completed
-                                    let elapsed = Date.now() - startTime;
-                                    if (elapsed >= 3000) {
-                                        console.log("User watched ad for 3+ seconds, proceeding to unlock.");
-                                        resolve(true);
-                                        return;
-                                    }
-                                    resolve(true);
-                                    return;
-                                }
-                            }
-                        } else if (adType === 'adsgram') {
-                            // If block ID is empty, fallback to int-53223
-                            finalBlockId = "int-53223";
+                // AdsGram: only count the step as successful when the SDK promise resolves.
+                // Never turn SDK errors, missing SDK, or missing configuration into a fake success.
+                if (adType === 'adsgram') {
+                    const cfg = window.adsgramConfig || {};
+                    if (cfg.enabled === false) {
+                        console.warn('[AdsGram] Ads are disabled in settings.');
+                        resolve(false);
+                        return;
+                    }
+
+                    const selectedId = (adNumber === 1 ? cfg.blockId1 : cfg.blockId2) || '';
+                    const fallbackId = cfg.blockId1 || cfg.blockId2 || 'int-53223';
+                    const blockId = String(selectedId || fallbackId).trim();
+
+                    if (!blockId) {
+                        console.error('[AdsGram] Block ID is missing.');
+                        resolve(false);
+                        return;
+                    }
+                    if (!window.Adsgram || typeof window.Adsgram.init !== 'function') {
+                        console.error('[AdsGram] SDK did not load; refusing to unlock without an ad.');
+                        resolve(false);
+                        return;
+                    }
+
+                    try {
+                        // Production mode: debug must stay false because AdsGram test ads do not count in statistics.
+                        const controller = window.Adsgram.init({ blockId: blockId, debug: false });
+                        const result = await controller.show();
+                        if (result && result.error === true) {
+                            console.warn('[AdsGram] SDK returned an ad error:', result);
+                            resolve(false);
+                            return;
                         }
+                        console.log('[AdsGram] Ad show completed:', result);
+                        resolve(true);
+                        return;
+                    } catch (e) {
+                        console.warn('[AdsGram] Ad failed, was unavailable, or was skipped:', e);
+                        resolve(false);
+                        return;
                     }
                 }
 
-                if(adType === 'adsterra_link') { openExternalLink(window.globalAdsterraUrl); }
-                else if(adType === 'monetag_link') { openExternalLink(window.globalMonetagUrl); }
+                // Other existing ad providers retain their current timer/visibility behavior.
+                if (adType === 'adsterra_link') { openExternalLink(window.globalAdsterraUrl); }
+                else if (adType === 'monetag_link') { openExternalLink(window.globalMonetagUrl); }
                 else {
                     if (adType === 'pop') { if (typeof show_11439323 === 'function') show_11439323('pop'); }
                     else if (adType === 'rewarded') { if (typeof show_11439323 === 'function') show_11439323(); }
@@ -6817,27 +6822,23 @@ function toggleLike(vidId) {
 
                 const checkReturn = () => {
                     if (failed) return;
-                    let elapsed = Date.now() - startTime;
-                    if (elapsed > 1000 && elapsed < (requiredTime - 1000)) { 
+                    const elapsed = Date.now() - startTime;
+                    if (elapsed > 1000 && elapsed < (requiredTime - 1000)) {
                         failed = true;
                         cleanup();
-                        resolve(false); 
+                        resolve(false);
                     }
                 };
-
-                const handleVisibility = () => { if(document.visibilityState === 'visible') checkReturn(); };
+                const handleVisibility = () => { if (document.visibilityState === 'visible') checkReturn(); };
                 const handleFocus = () => { checkReturn(); };
-
                 document.addEventListener('visibilitychange', handleVisibility);
                 window.addEventListener('focus', handleFocus);
-
-                let timeout = setTimeout(() => {
-                    if(!failed) {
+                const timeout = setTimeout(() => {
+                    if (!failed) {
                         cleanup();
-                        resolve(true); 
+                        resolve(true);
                     }
                 }, requiredTime);
-
                 function cleanup() {
                     document.removeEventListener('visibilitychange', handleVisibility);
                     window.removeEventListener('focus', handleFocus);
