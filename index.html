@@ -5057,8 +5057,8 @@
             },
             adsgramConfig: {
                 enabled: true,
-                blockId1: "int-53223",
-                blockId2: "int-53223"
+                blockId1: "int-53510",
+                blockId2: "int-53510"
             },
             appTimingConfig: {
                 ad1Countdown: 3,
@@ -5159,15 +5159,15 @@
             try {
                 let saved = JSON.parse(localStorage.getItem('adsgramConfig'));
                 if (saved && typeof saved === 'object') {
-                    if (!saved.blockId1) saved.blockId1 = "int-53223";
-                    if (!saved.blockId2) saved.blockId2 = "int-53223";
+                    if (!saved.blockId1 || saved.blockId1 === "int-53223") saved.blockId1 = "int-53510";
+                    if (!saved.blockId2 || saved.blockId2 === "int-53223") saved.blockId2 = "int-53510";
                     return saved;
                 }
             } catch(e) {}
             return {
                 enabled: true,
-                blockId1: "int-53223",
-                blockId2: "int-53223"
+                blockId1: "int-53510",
+                blockId2: "int-53510"
             };
         })();
 
@@ -6778,7 +6778,7 @@ function toggleLike(vidId) {
                     }
 
                     const selectedId = (adNumber === 1 ? cfg.blockId1 : cfg.blockId2) || '';
-                    const fallbackId = cfg.blockId1 || cfg.blockId2 || 'int-53223';
+                    const fallbackId = cfg.blockId1 || cfg.blockId2 || 'int-53510';
                     const blockId = String(selectedId || fallbackId).trim();
 
                     if (!blockId) {
