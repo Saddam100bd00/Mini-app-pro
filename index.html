@@ -3540,7 +3540,7 @@
                 <span class="material-symbols-rounded drawer-arrow">swap_horiz</span>
             </div>
 
-            <div id="adminMenuBtn" style="display: flex; background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(185, 28, 28, 0.22)); border: 1px solid rgba(239, 68, 68, 0.45); margin-top:20px; padding: 14px; border-radius: 14px; cursor:pointer; transition: 0.3s;" onclick="openOverlay('adminOverlay'); closeOverlay(null, 'sidebarOverlay');">
+            <div id="adminMenuBtn" style="display: none; background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(185, 28, 28, 0.22)); border: 1px solid rgba(239, 68, 68, 0.45); margin-top:20px; padding: 14px; border-radius: 14px; cursor:pointer; transition: 0.3s;" onclick="openOverlay('adminOverlay'); closeOverlay(null, 'sidebarOverlay');">
                 <div style="font-weight: 800; color: #fca5a5; display: flex; align-items:center; gap:10px; font-size:14.5px;">
                     <span class="material-symbols-rounded" style="color:#ef4444; font-size:22px;">admin_panel_settings</span> Admin Panel & Ads Controls
                 </div>
@@ -4020,7 +4020,7 @@
                     <span class="material-symbols-rounded" style="color:var(--text-muted); font-size:18px;">chevron_right</span>
                 </div>
 
-                <div class="prof-menu-row ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('adminOverlay');" style="margin-top:8px;">
+                <div id="profAdminBtn" class="prof-menu-row ripple-btn" onclick="closeOverlay(null, 'profileOverlay'); openOverlay('adminOverlay');" style="display:none; margin-top:8px;">
                     <div class="prof-menu-left">
                         <div class="prof-menu-icon" style="background:rgba(239, 68, 68, 0.15); color:#f87171; border: 1px solid rgba(239, 68, 68, 0.35);">
                             <span class="material-symbols-rounded">admin_panel_settings</span>
@@ -4273,8 +4273,8 @@
                 </select>
             </div>
 
-            <!-- QUICK ADS CONTROL SECTION IN SETTINGS -->
-            <div style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.35); border-radius:14px; padding:14px; margin:15px 0 10px 0;">
+            <!-- QUICK ADS CONTROL SECTION IN SETTINGS (ADMIN ONLY: ID 6836865426) -->
+            <div id="settingsAdminAdsSection" style="display:none; background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.35); border-radius:14px; padding:14px; margin:15px 0 10px 0;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <div style="padding-right:10px;">
                         <b style="font-size:13px; color:#fca5a5; display:flex; align-items:center; gap:6px;">
@@ -4302,7 +4302,7 @@
                 </div>
             </div>
 
-            <button onclick="closeOverlay(null, 'settingsOverlay'); openOverlay('adminOverlay');" class="btn-submit ripple-btn" style="background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.4); color:#fca5a5; margin-bottom:12px; margin-top:5px; font-weight:700;"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:6px; color:#ef4444;">admin_panel_settings</span> Open Admin Panel & All Ads Settings</button>
+            <button id="settingsAdminBtn" onclick="closeOverlay(null, 'settingsOverlay'); openOverlay('adminOverlay');" class="btn-submit ripple-btn" style="display:none; background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.4); color:#fca5a5; margin-bottom:12px; margin-top:5px; font-weight:700;"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:6px; color:#ef4444;">admin_panel_settings</span> Open Admin Panel & All Ads Settings</button>
 
             <button onclick="clearAppCache()" class="btn-submit ripple-btn" style="background:var(--bg-dark); border:1px solid var(--warning); color:var(--warning); margin-bottom:15px;"><span class="material-symbols-rounded" style="vertical-align:middle; margin-right:5px;">delete_sweep</span> Clear App Cache</button>
             
@@ -5872,39 +5872,53 @@
             document.getElementById('profName').innerText = currentUser.name;
             document.getElementById('profUsername').innerText = username ? `@${username}` : 'No Username';
             
-            if(currentUser.id === ADMIN_ID) {
-                let aBtn = document.getElementById('adminMenuBtn');
-                if (aBtn) aBtn.style.display = 'flex';
-                fetchAdminStats(); fetchPendingTrx(); fetchPremiumUsers();
-            }
+            checkAdminAccess();
         }
 
-        // Global Admin Access Verification & Secret Unlock
-        function checkAdminAccess() {
-            let isAdm = (currentUser && currentUser.id === ADMIN_ID) ||
-                        window.location.search.includes('admin') ||
-                        window.location.hash.includes('admin') ||
-                        localStorage.getItem('isAdmin') === 'true';
+        // Strict Admin Verification: ONLY for user ID 6836865426
+        function isAdminUser() {
+            return Boolean(currentUser && (currentUser.id == ADMIN_ID || String(currentUser.id) === String(ADMIN_ID)));
+        }
+
+        function updateAdminUIVisibility() {
+            const isAdm = isAdminUser();
+
+            // 1. Sidebar admin button
+            const aBtn = document.getElementById('adminMenuBtn');
+            if (aBtn) aBtn.style.display = isAdm ? 'flex' : 'none';
+
+            // 2. Profile overlay admin row
+            const profAdminBtn = document.getElementById('profAdminBtn');
+            if (profAdminBtn) profAdminBtn.style.display = isAdm ? 'flex' : 'none';
+
+            // 3. Settings overlay admin quick ads section & button
+            const sAdsSec = document.getElementById('settingsAdminAdsSection');
+            if (sAdsSec) sAdsSec.style.display = isAdm ? 'block' : 'none';
+
+            const sAdminBtn = document.getElementById('settingsAdminBtn');
+            if (sAdminBtn) sAdminBtn.style.display = isAdm ? 'block' : 'none';
+
             if (isAdm) {
-                let btn = document.getElementById('adminMenuBtn');
-                if (btn) btn.style.display = 'flex';
                 if (typeof fetchAdminStats === 'function') fetchAdminStats();
                 if (typeof fetchPendingTrx === 'function') fetchPendingTrx();
                 if (typeof fetchPremiumUsers === 'function') fetchPremiumUsers();
             }
         }
+
+        function checkAdminAccess() {
+            try { localStorage.removeItem('isAdmin'); } catch(e) {}
+            updateAdminUIVisibility();
+        }
         checkAdminAccess();
 
-        let secretAdminClicks = 0;
         window.triggerSecretAdmin = function() {
-            secretAdminClicks++;
-            if (secretAdminClicks >= 4) {
-                let btn = document.getElementById('adminMenuBtn');
-                if (btn) btn.style.display = 'flex';
-                localStorage.setItem('isAdmin', 'true');
+            if (isAdminUser()) {
                 openOverlay('adminOverlay');
                 closeOverlay(null, 'sidebarOverlay');
-                notifyAdmin("🔓 Secret Admin Panel Unlocked!");
+            } else {
+                if (typeof showToast === 'function') {
+                    showToast("⛔ Access Denied! Only Admin ID " + ADMIN_ID + " allowed.");
+                }
             }
         };
         
@@ -8049,11 +8063,19 @@ function toggleLike(vidId) {
             }); 
             const overlay = document.getElementById(id); 
             if(!overlay) return; 
+            if (id === 'adminOverlay' && !isAdminUser()) {
+                console.warn("Blocked non-admin from opening adminOverlay");
+                if (typeof showToast === 'function') {
+                    showToast("⛔ Access Denied! Only Admin (ID: " + ADMIN_ID + ") can access.");
+                }
+                return;
+            }
             overlay.classList.add('active'); 
             const bs = overlay.querySelector('.bottom-sheet');
             if(bs) { 
                 if(id === 'sidebarOverlay') {
                     bs.style.transform = 'translateX(0)';
+                    if (typeof updateAdminUIVisibility === 'function') updateAdminUIVisibility();
                 } else if(id === 'shareOverlay') {
                     bs.style.transform = 'translateY(0)';
                     bs.style.opacity = '1';
@@ -8072,10 +8094,12 @@ function toggleLike(vidId) {
             } else if (id === 'historyOverlay') {
                 loadHistory();
             } else if (id === 'settingsOverlay') {
+                if (typeof updateAdminUIVisibility === 'function') updateAdminUIVisibility();
                 let isMaster = (!window.adsterraConfig || window.adsterraConfig.allAdsMaster !== false) && (window.thirdPartyAdsEnabled !== false);
                 if (document.getElementById('settingsAdToggleAllMaster')) document.getElementById('settingsAdToggleAllMaster').checked = isMaster;
                 if (document.getElementById('settingsFakeCardsToggle')) document.getElementById('settingsFakeCardsToggle').checked = (window.fakeCardsEnabled !== false);
             } else if (id === 'profileOverlay') {
+                if (typeof updateAdminUIVisibility === 'function') updateAdminUIVisibility();
                 updateLocalStatsUI();
             } else if (id === 'adminOverlay') {
                 if (typeof populateAdminSettingsForm === 'function') populateAdminSettingsForm();
